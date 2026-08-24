@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invella — сайты-приглашения</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fbfaf7;color:#24211f}
+main{max-width:1000px;margin:auto;padding:90px 24px}h1{font-family:Georgia,serif;font-size:76px;line-height:.95;margin:20px 0}
+p{font-size:20px;color:#746d68;max-width:650px;line-height:1.5}button{background:#24211f;color:#fff;border:0;border-radius:30px;padding:16px 24px;font-size:16px;cursor:pointer}
+.hidden{display:none}.builder{max-width:650px}.back{background:transparent;color:#24211f;padding:0;margin-bottom:32px}
+label{display:block;margin:18px 0 7px;font-weight:600}input,textarea{width:100%;padding:14px;border:1px solid #d8d3ce;border-radius:12px;font:inherit;background:#fff}
+textarea{min-height:110px}@media(max-width:600px){main{padding:70px 40px}h1{font-size:64px}}
+</style></head><body><main>
+<section id="home"><small>INVELLA · онлайн-конструктор приглашений</small>
+<h1>Ваш день.<br>В одном красивом сайте.</h1>
+<p>Создайте персональное приглашение на свадьбу или другое событие за несколько минут.</p>
+<button id="createBtn">Создать приглашение</button></section>
+<section id="builder" class="builder hidden"><button class="back" id="backBtn">← Назад</button>
+<small>INVELLA · конструктор</small><h1 style="font-size:52px">Создайте приглашение</h1>
+<p>Начнём с основной информации о событии.</p>
+<label>Название события</label><input placeholder="Например: Свадьба Анны и Максима">
+<label>Дата</label><input type="date"><label>Место</label><input placeholder="Ресторан, адрес или площадка">
+<label>Текст приглашения</label><textarea placeholder="Напишите несколько тёплых слов гостям"></textarea>
+<button id="continueBtn" style="margin-top:22px">Продолжить</button></section></main>
+<script>
+const home=document.getElementById("home"),builder=document.getElementById("builder");
+document.getElementById("createBtn").onclick=()=>{home.classList.add("hidden");builder.classList.remove("hidden");scrollTo(0,0)};
+document.getElementById("backBtn").onclick=()=>{builder.classList.add("hidden");home.classList.remove("hidden");scrollTo(0,0)};
+document.getElementById("continueBtn").onclick=()=>alert("Кнопка работает! Следующим шагом подключим сохранение.");
+</script></body></html>
