@@ -1,28 +1,676 @@
 <!doctype html>
-<html lang="ru"><head><link rel="stylesheet" href="style.css"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Invella — сайты-приглашения</title>
+<meta name="description" content="Создайте красивый персональный сайт-приглашение за несколько минут.">
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fbfaf7;color:#24211f}
-main{max-width:1000px;margin:auto;padding:90px 24px}h1{font-family:Georgia,serif;font-size:76px;line-height:.95;margin:20px 0}
-p{font-size:20px;color:#746d68;max-width:650px;line-height:1.5}button{background:#24211f;color:#fff;border:0;border-radius:30px;padding:16px 24px;font-size:16px;cursor:pointer}
-.hidden{display:none}.builder{max-width:650px}.back{background:transparent;color:#24211f;padding:0;margin-bottom:32px}
-label{display:block;margin:18px 0 7px;font-weight:600}input,textarea{width:100%;padding:14px;border:1px solid #d8d3ce;border-radius:12px;font:inherit;background:#fff}
-textarea{min-height:110px}@media(max-width:600px){main{padding:70px 40px}h1{font-size:64px}}
-</style></head><body><main>
-<section id="home"><small>INVELLA · онлайн-конструктор приглашений</small>
+:root{
+  --bg:#f7f3ed;
+  --paper:#fffdf9;
+  --ink:#201d1b;
+  --muted:#766e68;
+  --line:#ddd5cd;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.shell{max-width:1180px;margin:auto;padding:0 22px}
+nav{height:72px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:Georgia,serif;font-size:24px;letter-spacing:.14em}
+.primary,.navbtn{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:14px 20px}
+.ghost{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 18px}
+.hero{min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:45px;padding:55px 0 75px}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:var(--muted)}
+h1,h2,h3{font-family:Georgia,serif;font-weight:400}
+h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
+.hero p{font-size:20px;line-height:1.55;color:var(--muted);max-width:620px}
+.phone{width:min(360px,82vw);margin:auto;background:#e9ded3;border:10px solid #25211f;border-radius:42px;padding:12px;box-shadow:0 25px 70px #6b57402b}
+.phone-inner{min-height:610px;border-radius:28px;background:#e8ded4;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px}
+.phone-inner h3{font-size:45px;margin:12px 0}
+.section{padding:72px 0}
+.section h2{font-size:48px;margin:0 0 12px}
+.sub{color:var(--muted);margin-bottom:30px}
+.categories,.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px}
+.category{min-height:145px;display:flex;flex-direction:column;justify-content:flex-end}
+.category b{font-family:Georgia,serif;font-size:25px}
+.template{padding:0;overflow:hidden}
+.preview{height:310px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center}
+.preview h3{font-size:35px;margin:8px}
+.t1{background:#e8ded4}
+.t2{background:#f4eee5}
+.t3{background:#20201e;color:white}
+.t4{background:#e6eadf}
+.t5{background:#eadce0}
+.t6{background:#dce4e7}
+.template-info{padding:18px}
+.template-info button{width:100%}
+.hidden{display:none!important}
+
+.app{min-height:100vh;background:#f5f2ed}
+.appbar{height:68px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:5}
+.editor{display:grid;grid-template-columns:minmax(330px,480px) 1fr;min-height:calc(100vh - 68px)}
+.controls{padding:28px;overflow:auto;background:white;border-right:1px solid var(--line)}
+.controls h2{font-size:34px;margin:5px 0 20px}
+.field{margin:15px 0}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:white}
+.field textarea{min-height:88px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.color{width:34px;height:34px;border:1px solid #bbb;border-radius:50%;padding:0}
+.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0}
+.preview-area{padding:30px;display:flex;justify-content:center;align-items:flex-start}
+.invitation{width:min(430px,100%);background:white;min-height:760px;box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center}
+.inv-hero{min-height:420px;background:#e8ded4;padding:65px 28px;display:flex;flex-direction:column;justify-content:center}
+.inv-hero h2{font-size:52px;margin:14px 0}
+.inv-date{font-family:Georgia,serif;font-size:22px}
+.block{padding:38px 28px;border-top:1px solid #eee}
+.block h3{font-size:30px;margin:0 0 15px}
+.block p{line-height:1.55;color:#615b56}
+.timeline{text-align:left;max-width:300px;margin:auto}
+.timeline div{padding:9px 0;border-bottom:1px solid #eee}
+.palette{display:flex;justify-content:center;gap:10px}
+.dot{width:34px;height:34px;border-radius:50%}
+.rsvp input,.rsvp select,.rsvp textarea{width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px}
+.success{padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px}
+.toolbar{display:flex;gap:8px}
+.price{font-family:Georgia,serif;font-size:42px}
+.faq details{background:white;border-bottom:1px solid var(--line);padding:18px}
+footer{padding:45px 0;color:var(--muted)}
+
+@media(max-width:850px){
+  .hero{grid-template-columns:1fr}
+  .phone{display:none}
+  .categories,.templates{grid-template-columns:1fr 1fr}
+  .editor{grid-template-columns:1fr}
+  .preview-area{padding:15px}
+  .controls{border-right:0}
+}
+@media(max-width:560px){
+  .categories,.templates{grid-template-columns:1fr}
+  .section{padding:50px 0}
+  .section h2{font-size:38px}
+  .row{grid-template-columns:1fr}
+  .controls{padding:20px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="marketing">
+<div class="shell">
+
+<nav>
+<div class="logo">INVELLA</div>
+<button class="navbtn" onclick="openTemplates()">Создать приглашение</button>
+</nav>
+
+<section class="hero">
+<div>
+<div class="eyebrow">Персональные сайты-приглашения</div>
 <h1>Ваш день.<br>В одном красивом сайте.</h1>
-<p>Создайте персональное приглашение на свадьбу или другое событие за несколько минут.</p>
-<button id="createBtn">Создать приглашение</button></section>
-<section id="builder" class="builder hidden"><button class="back" id="backBtn">← Назад</button>
-<small>INVELLA · конструктор</small><h1 style="font-size:52px">Создайте приглашение</h1>
-<p>Начнём с основной информации о событии.</p>
-<label>Название события</label><input placeholder="Например: Свадьба Анны и Максима">
-<label>Дата</label><input type="date"><label>Место</label><input placeholder="Ресторан, адрес или площадка">
-<label>Текст приглашения</label><textarea placeholder="Напишите несколько тёплых слов гостям"></textarea>
-<button id="continueBtn" style="margin-top:22px">Продолжить</button></section></main>
+<p>Выберите дизайн, добавьте детали праздника и отправьте гостям одну красивую ссылку.</p>
+<button class="primary" onclick="openTemplates()">Создать приглашение</button>
+</div>
+
+<div class="phone">
+<div class="phone-inner">
+<div class="eyebrow">мы женимся</div>
+<h3>Анна<br>&<br>Максим</h3>
+<div>12 сентября 2026</div>
+<p>Будем счастливы разделить этот день с вами</p>
+</div>
+</div>
+</section>
+
+<section class="section">
+<h2>Для любого события</h2>
+<p class="sub">Свадьба, день рождения, юбилей и другие важные события.</p>
+
+<div class="categories">
+<div class="card category"><span>💍</span><b>Свадьба</b><small>Главная коллекция</small></div>
+<div class="card category"><span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small></div>
+<div class="card category"><span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small></div>
+</div>
+</section>
+
+<section class="section" id="templates">
+<h2>Выберите шаблон</h2>
+<p class="sub">Выберите настроение будущего приглашения.</p>
+
+<div class="templates">
+
+<div class="card template">
+<div class="preview t1">
+<div><small>MINIMAL</small><h3>Анна & Максим</h3><span>12 · 09 · 2026</span></div>
+</div>
+<div class="template-info">
+<b>Тихая классика</b>
+<p>Воздух и кремовые оттенки.</p>
+<button class="primary" onclick="chooseTemplate('classic')">Выбрать</button>
+</div>
+</div>
+
+<div class="card template">
+<div class="preview t2">
+<div><small>EDITORIAL</small><h3>А + М</h3><span>THE WEDDING DAY</span></div>
+</div>
+<div class="template-info">
+<b>Editorial</b>
+<p>Журнальная типографика.</p>
+<button class="primary" onclick="chooseTemplate('editorial')">Выбрать</button>
+</div>
+</div>
+
+<div class="card template">
+<div class="preview t3">
+<div><small>EVENING</small><h3>Anna<br>Maxim</h3><span>SEPTEMBER 12</span></div>
+</div>
+<div class="template-info">
+<b>Black tie</b>
+<p>Тёмный вечерний стиль.</p>
+<button class="primary" onclick="chooseTemplate('dark')">Выбрать</button>
+</div>
+</div>
+
+<div class="card template">
+<div class="preview t4">
+<div><small>BOTANICAL</small><h3>А & М</h3><span>НАША СВАДЬБА</span></div>
+</div>
+<div class="template-info">
+<b>Botanical</b>
+<p>Природная палитра.</p>
+<button class="primary" onclick="chooseTemplate('botanical')">Выбрать</button>
+</div>
+</div>
+
+<div class="card template">
+<div class="preview t5">
+<div><small>ROMANCE</small><h3>Анна<br>и Максим</h3><span>навсегда начинается здесь</span></div>
+</div>
+<div class="template-info">
+<b>Romance</b>
+<p>Мягкий романтичный дизайн.</p>
+<button class="primary" onclick="chooseTemplate('romance')">Выбрать</button>
+</div>
+</div>
+
+<div class="card template">
+<div class="preview t6">
+<div><small>MODERN</small><h3>12.09</h3><span>ANNA × MAXIM</span></div>
+</div>
+<div class="template-info">
+<b>Modern</b>
+<p>Современный графичный стиль.</p>
+<button class="primary" onclick="chooseTemplate('modern')">Выбрать</button>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="section">
+<h2>Как это работает</h2>
+<div class="categories">
+<div class="card"><b>01. Выберите</b><p>Подберите шаблон.</p></div>
+<div class="card"><b>02. Заполните</b><p>Добавьте дату, место, программу и дресс-код.</p></div>
+<div class="card"><b>03. Отправьте</b><p>Опубликуйте сайт и отправьте гостям ссылку.</p></div>
+</div>
+</section>
+
+<section class="section">
+<h2>Одна покупка — одно событие</h2>
+<div class="card">
+<div class="price">990 ₽</div>
+<p>Публикация одного приглашения. Без обязательной подписки.</p>
+<button class="primary" onclick="openTemplates()">Попробовать бесплатно</button>
+</div>
+</section>
+
+<section class="section faq">
+<h2>Вопросы</h2>
+<details><summary>Можно попробовать бесплатно?</summary><p>Да. Создание и предпросмотр доступны до публикации.</p></details>
+<details><summary>Гости должны регистрироваться?</summary><p>Нет. Они просто открывают ссылку.</p></details>
+<details><summary>Можно изменить приглашение?</summary><p>Да, данные можно редактировать.</p></details>
+</section>
+
+<footer>© 2026 Invella</footer>
+
+</div>
+</div>
+
+
+<div id="app" class="app hidden">
+
+<div class="appbar">
+<div class="logo">INVELLA</div>
+<div class="toolbar">
+<button class="ghost" onclick="goHome()">Шаблоны</button>
+<button class="primary" onclick="publishDemo()">Опубликовать</button>
+</div>
+</div>
+
+<div class="editor">
+
+<div class="controls">
+
+<div class="eyebrow">Конструктор</div>
+<h2>Ваше приглашение</h2>
+
+<div class="row">
+<div class="field">
+<label>Имена</label>
+<input id="names" value="Анна & Максим">
+</div>
+
+<div class="field">
+<label>Дата</label>
+<input id="date" type="date" value="2026-09-12">
+</div>
+</div>
+
+<div class="row">
+<div class="field">
+<label>Время</label>
+<input id="time" type="time" value="15:00">
+</div>
+
+<div class="field">
+<label>Площадка</label>
+<input id="venue" value="Усадьба «Лесная»">
+</div>
+</div>
+
+<div class="field">
+<label>Адрес</label>
+<input id="address" value="Воронеж, ул. Примерная, 10">
+</div>
+
+<div class="field">
+<label>Текст приглашения</label>
+<textarea id="message">Будем счастливы разделить с вами один из самых важных дней нашей жизни.</textarea>
+</div>
+
+<div class="field">
+<label>Программа мероприятия</label>
+
+<div class="timeline-item">
+<input id="p1t" value="15:00">
+<input id="p1" value="Сбор гостей">
+</div>
+
+<div class="timeline-item">
+<input id="p2t" value="15:30">
+<input id="p2" value="Церемония">
+</div>
+
+<div class="timeline-item">
+<input id="p3t" value="17:00">
+<input id="p3" value="Банкет">
+</div>
+</div>
+
+<div class="field">
+<label>Дресс-код</label>
+<textarea id="dress">Будем рады, если вы поддержите природную палитру нашего вечера.</textarea>
+
+<div class="colors">
+<input class="color" id="c1" type="color" value="#77624f">
+<input class="color" id="c2" type="color" value="#9a9b79">
+<input class="color" id="c3" type="color" value="#d8c7ad">
+<input class="color" id="c4" type="color" value="#eee7dc">
+</div>
+</div>
+
+<div class="field">
+<label>Пожелания гостям</label>
+<textarea id="wishes">Ваше присутствие — лучший подарок для нас.</textarea>
+</div>
+
+<div class="field">
+<label>Фотография обложки</label>
+<input id="photo" type="file" accept="image/*">
+</div>
+
+<p style="font-size:12px;color:#766e68">
+Изменения сохраняются автоматически.
+</p>
+
+</div>
+
+
+<div class="preview-area">
+
+<div class="invitation">
+
+<div class="inv-hero" id="invHero">
+<div class="eyebrow">мы женимся</div>
+<h2 id="vNames">Анна & Максим</h2>
+<div class="inv-date" id="vDate">12 сентября 2026 · 15:00</div>
+</div>
+
+<div class="block">
+<h3>Дорогие гости</h3>
+<p id="vMessage"></p>
+</div>
+
+<div class="block">
+<h3>Программа дня</h3>
+
+<div class="timeline">
+<div><b id="vp1t"></b> — <span id="vp1"></span></div>
+<div><b id="vp2t"></b> — <span id="vp2"></span></div>
+<div><b id="vp3t"></b> — <span id="vp3"></span></div>
+</div>
+
+</div>
+
+<div class="block">
+<h3>Место</h3>
+<p>
+<b id="vVenue"></b><br>
+<span id="vAddress"></span>
+</p>
+<button class="ghost" onclick="route()">Построить маршрут</button>
+</div>
+
+<div class="block">
+<h3>Дресс-код</h3>
+<p id="vDress"></p>
+
+<div class="palette">
+<i class="dot" id="d1"></i>
+<i class="dot" id="d2"></i>
+<i class="dot" id="d3"></i>
+<i class="dot" id="d4"></i>
+</div>
+
+</div>
+
+<div class="block">
+<h3>Пожелания</h3>
+<p id="vWishes"></p>
+</div>
+
+<div class="block rsvp">
+
+<h3>Вы сможете присутствовать?</h3>
+
+<input id="guest" placeholder="Имя и фамилия">
+
+<select id="attendance">
+<option value="yes">Да, с удовольствием</option>
+<option value="no">К сожалению, нет</option>
+<option value="maybe">Пока не знаю</option>
+</select>
+
+<input id="guestCount" type="number" min="1" max="20" value="1">
+
+<textarea id="comment" placeholder="Комментарий"></textarea>
+
+<button class="primary" onclick="sendRSVP()">Отправить ответ</button>
+
+<div id="rsvpOk" class="success hidden">
+Спасибо! Ответ сохранён.
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+
 <script>
-const home=document.getElementById("home"),builder=document.getElementById("builder");
-document.getElementById("createBtn").onclick=()=>{home.classList.add("hidden");builder.classList.remove("hidden");scrollTo(0,0)};
-document.getElementById("backBtn").onclick=()=>{builder.classList.add("hidden");home.classList.remove("hidden");scrollTo(0,0)};
-document.getElementById("continueBtn").onclick=()=>alert("Кнопка работает! Следующим шагом подключим сохранение.");
-</script></body></html>
+
+const $ = id => document.getElementById(id);
+
+const fields = [
+'names','date','time','venue','address','message',
+'p1t','p1','p2t','p2','p3t','p3',
+'dress','wishes','c1','c2','c3','c4'
+];
+
+let template = localStorage.getItem('invella_template') || 'classic';
+
+function openTemplates(){
+  document.getElementById('templates').scrollIntoView({behavior:'smooth'});
+}
+
+function chooseTemplate(t){
+
+  template = t;
+
+  localStorage.setItem('invella_template',t);
+
+  $('marketing').classList.add('hidden');
+
+  $('app').classList.remove('hidden');
+
+  load();
+
+  render();
+
+  window.scrollTo(0,0);
+}
+
+function goHome(){
+
+  $('app').classList.add('hidden');
+
+  $('marketing').classList.remove('hidden');
+
+  setTimeout(openTemplates,50);
+}
+
+function load(){
+
+  try{
+
+    const data = JSON.parse(localStorage.getItem('invella_draft') || '{}');
+
+    fields.forEach(k=>{
+      if(data[k] != null){
+        $(k).value = data[k];
+      }
+    });
+
+  }catch(e){}
+}
+
+function save(){
+
+  const data = {};
+
+  fields.forEach(k=>{
+    data[k] = $(k).value;
+  });
+
+  localStorage.setItem('invella_draft',JSON.stringify(data));
+}
+
+function dateText(){
+
+  if(!$('date').value){
+    return 'Дата события';
+  }
+
+  const d = new Date($('date').value + 'T12:00:00');
+
+  let result = d.toLocaleDateString('ru-RU',{
+    day:'numeric',
+    month:'long',
+    year:'numeric'
+  });
+
+  if($('time').value){
+    result += ' · ' + $('time').value;
+  }
+
+  return result;
+}
+
+function render(){
+
+  $('vNames').textContent = $('names').value || 'Ваш праздник';
+
+  $('vDate').textContent = dateText();
+
+  $('vMessage').textContent = $('message').value;
+
+  $('vVenue').textContent = $('venue').value;
+
+  $('vAddress').textContent = $('address').value;
+
+  $('vDress').textContent = $('dress').value;
+
+  $('vWishes').textContent = $('wishes').value;
+
+  ['1','2','3'].forEach(n=>{
+
+    $('vp'+n+'t').textContent = $('p'+n+'t').value;
+
+    $('vp'+n).textContent = $('p'+n).value;
+
+  });
+
+  ['1','2','3','4'].forEach(n=>{
+
+    $('d'+n).style.background = $('c'+n).value;
+
+  });
+
+  const hero = $('invHero');
+
+  hero.style.backgroundImage = '';
+
+  if(template === 'dark'){
+    hero.style.background = '#20201e';
+    hero.style.color = 'white';
+  }
+
+  else if(template === 'botanical'){
+    hero.style.background = '#e6eadf';
+    hero.style.color = '#201d1b';
+  }
+
+  else if(template === 'romance'){
+    hero.style.background = '#eadce0';
+    hero.style.color = '#201d1b';
+  }
+
+  else if(template === 'modern'){
+    hero.style.background = '#dce4e7';
+    hero.style.color = '#201d1b';
+  }
+
+  else if(template === 'editorial'){
+    hero.style.background = '#f4eee5';
+    hero.style.color = '#201d1b';
+  }
+
+  else{
+    hero.style.background = '#e8ded4';
+    hero.style.color = '#201d1b';
+  }
+
+  save();
+}
+
+fields.forEach(id=>{
+
+  document.addEventListener('input',event=>{
+
+    if(event.target.id === id){
+      render();
+    }
+
+  });
+
+});
+
+$('photo').addEventListener('change',event=>{
+
+  const file = event.target.files[0];
+
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = ()=>{
+
+    $('invHero').style.backgroundImage =
+    `linear-gradient(#0004,#0004),url("${reader.result}")`;
+
+    $('invHero').style.backgroundSize = 'cover';
+
+    $('invHero').style.backgroundPosition = 'center';
+
+    $('invHero').style.color = 'white';
+
+  };
+
+  reader.readAsDataURL(file);
+
+});
+
+function route(){
+
+  const address = encodeURIComponent($('address').value);
+
+  window.open(
+    'https://www.google.com/maps/search/?api=1&query=' + address,
+    '_blank'
+  );
+}
+
+function sendRSVP(){
+
+  const responses =
+  JSON.parse(localStorage.getItem('invella_rsvp') || '[]');
+
+  responses.push({
+
+    name:$('guest').value,
+
+    attendance:$('attendance').value,
+
+    count:$('guestCount').value,
+
+    comment:$('comment').value,
+
+    createdAt:new Date().toISOString()
+
+  });
+
+  localStorage.setItem(
+    'invella_rsvp',
+    JSON.stringify(responses)
+  );
+
+  $('rsvpOk').classList.remove('hidden');
+}
+
+function publishDemo(){
+
+  alert(
+    'Приглашение готово к публикации. Следующим этапом подключим аккаунты, Supabase, персональную ссылку и оплату.'
+  );
+
+}
+
+load();
+render();
+
+</script>
+
+</body>
+  </html>
