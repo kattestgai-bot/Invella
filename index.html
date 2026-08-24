@@ -23,96 +23,25 @@ a{color:inherit}
 .shell{max-width:1180px;margin:auto;padding:0 22px}
 nav{height:72px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:Georgia,serif;font-size:24px;letter-spacing:.14em}
-.primary,.navbtn{
-  border:0;
-  border-radius:999px;
-  background:var(--ink);
-  color:#fff;
-  padding:14px 20px;
-}
-.ghost{
-  border:1px solid var(--line);
-  background:transparent;
-  color:var(--ink);
-  border-radius:999px;
-  padding:13px 18px;
-}
-.hero{
-  min-height:72vh;
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  align-items:center;
-  gap:45px;
-  padding:55px 0 75px;
-}
-.eyebrow{
-  text-transform:uppercase;
-  letter-spacing:.15em;
-  font-size:12px;
-  color:var(--muted);
-}
+.primary,.navbtn{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:14px 20px}
+.ghost{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 18px}
+.hero{min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:45px;padding:55px 0 75px}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:var(--muted)}
 h1,h2,h3{font-family:Georgia,serif;font-weight:400}
-h1{
-  font-size:clamp(58px,8vw,100px);
-  line-height:.88;
-  margin:20px 0 26px;
-}
-.hero p{
-  font-size:20px;
-  line-height:1.55;
-  color:var(--muted);
-  max-width:620px;
-}
-.phone{
-  width:min(360px,82vw);
-  margin:auto;
-  background:#e9ded3;
-  border:10px solid #25211f;
-  border-radius:42px;
-  padding:12px;
-  box-shadow:0 25px 70px #6b57402b;
-}
-.phone-inner{
-  min-height:610px;
-  border-radius:28px;
-  background:#e8ded4;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  text-align:center;
-  padding:28px;
-}
+h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
+.hero p{font-size:20px;line-height:1.55;color:var(--muted);max-width:620px}
+.phone{width:min(360px,82vw);margin:auto;background:#e9ded3;border:10px solid #25211f;border-radius:42px;padding:12px;box-shadow:0 25px 70px #6b57402b}
+.phone-inner{min-height:610px;border-radius:28px;background:#e8ded4;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px}
 .phone-inner h3{font-size:45px;margin:12px 0}
 .section{padding:72px 0}
 .section h2{font-size:48px;margin:0 0 12px}
 .sub{color:var(--muted);margin-bottom:30px}
-.categories,.templates{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-}
-.card{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:22px;
-}
-.category{
-  min-height:145px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-}
+.categories,.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px}
+.category{min-height:145px;display:flex;flex-direction:column;justify-content:flex-end}
 .category b{font-family:Georgia,serif;font-size:25px}
 .template{padding:0;overflow:hidden}
-.preview{
-  height:310px;
-  padding:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
+.preview{height:310px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center}
 .preview h3{font-size:35px;margin:8px}
 .t1{background:#e8ded4}
 .t2{background:#f4eee5}
@@ -124,34 +53,33 @@ h1{
 .template-info button{width:100%}
 .hidden{display:none!important}
 
-/* ТАРИФЫ */
-
 .pricing{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:16px;
+  align-items:stretch;
 }
 .plan{
-  position:relative;
   display:flex;
   flex-direction:column;
+  position:relative;
 }
-.plan.popular{
+.plan.featured{
   border:2px solid var(--ink);
 }
-.popular-label{
+.plan-badge{
   display:inline-block;
-  align-self:flex-start;
+  width:max-content;
   background:var(--ink);
-  color:white;
+  color:#fff;
   padding:6px 10px;
   border-radius:999px;
   font-size:11px;
-  margin-bottom:15px;
+  margin-bottom:14px;
 }
 .plan-name{
   font-family:Georgia,serif;
-  font-size:28px;
+  font-size:29px;
 }
 .price{
   font-family:Georgia,serif;
@@ -161,194 +89,106 @@ h1{
 .plan ul{
   list-style:none;
   padding:0;
-  margin:15px 0 25px;
+  margin:15px 0 24px;
   flex:1;
 }
 .plan li{
   padding:8px 0;
   border-bottom:1px solid #eee8e2;
   color:#625b56;
+  line-height:1.4;
 }
-
-/* КОНСТРУКТОР */
+.plan button{width:100%}
 
 .app{min-height:100vh;background:#f5f2ed}
-.appbar{
-  min-height:68px;
-  border-bottom:1px solid var(--line);
-  background:white;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:10px 20px;
-  position:sticky;
-  top:0;
-  z-index:5;
-}
-.toolbar{display:flex;gap:8px}
-.editor{
-  display:grid;
-  grid-template-columns:minmax(330px,480px) 1fr;
-  min-height:calc(100vh - 68px);
-}
-.controls{
-  padding:28px;
-  overflow:auto;
-  background:white;
-  border-right:1px solid var(--line);
-}
+.appbar{height:68px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:5}
+.editor{display:grid;grid-template-columns:minmax(330px,480px) 1fr;min-height:calc(100vh - 68px)}
+.controls{padding:28px;overflow:auto;background:white;border-right:1px solid var(--line)}
 .controls h2{font-size:34px;margin:5px 0 20px}
 .field{margin:15px 0}
-.field label{
-  display:block;
-  font-size:13px;
-  color:var(--muted);
-  margin-bottom:7px;
-}
-.field input,.field textarea,.field select{
-  width:100%;
-  padding:13px;
-  border:1px solid var(--line);
-  border-radius:11px;
-  background:white;
-}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:white}
 .field textarea{min-height:88px;resize:vertical}
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.colors{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.color{
-  width:34px!important;
-  height:34px!important;
-  border:1px solid #bbb!important;
-  border-radius:50%!important;
-  padding:0!important;
-}
-.timeline-item{
-  display:grid;
-  grid-template-columns:90px 1fr;
-  gap:8px;
-  margin:8px 0;
-}
-.preview-area{
-  padding:30px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-}
-.invitation{
-  width:min(430px,100%);
-  background:white;
-  min-height:760px;
-  box-shadow:0 18px 60px #493d3120;
-  overflow:hidden;
-  text-align:center;
-}
-.inv-hero{
-  min-height:420px;
-  background:#e8ded4;
-  padding:65px 28px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  background-size:cover;
-  background-position:center;
-}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.color{width:34px;height:34px;border:1px solid #bbb;border-radius:50%;padding:0}
+.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0}
+.preview-area{padding:30px;display:flex;justify-content:center;align-items:flex-start}
+.invitation{width:min(430px,100%);background:white;min-height:760px;box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center}
+.inv-hero{min-height:420px;background:#e8ded4;padding:65px 28px;display:flex;flex-direction:column;justify-content:center}
 .inv-hero h2{font-size:52px;margin:14px 0}
 .inv-date{font-family:Georgia,serif;font-size:22px}
-.block{
-  padding:38px 28px;
-  border-top:1px solid #eee;
-}
+.block{padding:38px 28px;border-top:1px solid #eee}
 .block h3{font-size:30px;margin:0 0 15px}
 .block p{line-height:1.55;color:#615b56}
 .timeline{text-align:left;max-width:300px;margin:auto}
 .timeline div{padding:9px 0;border-bottom:1px solid #eee}
-.palette{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-}
-.dot{
-  width:34px;
-  height:34px;
-  border-radius:50%;
-}
-.rsvp input,.rsvp select,.rsvp textarea{
-  width:100%;
-  margin:6px 0;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:10px;
-}
-.success{
-  padding:12px;
-  border-radius:10px;
-  background:#eef5ec;
-  margin-top:10px;
-}
+.palette{display:flex;justify-content:center;gap:10px}
+.dot{width:34px;height:34px;border-radius:50%}
+.rsvp input,.rsvp select,.rsvp textarea{width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px}
+.success{padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px}
+.toolbar{display:flex;gap:8px}
 
-/* ТАРИФНЫЕ ПОМЕТКИ */
-
-.tag{
+.tier{
   display:inline-block;
-  margin-left:5px;
-  padding:3px 7px;
-  border-radius:999px;
   font-size:10px;
-  background:#eee9e4;
-  color:#6c625b;
+  line-height:1;
+  padding:5px 7px;
+  border-radius:999px;
+  margin-left:5px;
+  vertical-align:middle;
+  font-weight:normal;
 }
-.tag-plus{
-  background:#e6eee2;
-  color:#506047;
+.tier-basic{
+  background:#eeeae5;
+  color:#6d655f;
 }
-.tag-premium{
-  background:#f1e6d5;
-  color:#765d39;
+.tier-plus{
+  background:#e8eee4;
+  color:#526148;
 }
-.extra{
-  border:1px solid var(--line);
-  border-radius:16px;
+.tier-premium{
+  background:#f3e8d7;
+  color:#795f3b;
+}
+
+.locked-feature{
+  border:1px dashed #cfc5bb;
+  background:#faf7f2;
+  border-radius:15px;
   padding:15px;
   margin:15px 0;
-  background:#fcfaf6;
 }
-.extra-title{
-  font-weight:bold;
-  margin-bottom:8px;
+.locked-feature strong{
+  display:block;
+  margin-bottom:5px;
 }
-.extra p{
+.locked-feature p{
+  margin:5px 0 0;
   font-size:12px;
+  line-height:1.45;
   color:var(--muted);
-  margin:7px 0;
 }
 
-/* SUPPORT */
+.faq details{background:white;border-bottom:1px solid var(--line);padding:18px}
 
-.support{
-  background:#201d1b;
+.support-box{
+  background:var(--ink);
   color:white;
+  padding:34px;
   border-radius:24px;
-  padding:30px;
 }
-.support h2{color:white}
-.support p{color:#d8d1cb}
-.support a{
+.support-box h2{
+  color:white;
+  margin-bottom:12px;
+}
+.support-box p{
+  color:#d8d1cc;
+  line-height:1.6;
+}
+.support-box a{
   color:white;
   font-weight:bold;
-}
-
-.faq details{
-  background:white;
-  border-bottom:1px solid var(--line);
-  padding:18px;
 }
 
 footer{
@@ -356,8 +196,8 @@ footer{
   color:var(--muted);
   display:flex;
   justify-content:space-between;
+  gap:20px;
   flex-wrap:wrap;
-  gap:15px;
 }
 
 @media(max-width:850px){
@@ -375,11 +215,6 @@ footer{
   .section h2{font-size:38px}
   .row{grid-template-columns:1fr}
   .controls{padding:20px}
-  .appbar .primary,.appbar .ghost{
-    padding:10px 12px;
-    font-size:13px;
-  }
-  .appbar .logo{font-size:18px}
 }
 </style>
 </head>
@@ -391,7 +226,7 @@ footer{
 
 <nav>
 <div class="logo">INVELLA</div>
-<button type="button" class="navbtn" id="topCreate">Создать приглашение</button>
+<button class="navbtn" onclick="openTemplates()">Создать приглашение</button>
 </nav>
 
 <section class="hero">
@@ -399,7 +234,7 @@ footer{
 <div class="eyebrow">Персональные сайты-приглашения</div>
 <h1>Ваш день.<br>В одном красивом сайте.</h1>
 <p>Выберите дизайн, добавьте детали праздника и отправьте гостям одну красивую ссылку.</p>
-<button type="button" class="primary" id="heroCreate">Создать приглашение</button>
+<button class="primary" onclick="openTemplates()">Создать приглашение</button>
 </div>
 
 <div class="phone">
@@ -417,23 +252,9 @@ footer{
 <p class="sub">Свадьба, день рождения, юбилей и другие важные события.</p>
 
 <div class="categories">
-<div class="card category">
-<span>💍</span>
-<b>Свадьба</b>
-<small>Главная коллекция</small>
-</div>
-
-<div class="card category">
-<span>🎂</span>
-<b>День рождения</b>
-<small>Тёплые и яркие дизайны</small>
-</div>
-
-<div class="card category">
-<span>✨</span>
-<b>Другой праздник</b>
-<small>Юбилей, baby shower, вечеринка</small>
-</div>
+<div class="card category"><span>💍</span><b>Свадьба</b><small>Главная коллекция</small></div>
+<div class="card category"><span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small></div>
+<div class="card category"><span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small></div>
 </div>
 </section>
 
@@ -445,91 +266,67 @@ footer{
 
 <div class="card template">
 <div class="preview t1">
-<div>
-<small>MINIMAL</small>
-<h3>Анна & Максим</h3>
-<span>12 · 09 · 2026</span>
-</div>
+<div><small>MINIMAL</small><h3>Анна & Максим</h3><span>12 · 09 · 2026</span></div>
 </div>
 <div class="template-info">
 <b>Тихая классика</b>
 <p>Воздух и кремовые оттенки.</p>
-<button type="button" class="primary template-btn" data-template="classic">Выбрать</button>
+<button class="primary" onclick="chooseTemplate('classic')">Выбрать</button>
 </div>
 </div>
 
 <div class="card template">
 <div class="preview t2">
-<div>
-<small>EDITORIAL</small>
-<h3>А + М</h3>
-<span>THE WEDDING DAY</span>
-</div>
+<div><small>EDITORIAL</small><h3>А + М</h3><span>THE WEDDING DAY</span></div>
 </div>
 <div class="template-info">
 <b>Editorial</b>
 <p>Журнальная типографика.</p>
-<button type="button" class="primary template-btn" data-template="editorial">Выбрать</button>
+<button class="primary" onclick="chooseTemplate('editorial')">Выбрать</button>
 </div>
 </div>
 
 <div class="card template">
 <div class="preview t3">
-<div>
-<small>EVENING</small>
-<h3>Anna<br>Maxim</h3>
-<span>SEPTEMBER 12</span>
-</div>
+<div><small>EVENING</small><h3>Anna<br>Maxim</h3><span>SEPTEMBER 12</span></div>
 </div>
 <div class="template-info">
 <b>Black tie</b>
 <p>Тёмный вечерний стиль.</p>
-<button type="button" class="primary template-btn" data-template="dark">Выбрать</button>
+<button class="primary" onclick="chooseTemplate('dark')">Выбрать</button>
 </div>
 </div>
 
 <div class="card template">
 <div class="preview t4">
-<div>
-<small>BOTANICAL</small>
-<h3>А & М</h3>
-<span>НАША СВАДЬБА</span>
-</div>
+<div><small>BOTANICAL</small><h3>А & М</h3><span>НАША СВАДЬБА</span></div>
 </div>
 <div class="template-info">
 <b>Botanical</b>
 <p>Природная палитра.</p>
-<button type="button" class="primary template-btn" data-template="botanical">Выбрать</button>
+<button class="primary" onclick="chooseTemplate('botanical')">Выбрать</button>
 </div>
 </div>
 
 <div class="card template">
 <div class="preview t5">
-<div>
-<small>ROMANCE</small>
-<h3>Анна<br>и Максим</h3>
-<span>навсегда начинается здесь</span>
-</div>
+<div><small>ROMANCE</small><h3>Анна<br>и Максим</h3><span>навсегда начинается здесь</span></div>
 </div>
 <div class="template-info">
 <b>Romance</b>
 <p>Мягкий романтичный дизайн.</p>
-<button type="button" class="primary template-btn" data-template="romance">Выбрать</button>
+<button class="primary" onclick="chooseTemplate('romance')">Выбрать</button>
 </div>
 </div>
 
 <div class="card template">
 <div class="preview t6">
-<div>
-<small>MODERN</small>
-<h3>12.09</h3>
-<span>ANNA × MAXIM</span>
-</div>
+<div><small>MODERN</small><h3>12.09</h3><span>ANNA × MAXIM</span></div>
 </div>
 <div class="template-info">
 <b>Modern</b>
 <p>Современный графичный стиль.</p>
-<button type="button" class="primary template-btn" data-template="modern">Выбрать</button>
+<button class="primary" onclick="chooseTemplate('modern')">Выбрать</button>
 </div>
 </div>
 
@@ -538,83 +335,73 @@ footer{
 
 <section class="section">
 <h2>Как это работает</h2>
-
 <div class="categories">
-<div class="card">
-<b>01. Выберите</b>
-<p>Подберите шаблон.</p>
-</div>
-
-<div class="card">
-<b>02. Заполните</b>
-<p>Добавьте дату, место, программу и дресс-код.</p>
-</div>
-
-<div class="card">
-<b>03. Отправьте</b>
-<p>Опубликуйте сайт и отправьте гостям ссылку.</p>
-</div>
+<div class="card"><b>01. Выберите</b><p>Подберите шаблон.</p></div>
+<div class="card"><b>02. Заполните</b><p>Добавьте дату, место, программу и дресс-код.</p></div>
+<div class="card"><b>03. Отправьте</b><p>Опубликуйте сайт и отправьте гостям ссылку.</p></div>
 </div>
 </section>
 
-<section class="section" id="pricing">
-<h2>Тарифы</h2>
-<p class="sub">Создание и предпросмотр бесплатны. Оплата понадобится перед публикацией.</p>
+<section class="section" id="prices">
+<h2>Выберите возможности</h2>
+<p class="sub">Создавать и смотреть приглашение можно бесплатно. Тариф выбирается перед публикацией.</p>
 
 <div class="pricing">
 
 <div class="card plan">
 <div class="plan-name">Базовый</div>
 <div class="price">990 ₽</div>
-<p>Всё необходимое для красивого приглашения.</p>
+<p>Красивое полноценное приглашение со всей основной информацией.</p>
 
 <ul>
-<li>✓ 1 сайт-приглашение</li>
-<li>✓ Основные шаблоны</li>
-<li>✓ Дата, время и место</li>
-<li>✓ Программа мероприятия</li>
-<li>✓ Дресс-код и цвета</li>
+<li>✓ Сайт-приглашение</li>
+<li>✓ Шаблоны оформления</li>
+<li>✓ Дата и время</li>
+<li>✓ Место проведения</li>
+<li>✓ Программа дня</li>
+<li>✓ Дресс-код и палитра</li>
 <li>✓ Пожелания гостям</li>
 <li>✓ Маршрут до площадки</li>
 </ul>
 
-<button type="button" class="ghost plan-btn" data-plan="basic">Выбрать</button>
+<button class="ghost" onclick="openTemplates()">Создать приглашение</button>
 </div>
 
-<div class="card plan popular">
-<div class="popular-label">Популярный</div>
+<div class="card plan featured">
+<div class="plan-badge">САМЫЙ ПОПУЛЯРНЫЙ</div>
 <div class="plan-name">Расширенный</div>
 <div class="price">1 490 ₽</div>
-<p>Для тех, кому нужны ответы гостей и фотографии.</p>
+<p>Больше возможностей и удобный сбор ответов от гостей.</p>
 
 <ul>
-<li>✓ Всё из «Базового»</li>
-<li>✓ RSVP гостей</li>
-<li>✓ Количество гостей</li>
-<li>✓ Комментарии гостей</li>
+<li>✓ Всё из Базового</li>
 <li>✓ Фото на обложке</li>
+<li>✓ RSVP гостей</li>
+<li>✓ Подтверждение присутствия</li>
+<li>✓ Количество гостей</li>
+<li>✓ Комментарии и пожелания гостей</li>
 <li>✓ Расширенное оформление</li>
 </ul>
 
-<button type="button" class="primary plan-btn" data-plan="plus">Выбрать</button>
+<button class="primary" onclick="openTemplates()">Создать приглашение</button>
 </div>
 
 <div class="card plan">
 <div class="plan-name">Premium</div>
 <div class="price">2 490 ₽</div>
-<p>Максимальные возможности для особенного события.</p>
+<p>Максимальное оформление для особенного события.</p>
 
 <ul>
-<li>✓ Всё из «Расширенного»</li>
-<li>✓ Музыка</li>
+<li>✓ Всё из Расширенного</li>
+<li>✓ Музыка на сайте</li>
 <li>✓ Фотогалерея</li>
 <li>✓ Таймер до события</li>
+<li>✓ Дополнительные Premium-блоки</li>
 <li>✓ Персональная ссылка</li>
-<li>✓ Premium-блоки</li>
 <li>✓ Приоритетная поддержка</li>
 </ul>
 
-<button type="button" class="ghost plan-btn" data-plan="premium">Выбрать Premium</button>
+<button class="ghost" onclick="openTemplates()">Создать Premium</button>
 </div>
 
 </div>
@@ -630,48 +417,50 @@ footer{
 
 <details>
 <summary>Гости должны регистрироваться?</summary>
-<p>Нет. Они просто открывают вашу ссылку.</p>
+<p>Нет. Они просто открывают ссылку.</p>
 </details>
 
 <details>
 <summary>Можно изменить приглашение?</summary>
-<p>Да. Информацию можно редактировать.</p>
+<p>Да, данные можно редактировать.</p>
 </details>
 
 <details>
 <summary>Можно добавить музыку?</summary>
 <p>Да. Музыка доступна в тарифе Premium.</p>
 </details>
+
+<details>
+<summary>Когда нужно платить?</summary>
+<p>Вы можете сначала создать и посмотреть приглашение. Оплата понадобится перед публикацией.</p>
+</details>
 </section>
 
 <section class="section">
-<div class="support">
-<div class="eyebrow" style="color:#c9c0ba">Поддержка Invella</div>
-<h2>Нужна помощь?</h2>
-<p>Если возник вопрос по конструктору, оплате или публикации — напишите нам.</p>
+<div class="support-box">
+<div class="eyebrow" style="color:#cfc6bf">Поддержка Invella</div>
+<h2>Мы рядом, если понадобится помощь</h2>
+<p>Вопрос по созданию приглашения, тарифу, оплате или публикации? Напишите в поддержку.</p>
 <p>✉ <a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a></p>
 </div>
 </section>
 
 <footer>
 <span>© 2026 Invella</span>
-<a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a>
+<a href="mailto:hello.invella@bk.ru">Поддержка: hello.invella@bk.ru</a>
 </footer>
 
 </div>
 </div>
 
 
-<!-- КОНСТРУКТОР -->
-
 <div id="app" class="app hidden">
 
 <div class="appbar">
 <div class="logo">INVELLA</div>
-
 <div class="toolbar">
-<button type="button" class="ghost" id="backTemplates">← Шаблоны</button>
-<button type="button" class="primary" id="publishBtn">Опубликовать</button>
+<button class="ghost" onclick="goHome()">← Шаблоны</button>
+<button class="primary" onclick="publishDemo()">Опубликовать</button>
 </div>
 </div>
 
@@ -683,45 +472,41 @@ footer{
 <h2>Ваше приглашение</h2>
 
 <div class="row">
-
 <div class="field">
-<label>Имена <span class="tag">Базовый</span></label>
+<label>Имена <span class="tier tier-basic">Базовый</span></label>
 <input id="names" value="Анна & Максим">
 </div>
 
 <div class="field">
-<label>Дата <span class="tag">Базовый</span></label>
+<label>Дата <span class="tier tier-basic">Базовый</span></label>
 <input id="date" type="date" value="2026-09-12">
 </div>
-
 </div>
 
 <div class="row">
-
 <div class="field">
-<label>Время <span class="tag">Базовый</span></label>
+<label>Время <span class="tier tier-basic">Базовый</span></label>
 <input id="time" type="time" value="15:00">
 </div>
 
 <div class="field">
-<label>Площадка <span class="tag">Базовый</span></label>
+<label>Площадка <span class="tier tier-basic">Базовый</span></label>
 <input id="venue" value="Усадьба «Лесная»">
 </div>
-
 </div>
 
 <div class="field">
-<label>Адрес <span class="tag">Базовый</span></label>
+<label>Адрес <span class="tier tier-basic">Базовый</span></label>
 <input id="address" value="Воронеж, ул. Примерная, 10">
 </div>
 
 <div class="field">
-<label>Текст приглашения <span class="tag">Базовый</span></label>
+<label>Текст приглашения <span class="tier tier-basic">Базовый</span></label>
 <textarea id="message">Будем счастливы разделить с вами один из самых важных дней нашей жизни.</textarea>
 </div>
 
 <div class="field">
-<label>Программа мероприятия <span class="tag">Базовый</span></label>
+<label>Программа мероприятия <span class="tier tier-basic">Базовый</span></label>
 
 <div class="timeline-item">
 <input id="p1t" value="15:00">
@@ -737,12 +522,10 @@ footer{
 <input id="p3t" value="17:00">
 <input id="p3" value="Банкет">
 </div>
-
 </div>
 
 <div class="field">
-<label>Дресс-код <span class="tag">Базовый</span></label>
-
+<label>Дресс-код <span class="tier tier-basic">Базовый</span></label>
 <textarea id="dress">Будем рады, если вы поддержите природную палитру нашего вечера.</textarea>
 
 <div class="colors">
@@ -751,66 +534,61 @@ footer{
 <input class="color" id="c3" type="color" value="#d8c7ad">
 <input class="color" id="c4" type="color" value="#eee7dc">
 </div>
-
 </div>
 
 <div class="field">
-<label>Пожелания гостям <span class="tag">Базовый</span></label>
+<label>Пожелания гостям <span class="tier tier-basic">Базовый</span></label>
 <textarea id="wishes">Ваше присутствие — лучший подарок для нас.</textarea>
 </div>
 
 <div class="field">
-<label>Фотография обложки <span class="tag tag-plus">Расширенный</span></label>
+<label>Фотография обложки <span class="tier tier-plus">Расширенный</span></label>
 <input id="photo" type="file" accept="image/*">
 </div>
 
-<div class="extra">
-<div class="extra-title">
+<div class="locked-feature">
+<strong>
 🎵 Музыка
-<span class="tag tag-premium">Premium</span>
+<span class="tier tier-premium">Premium</span>
+</strong>
+<p>Добавьте любимую композицию, которая будет звучать на сайте-приглашении.</p>
 </div>
 
-<input id="music" type="file" accept="audio/*">
-
-<p>Добавьте композицию, которая будет сопровождать приглашение.</p>
-</div>
-
-<div class="extra">
-<div class="extra-title">
+<div class="locked-feature">
+<strong>
 📷 Фотогалерея
-<span class="tag tag-premium">Premium</span>
+<span class="tier tier-premium">Premium</span>
+</strong>
+<p>Добавьте фотографии пары, именинника или самого события.</p>
 </div>
 
-<input id="gallery" type="file" accept="image/*" multiple>
-
-<p>Добавьте фотографии вашей пары или события.</p>
-</div>
-
-<div class="extra">
-<div class="extra-title">
+<div class="locked-feature">
+<strong>
 ⏳ Таймер до события
-<span class="tag tag-premium">Premium</span>
+<span class="tier tier-premium">Premium</span>
+</strong>
+<p>Красивый обратный отсчёт дней, часов и минут до праздника.</p>
 </div>
 
-<label style="display:flex;align-items:center;gap:9px">
-<input id="countdown" type="checkbox" style="width:auto">
-Показывать таймер
-</label>
+<div class="locked-feature">
+<strong>
+🔗 Персональная ссылка
+<span class="tier tier-premium">Premium</span>
+</strong>
+<p>Красивый индивидуальный адрес вашего приглашения.</p>
 </div>
 
 <p style="font-size:12px;color:#766e68">
 Изменения сохраняются автоматически.
 </p>
 
-<p style="font-size:13px">
-Нужна помощь?
+<p style="font-size:13px;color:#766e68;line-height:1.5">
+Нужна помощь?<br>
 <a href="mailto:hello.invella@bk.ru"><b>hello.invella@bk.ru</b></a>
 </p>
 
 </div>
 
-
-<!-- ПРЕДПРОСМОТР -->
 
 <div class="preview-area">
 
@@ -820,11 +598,6 @@ footer{
 <div class="eyebrow">мы женимся</div>
 <h2 id="vNames">Анна & Максим</h2>
 <div class="inv-date" id="vDate">12 сентября 2026 · 15:00</div>
-</div>
-
-<div class="block hidden" id="countdownPreview">
-<h3>До нашего дня</h3>
-<p>Совсем скоро ✨</p>
 </div>
 
 <div class="block">
@@ -845,20 +618,15 @@ footer{
 
 <div class="block">
 <h3>Место</h3>
-
 <p>
 <b id="vVenue"></b><br>
 <span id="vAddress"></span>
 </p>
-
-<button type="button" class="ghost" id="routeBtn">
-Построить маршрут
-</button>
+<button class="ghost" onclick="route()">Построить маршрут</button>
 </div>
 
 <div class="block">
 <h3>Дресс-код</h3>
-
 <p id="vDress"></p>
 
 <div class="palette">
@@ -879,8 +647,8 @@ footer{
 
 <h3>Вы сможете присутствовать?</h3>
 
-<p style="font-size:12px">
-Доступно в «Расширенном» и Premium
+<p style="font-size:12px;color:#766e68">
+Доступно в тарифах «Расширенный» и Premium
 </p>
 
 <input id="guest" placeholder="Имя и фамилия">
@@ -895,9 +663,7 @@ footer{
 
 <textarea id="comment" placeholder="Комментарий"></textarea>
 
-<button type="button" class="primary" id="rsvpBtn">
-Отправить ответ
-</button>
+<button class="primary" onclick="sendRSVP()">Отправить ответ</button>
 
 <div id="rsvpOk" class="success hidden">
 Спасибо! Ответ сохранён.
@@ -907,58 +673,83 @@ footer{
 
 </div>
 </div>
-
-</div>
 </div>
 </div>
 
 
 <script>
-(function(){
 
-"use strict";
+const $ = id => document.getElementById(id);
 
-function get(id){
-  return document.getElementById(id);
+const fields = [
+'names','date','time','venue','address','message',
+'p1t','p1','p2t','p2','p3t','p3',
+'dress','wishes','c1','c2','c3','c4'
+];
+
+let template = localStorage.getItem('invella_template') || 'classic';
+
+function openTemplates(){
+  document.getElementById('templates').scrollIntoView({behavior:'smooth'});
 }
 
-var marketing = get("marketing");
-var app = get("app");
-var templates = get("templates");
+function chooseTemplate(t){
 
-var currentTemplate = "classic";
-var selectedPlan = "basic";
+  template = t;
 
-try{
-  currentTemplate = localStorage.getItem("invella_template") || "classic";
-  selectedPlan = localStorage.getItem("invella_plan") || "basic";
-}catch(e){}
+  localStorage.setItem('invella_template',t);
 
+  $('marketing').classList.add('hidden');
 
-/* ПЕРЕХОД К ШАБЛОНАМ */
+  $('app').classList.remove('hidden');
 
-function scrollTemplates(){
-  if(templates){
-    templates.scrollIntoView({
-      behavior:"smooth",
-      block:"start"
+  load();
+
+  render();
+
+  window.scrollTo(0,0);
+}
+
+function goHome(){
+  window.location.replace(window.location.pathname + window.location.search + '#templates');
+  window.location.reload();
+}
+
+function load(){
+
+  try{
+
+    const data = JSON.parse(localStorage.getItem('invella_draft') || '{}');
+
+    fields.forEach(k=>{
+      if(data[k] != null){
+        $(k).value = data[k];
+      }
     });
-  }
+
+  }catch(e){}
 }
 
-get("topCreate").addEventListener("click",scrollTemplates);
-get("heroCreate").addEventListener("click",scrollTemplates);
+function save(){
 
+  const data = {};
 
-/* ВЫБОР ШАБЛОНА */
+  fields.forEach(k=>{
+    data[k] = $(k).value;
+  });
 
-var templateButtons = document.querySelectorAll(".template-btn");
+  localStorage.setItem('invella_draft',JSON.stringify(data));
+}
 
-templateButtons.forEach(function(button){
+function dateText(){
 
-  button.addEventListener("click",function(){
+  if(!$('date').value){
+    return 'Дата события';
+  }
 
-    currentTemplate = button.getAttribute("data-template");
+  const d = new Date($('date').value + 'T12:00:00');
 
-    try{
-      localStorage.setItem(
+  let result = d.toLocaleDateString('ru-RU',{
+    day:'numeric',
+    month:'long',
+    y
