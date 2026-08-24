@@ -13,208 +13,792 @@
   --ink:#201d1b;
   --muted:#766e68;
   --line:#ddd5cd;
+  --soft:#eee7df;
+  --premium:#8b6f47;
 }
+
 *{box-sizing:border-box}
+
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+
 button,input,textarea,select{font:inherit}
+
 button{cursor:pointer}
+
 a{color:inherit}
-.shell{max-width:1180px;margin:auto;padding:0 22px}
-nav{height:72px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-family:Georgia,serif;font-size:24px;letter-spacing:.14em}
-.primary,.navbtn{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:14px 20px}
-.ghost{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 18px}
-.hero{min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:45px;padding:55px 0 75px}
-.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:var(--muted)}
-h1,h2,h3{font-family:Georgia,serif;font-weight:400}
-h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
-.hero p{font-size:20px;line-height:1.55;color:var(--muted);max-width:620px}
-.phone{width:min(360px,82vw);margin:auto;background:#e9ded3;border:10px solid #25211f;border-radius:42px;padding:12px;box-shadow:0 25px 70px #6b57402b}
-.phone-inner{min-height:610px;border-radius:28px;background:#e8ded4;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px}
-.phone-inner h3{font-size:45px;margin:12px 0}
-.section{padding:72px 0}
-.section h2{font-size:48px;margin:0 0 12px}
-.sub{color:var(--muted);margin-bottom:30px}
-.categories,.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px}
-.category{min-height:145px;display:flex;flex-direction:column;justify-content:flex-end}
-.category b{font-family:Georgia,serif;font-size:25px}
-.template{padding:0;overflow:hidden}
-.preview{height:310px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center}
-.preview h3{font-size:35px;margin:8px}
+
+.shell{
+  max-width:1180px;
+  margin:auto;
+  padding:0 22px;
+}
+
+nav{
+  min-height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.logo{
+  font-family:Georgia,serif;
+  font-size:24px;
+  letter-spacing:.14em;
+}
+
+.primary,
+.navbtn{
+  border:0;
+  border-radius:999px;
+  background:var(--ink);
+  color:#fff;
+  padding:14px 20px;
+  transition:.2s ease;
+}
+
+.primary:active,
+.navbtn:active,
+.ghost:active{
+  transform:scale(.98);
+}
+
+.ghost{
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  border-radius:999px;
+  padding:13px 18px;
+}
+
+.hero{
+  min-height:72vh;
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  align-items:center;
+  gap:45px;
+  padding:55px 0 75px;
+}
+
+.eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.15em;
+  font-size:12px;
+  color:var(--muted);
+}
+
+h1,h2,h3{
+  font-family:Georgia,serif;
+  font-weight:400;
+}
+
+h1{
+  font-size:clamp(58px,8vw,100px);
+  line-height:.88;
+  margin:20px 0 26px;
+}
+
+.hero p{
+  font-size:20px;
+  line-height:1.55;
+  color:var(--muted);
+  max-width:620px;
+}
+
+.hero-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.phone{
+  width:min(360px,82vw);
+  margin:auto;
+  background:#e9ded3;
+  border:10px solid #25211f;
+  border-radius:42px;
+  padding:12px;
+  box-shadow:0 25px 70px #6b57402b;
+}
+
+.phone-inner{
+  min-height:610px;
+  border-radius:28px;
+  background:#e8ded4;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  text-align:center;
+  padding:28px;
+}
+
+.phone-inner h3{
+  font-size:45px;
+  margin:12px 0;
+}
+
+.section{
+  padding:72px 0;
+}
+
+.section h2{
+  font-size:48px;
+  margin:0 0 12px;
+}
+
+.sub{
+  color:var(--muted);
+  margin-bottom:30px;
+  line-height:1.55;
+}
+
+.categories,
+.templates{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+}
+
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:22px;
+}
+
+.category{
+  min-height:145px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  gap:5px;
+}
+
+.category span{
+  font-size:25px;
+  margin-bottom:auto;
+}
+
+.category b{
+  font-family:Georgia,serif;
+  font-size:25px;
+}
+
+.category small{
+  color:var(--muted);
+}
+
+.template{
+  padding:0;
+  overflow:hidden;
+}
+
+.preview{
+  height:310px;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+.preview h3{
+  font-size:35px;
+  margin:8px;
+}
+
 .t1{background:#e8ded4}
 .t2{background:#f4eee5}
 .t3{background:#20201e;color:white}
 .t4{background:#e6eadf}
 .t5{background:#eadce0}
 .t6{background:#dce4e7}
-.template-info{padding:18px}
-.template-info button{width:100%}
-.hidden{display:none!important}
+
+.template-info{
+  padding:18px;
+}
+
+.template-info p{
+  color:var(--muted);
+  min-height:38px;
+}
+
+.template-info button{
+  width:100%;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* ТАРИФЫ */
 
 .pricing{
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:16px;
+  gap:18px;
   align-items:stretch;
 }
-.plan{
+
+.price-card{
+  position:relative;
   display:flex;
   flex-direction:column;
-  position:relative;
+  min-height:100%;
 }
-.plan.featured{
-  border:2px solid var(--ink);
+
+.price-card.popular{
+  border:1px solid #a88960;
+  box-shadow:0 18px 45px #5b463215;
 }
-.plan-badge{
-  display:inline-block;
-  width:max-content;
+
+.popular-badge{
+  position:absolute;
+  top:14px;
+  right:14px;
   background:var(--ink);
-  color:#fff;
-  padding:6px 10px;
+  color:white;
   border-radius:999px;
+  padding:7px 10px;
   font-size:11px;
-  margin-bottom:14px;
 }
+
 .plan-name{
-  font-family:Georgia,serif;
-  font-size:29px;
+  font-size:12px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:12px;
 }
+
 .price{
   font-family:Georgia,serif;
   font-size:42px;
-  margin:12px 0;
+  margin-bottom:8px;
 }
-.plan ul{
-  list-style:none;
+
+.plan-description{
+  color:var(--muted);
+  line-height:1.5;
+  min-height:48px;
+}
+
+.features{
   padding:0;
-  margin:15px 0 24px;
+  margin:18px 0 25px;
+  list-style:none;
   flex:1;
 }
-.plan li{
+
+.features li{
   padding:8px 0;
-  border-bottom:1px solid #eee8e2;
-  color:#625b56;
+  border-bottom:1px solid #eee7df;
   line-height:1.4;
 }
-.plan button{width:100%}
 
-.app{min-height:100vh;background:#f5f2ed}
-.appbar{height:68px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:5}
-.editor{display:grid;grid-template-columns:minmax(330px,480px) 1fr;min-height:calc(100vh - 68px)}
-.controls{padding:28px;overflow:auto;background:white;border-right:1px solid var(--line)}
-.controls h2{font-size:34px;margin:5px 0 20px}
-.field{margin:15px 0}
-.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
-.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:white}
-.field textarea{min-height:88px;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.colors{display:flex;gap:8px;flex-wrap:wrap}
-.color{width:34px;height:34px;border:1px solid #bbb;border-radius:50%;padding:0}
-.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0}
-.preview-area{padding:30px;display:flex;justify-content:center;align-items:flex-start}
-.invitation{width:min(430px,100%);background:white;min-height:760px;box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center}
-.inv-hero{min-height:420px;background:#e8ded4;padding:65px 28px;display:flex;flex-direction:column;justify-content:center}
-.inv-hero h2{font-size:52px;margin:14px 0}
-.inv-date{font-family:Georgia,serif;font-size:22px}
-.block{padding:38px 28px;border-top:1px solid #eee}
-.block h3{font-size:30px;margin:0 0 15px}
-.block p{line-height:1.55;color:#615b56}
-.timeline{text-align:left;max-width:300px;margin:auto}
-.timeline div{padding:9px 0;border-bottom:1px solid #eee}
-.palette{display:flex;justify-content:center;gap:10px}
-.dot{width:34px;height:34px;border-radius:50%}
-.rsvp input,.rsvp select,.rsvp textarea{width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px}
-.success{padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px}
-.toolbar{display:flex;gap:8px}
-
-.tier{
-  display:inline-block;
-  font-size:10px;
-  line-height:1;
-  padding:5px 7px;
-  border-radius:999px;
-  margin-left:5px;
-  vertical-align:middle;
-  font-weight:normal;
-}
-.tier-basic{
-  background:#eeeae5;
-  color:#6d655f;
-}
-.tier-plus{
-  background:#e8eee4;
-  color:#526148;
-}
-.tier-premium{
-  background:#f3e8d7;
-  color:#795f3b;
+.features li::before{
+  content:"✓";
+  margin-right:9px;
 }
 
-.locked-feature{
-  border:1px dashed #cfc5bb;
-  background:#faf7f2;
-  border-radius:15px;
-  padding:15px;
+.price-card button{
+  width:100%;
+}
+
+/* КОНСТРУКТОР */
+
+.app{
+  min-height:100vh;
+  background:#f5f2ed;
+}
+
+.appbar{
+  min-height:68px;
+  border-bottom:1px solid var(--line);
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:10px 20px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.editor{
+  display:grid;
+  grid-template-columns:minmax(330px,480px) 1fr;
+  min-height:calc(100vh - 68px);
+}
+
+.controls{
+  padding:28px;
+  overflow:auto;
+  background:white;
+  border-right:1px solid var(--line);
+}
+
+.controls h2{
+  font-size:34px;
+  margin:5px 0 20px;
+}
+
+.field{
   margin:15px 0;
 }
-.locked-feature strong{
+
+.field label{
   display:block;
-  margin-bottom:5px;
-}
-.locked-feature p{
-  margin:5px 0 0;
-  font-size:12px;
-  line-height:1.45;
+  font-size:13px;
   color:var(--muted);
+  margin-bottom:7px;
 }
 
-.faq details{background:white;border-bottom:1px solid var(--line);padding:18px}
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:white;
+  color:var(--ink);
+}
+
+.field textarea{
+  min-height:88px;
+  resize:vertical;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.colors{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.color{
+  width:38px!important;
+  height:38px;
+  border:1px solid #bbb!important;
+  border-radius:50%!important;
+  padding:2px!important;
+}
+
+.timeline-item{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:8px;
+  margin:8px 0;
+}
+
+.feature-box{
+  margin:18px 0;
+  padding:17px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#faf8f4;
+}
+
+.feature-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.feature-head strong{
+  font-family:Georgia,serif;
+  font-size:18px;
+  font-weight:400;
+}
+
+.feature-box p{
+  margin:6px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.tag{
+  flex:none;
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  background:#eee8df;
+  color:#655a50;
+}
+
+.tag.premium{
+  background:#282421;
+  color:white;
+}
+
+.preview-area{
+  padding:30px;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+}
+
+.invitation{
+  width:min(430px,100%);
+  background:white;
+  min-height:760px;
+  box-shadow:0 18px 60px #493d3120;
+  overflow:hidden;
+  text-align:center;
+}
+
+.inv-hero{
+  min-height:420px;
+  background:#e8ded4;
+  padding:65px 28px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background-size:cover;
+  background-position:center;
+}
+
+.inv-hero h2{
+  font-size:52px;
+  margin:14px 0;
+}
+
+.inv-date{
+  font-family:Georgia,serif;
+  font-size:22px;
+}
+
+.block{
+  padding:38px 28px;
+  border-top:1px solid #eee;
+}
+
+.block h3{
+  font-size:30px;
+  margin:0 0 15px;
+}
+
+.block p{
+  line-height:1.55;
+  color:#615b56;
+}
+
+.timeline{
+  text-align:left;
+  max-width:300px;
+  margin:auto;
+}
+
+.timeline div{
+  padding:9px 0;
+  border-bottom:1px solid #eee;
+}
+
+.palette{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.dot{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:1px solid #ddd;
+}
+
+.rsvp input,
+.rsvp select,
+.rsvp textarea{
+  width:100%;
+  margin:6px 0;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+}
+
+.success{
+  padding:12px;
+  border-radius:10px;
+  background:#eef5ec;
+  margin-top:10px;
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+}
+
+.draft-note{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.5;
+}
 
 .support-box{
-  background:var(--ink);
-  color:white;
-  padding:34px;
-  border-radius:24px;
+  margin-top:25px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:13px;
 }
-.support-box h2{
-  color:white;
-  margin-bottom:12px;
-}
-.support-box p{
-  color:#d8d1cc;
-  line-height:1.6;
-}
+
 .support-box a{
-  color:white;
-  font-weight:bold;
+  color:var(--ink);
+}
+
+.faq details{
+  background:white;
+  border-bottom:1px solid var(--line);
+  padding:18px;
+}
+
+.faq summary{
+  cursor:pointer;
+}
+
+.faq p{
+  color:var(--muted);
+  line-height:1.5;
 }
 
 footer{
   padding:45px 0;
   color:var(--muted);
+  border-top:1px solid var(--line);
+}
+
+.footer-inner{
   display:flex;
   justify-content:space-between;
   gap:20px;
   flex-wrap:wrap;
 }
 
-@media(max-width:850px){
-  .hero{grid-template-columns:1fr}
-  .phone{display:none}
-  .categories,.templates{grid-template-columns:1fr 1fr}
-  .pricing{grid-template-columns:1fr}
-  .editor{grid-template-columns:1fr}
-  .preview-area{padding:15px}
-  .controls{border-right:0}
+.footer-inner a{
+  color:var(--ink);
 }
+
+/* МОДАЛЬНОЕ ОКНО ТАРИФОВ */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#201d1ba8;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+
+.modal-card{
+  width:min(950px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:var(--bg);
+  border-radius:24px;
+  padding:24px;
+  box-shadow:0 25px 80px #0004;
+}
+
+.modal-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.modal-top h2{
+  margin:0;
+  font-size:36px;
+}
+
+.close-btn{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1px solid var(--line);
+  background:white;
+  font-size:22px;
+  flex:none;
+}
+
+.modal .pricing{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.modal .price{
+  font-size:34px;
+}
+
+.modal-note{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:13px;
+  text-align:center;
+  line-height:1.5;
+}
+
+@media(max-width:850px){
+  .hero{
+    grid-template-columns:1fr;
+  }
+
+  .phone{
+    display:none;
+  }
+
+  .categories,
+  .templates{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .pricing{
+    grid-template-columns:1fr;
+  }
+
+  .editor{
+    grid-template-columns:1fr;
+  }
+
+  .preview-area{
+    padding:15px;
+  }
+
+  .controls{
+    border-right:0;
+  }
+
+  .modal .pricing{
+    grid-template-columns:1fr;
+  }
+}
+
 @media(max-width:560px){
-  .categories,.templates{grid-template-columns:1fr}
-  .section{padding:50px 0}
-  .section h2{font-size:38px}
-  .row{grid-template-columns:1fr}
-  .controls{padding:20px}
+  .shell{
+    padding:0 16px;
+  }
+
+  nav{
+    min-height:66px;
+  }
+
+  nav .navbtn{
+    padding:11px 14px;
+    font-size:13px;
+  }
+
+  .logo{
+    font-size:20px;
+  }
+
+  .hero{
+    min-height:auto;
+    padding:55px 0 65px;
+  }
+
+  h1{
+    font-size:52px;
+  }
+
+  .hero p{
+    font-size:17px;
+  }
+
+  .categories,
+  .templates{
+    grid-template-columns:1fr;
+  }
+
+  .section{
+    padding:50px 0;
+  }
+
+  .section h2{
+    font-size:38px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+  .controls{
+    padding:20px;
+  }
+
+  .appbar{
+    align-items:center;
+    padding:9px 12px;
+  }
+
+  .appbar .logo{
+    display:none;
+  }
+
+  .toolbar{
+    width:100%;
+  }
+
+  .toolbar button{
+    flex:1;
+    padding:11px 10px;
+    font-size:13px;
+  }
+
+  .preview-area{
+    padding:10px;
+  }
+
+  .inv-hero{
+    min-height:360px;
+  }
+
+  .inv-hero h2{
+    font-size:42px;
+  }
+
+  .block{
+    padding:32px 22px;
+  }
+
+  .modal-card{
+    padding:18px;
+  }
+
+  .modal-top h2{
+    font-size:29px;
+  }
+
+  .popular-badge{
+    position:static;
+    display:inline-block;
+    align-self:flex-start;
+    margin-bottom:10px;
+  }
 }
 </style>
 </head>
@@ -222,19 +806,30 @@ footer{
 <body>
 
 <div id="marketing">
+
 <div class="shell">
 
 <nav>
 <div class="logo">INVELLA</div>
-<button class="navbtn" onclick="openTemplates()">Создать приглашение</button>
+<button type="button" class="navbtn" onclick="openTemplates()">Создать приглашение</button>
 </nav>
 
 <section class="hero">
 <div>
 <div class="eyebrow">Персональные сайты-приглашения</div>
-<h1>Ваш день.<br>В одном красивом сайте.</h1>
-<p>Выберите дизайн, добавьте детали праздника и отправьте гостям одну красивую ссылку.</p>
-<button class="primary" onclick="openTemplates()">Создать приглашение</button>
+
+<h1>
+Ваш день.<br>
+В одном красивом сайте.
+</h1>
+
+<p>
+Выберите дизайн, добавьте детали праздника и отправьте гостям одну красивую ссылку.
+</p>
+
+<div class="hero-actions">
+<button type="button" class="primary" onclick="openTemplates()">Создать приглашение</button>
+</div>
 </div>
 
 <div class="phone">
@@ -248,166 +843,274 @@ footer{
 </section>
 
 <section class="section">
+
 <h2>Для любого события</h2>
-<p class="sub">Свадьба, день рождения, юбилей и другие важные события.</p>
+
+<p class="sub">
+Свадьба, день рождения, юбилей и другие важные события.
+</p>
 
 <div class="categories">
-<div class="card category"><span>💍</span><b>Свадьба</b><small>Главная коллекция</small></div>
-<div class="card category"><span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small></div>
-<div class="card category"><span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small></div>
+
+<div class="card category">
+<span>💍</span>
+<b>Свадьба</b>
+<small>Главная коллекция</small>
+</div>
+
+<div class="card category">
+<span>🎂</span>
+<b>День рождения</b>
+<small>Тёплые и яркие дизайны</small>
+</div>
+
+<div class="card category">
+<span>✨</span>
+<b>Другой праздник</b>
+<small>Юбилей, baby shower, вечеринка</small>
+</div>
+
 </div>
 </section>
 
 <section class="section" id="templates">
+
 <h2>Выберите шаблон</h2>
-<p class="sub">Выберите настроение будущего приглашения.</p>
+
+<p class="sub">
+Выберите настроение будущего приглашения.
+</p>
 
 <div class="templates">
 
 <div class="card template">
+
 <div class="preview t1">
-<div><small>MINIMAL</small><h3>Анна & Максим</h3><span>12 · 09 · 2026</span></div>
+<div>
+<small>MINIMAL</small>
+<h3>Анна & Максим</h3>
+<span>12 · 09 · 2026</span>
 </div>
+</div>
+
 <div class="template-info">
 <b>Тихая классика</b>
 <p>Воздух и кремовые оттенки.</p>
-<button class="primary" onclick="chooseTemplate('classic')">Выбрать</button>
+<button type="button" class="primary" onclick="chooseTemplate('classic')">Выбрать</button>
 </div>
+
 </div>
 
 <div class="card template">
+
 <div class="preview t2">
-<div><small>EDITORIAL</small><h3>А + М</h3><span>THE WEDDING DAY</span></div>
+<div>
+<small>EDITORIAL</small>
+<h3>А + М</h3>
+<span>THE WEDDING DAY</span>
 </div>
+</div>
+
 <div class="template-info">
 <b>Editorial</b>
 <p>Журнальная типографика.</p>
-<button class="primary" onclick="chooseTemplate('editorial')">Выбрать</button>
+<button type="button" class="primary" onclick="chooseTemplate('editorial')">Выбрать</button>
 </div>
+
 </div>
 
 <div class="card template">
+
 <div class="preview t3">
-<div><small>EVENING</small><h3>Anna<br>Maxim</h3><span>SEPTEMBER 12</span></div>
+<div>
+<small>EVENING</small>
+<h3>Anna<br>Maxim</h3>
+<span>SEPTEMBER 12</span>
 </div>
+</div>
+
 <div class="template-info">
 <b>Black tie</b>
 <p>Тёмный вечерний стиль.</p>
-<button class="primary" onclick="chooseTemplate('dark')">Выбрать</button>
+<button type="button" class="primary" onclick="chooseTemplate('dark')">Выбрать</button>
 </div>
+
 </div>
 
 <div class="card template">
+
 <div class="preview t4">
-<div><small>BOTANICAL</small><h3>А & М</h3><span>НАША СВАДЬБА</span></div>
+<div>
+<small>BOTANICAL</small>
+<h3>А & М</h3>
+<span>НАША СВАДЬБА</span>
 </div>
+</div>
+
 <div class="template-info">
 <b>Botanical</b>
 <p>Природная палитра.</p>
-<button class="primary" onclick="chooseTemplate('botanical')">Выбрать</button>
+<button type="button" class="primary" onclick="chooseTemplate('botanical')">Выбрать</button>
 </div>
+
 </div>
 
 <div class="card template">
+
 <div class="preview t5">
-<div><small>ROMANCE</small><h3>Анна<br>и Максим</h3><span>навсегда начинается здесь</span></div>
+<div>
+<small>ROMANCE</small>
+<h3>Анна<br>и Максим</h3>
+<span>навсегда начинается здесь</span>
 </div>
+</div>
+
 <div class="template-info">
 <b>Romance</b>
 <p>Мягкий романтичный дизайн.</p>
-<button class="primary" onclick="chooseTemplate('romance')">Выбрать</button>
+<button type="button" class="primary" onclick="chooseTemplate('romance')">Выбрать</button>
 </div>
+
 </div>
 
 <div class="card template">
+
 <div class="preview t6">
-<div><small>MODERN</small><h3>12.09</h3><span>ANNA × MAXIM</span></div>
+<div>
+<small>MODERN</small>
+<h3>12.09</h3>
+<span>ANNA × MAXIM</span>
 </div>
+</div>
+
 <div class="template-info">
 <b>Modern</b>
 <p>Современный графичный стиль.</p>
-<button class="primary" onclick="chooseTemplate('modern')">Выбрать</button>
+<button type="button" class="primary" onclick="chooseTemplate('modern')">Выбрать</button>
 </div>
+
 </div>
 
 </div>
 </section>
 
 <section class="section">
+
 <h2>Как это работает</h2>
+
 <div class="categories">
-<div class="card"><b>01. Выберите</b><p>Подберите шаблон.</p></div>
-<div class="card"><b>02. Заполните</b><p>Добавьте дату, место, программу и дресс-код.</p></div>
-<div class="card"><b>03. Отправьте</b><p>Опубликуйте сайт и отправьте гостям ссылку.</p></div>
+
+<div class="card">
+<b>01. Выберите</b>
+<p>Подберите дизайн будущего приглашения.</p>
+</div>
+
+<div class="card">
+<b>02. Заполните</b>
+<p>Добавьте дату, место, программу, фотографию и дресс-код.</p>
+</div>
+
+<div class="card">
+<b>03. Отправьте</b>
+<p>Опубликуйте сайт и отправьте гостям персональную ссылку.</p>
+</div>
+
 </div>
 </section>
 
-<section class="section" id="prices">
+<section class="section" id="pricing">
+
 <h2>Выберите возможности</h2>
-<p class="sub">Создавать и смотреть приглашение можно бесплатно. Тариф выбирается перед публикацией.</p>
+
+<p class="sub">
+Создавать и смотреть приглашение можно бесплатно. Тариф понадобится только перед публикацией.
+</p>
 
 <div class="pricing">
 
-<div class="card plan">
+<div class="card price-card">
+
 <div class="plan-name">Базовый</div>
+
 <div class="price">990 ₽</div>
-<p>Красивое полноценное приглашение со всей основной информацией.</p>
 
-<ul>
-<li>✓ Сайт-приглашение</li>
-<li>✓ Шаблоны оформления</li>
-<li>✓ Дата и время</li>
-<li>✓ Место проведения</li>
-<li>✓ Программа дня</li>
-<li>✓ Дресс-код и палитра</li>
-<li>✓ Пожелания гостям</li>
-<li>✓ Маршрут до площадки</li>
+<p class="plan-description">
+Всё необходимое для красивого сайта-приглашения.
+</p>
+
+<ul class="features">
+<li>Сайт-приглашение</li>
+<li>Шаблон</li>
+<li>Имена</li>
+<li>Дата и время</li>
+<li>Место и адрес</li>
+<li>Текст приглашения</li>
+<li>Программа</li>
+<li>Дресс-код</li>
+<li>Цветовая палитра</li>
+<li>Пожелания</li>
+<li>Маршрут</li>
 </ul>
 
-<button class="ghost" onclick="openTemplates()">Создать приглашение</button>
+<button type="button" class="ghost" onclick="openTemplates()">Создать приглашение</button>
+
 </div>
 
-<div class="card plan featured">
-<div class="plan-badge">САМЫЙ ПОПУЛЯРНЫЙ</div>
+<div class="card price-card popular">
+
+<div class="popular-badge">Самый популярный</div>
+
 <div class="plan-name">Расширенный</div>
-<div class="price">1 490 ₽</div>
-<p>Больше возможностей и удобный сбор ответов от гостей.</p>
 
-<ul>
-<li>✓ Всё из Базового</li>
-<li>✓ Фото на обложке</li>
-<li>✓ RSVP гостей</li>
-<li>✓ Подтверждение присутствия</li>
-<li>✓ Количество гостей</li>
-<li>✓ Комментарии и пожелания гостей</li>
-<li>✓ Расширенное оформление</li>
+<div class="price">1 490 ₽</div>
+
+<p class="plan-description">
+Для приглашения с фотографией и ответами гостей.
+</p>
+
+<ul class="features">
+<li>Всё из Базового</li>
+<li>Фотография обложки</li>
+<li>RSVP гостей</li>
+<li>Подтверждение присутствия</li>
+<li>Количество гостей</li>
+<li>Комментарии гостей</li>
+<li>Дополнительное оформление</li>
 </ul>
 
-<button class="primary" onclick="openTemplates()">Создать приглашение</button>
+<button type="button" class="primary" onclick="openTemplates()">Создать приглашение</button>
+
 </div>
 
-<div class="card plan">
-<div class="plan-name">Premium</div>
-<div class="price">2 490 ₽</div>
-<p>Максимальное оформление для особенного события.</p>
+<div class="card price-card">
 
-<ul>
-<li>✓ Всё из Расширенного</li>
-<li>✓ Музыка на сайте</li>
-<li>✓ Фотогалерея</li>
-<li>✓ Таймер до события</li>
-<li>✓ Дополнительные Premium-блоки</li>
-<li>✓ Персональная ссылка</li>
-<li>✓ Приоритетная поддержка</li>
+<div class="plan-name">Premium</div>
+
+<div class="price">2 490 ₽</div>
+
+<p class="plan-description">
+Максимальные возможности для особенного события.
+</p>
+
+<ul class="features">
+<li>Всё из Расширенного</li>
+<li>Музыка</li>
+<li>Фотогалерея</li>
+<li>Таймер до мероприятия</li>
+<li>Premium-блоки</li>
+<li>Персональная ссылка</li>
+<li>Приоритетная поддержка</li>
 </ul>
 
-<button class="ghost" onclick="openTemplates()">Создать Premium</button>
+<button type="button" class="ghost" onclick="openTemplates()">Создать приглашение</button>
+
 </div>
 
 </div>
 </section>
 
 <section class="section faq">
+
 <h2>Вопросы</h2>
 
 <details>
@@ -417,37 +1120,37 @@ footer{
 
 <details>
 <summary>Гости должны регистрироваться?</summary>
-<p>Нет. Они просто открывают ссылку.</p>
+<p>Нет. Они просто открывают полученную ссылку.</p>
 </details>
 
 <details>
 <summary>Можно изменить приглашение?</summary>
-<p>Да, данные можно редактировать.</p>
+<p>Да. Данные приглашения можно редактировать.</p>
 </details>
 
 <details>
-<summary>Можно добавить музыку?</summary>
-<p>Да. Музыка доступна в тарифе Premium.</p>
+<summary>Куда обратиться, если нужна помощь?</summary>
+<p>
+Напишите нам:
+<a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a>
+</p>
 </details>
 
-<details>
-<summary>Когда нужно платить?</summary>
-<p>Вы можете сначала создать и посмотреть приглашение. Оплата понадобится перед публикацией.</p>
-</details>
-</section>
-
-<section class="section">
-<div class="support-box">
-<div class="eyebrow" style="color:#cfc6bf">Поддержка Invella</div>
-<h2>Мы рядом, если понадобится помощь</h2>
-<p>Вопрос по созданию приглашения, тарифу, оплате или публикации? Напишите в поддержку.</p>
-<p>✉ <a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a></p>
-</div>
 </section>
 
 <footer>
+
+<div class="footer-inner">
+
 <span>© 2026 Invella</span>
-<a href="mailto:hello.invella@bk.ru">Поддержка: hello.invella@bk.ru</a>
+
+<span>
+Поддержка:
+<a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a>
+</span>
+
+</div>
+
 </footer>
 
 </div>
@@ -457,135 +1160,260 @@ footer{
 <div id="app" class="app hidden">
 
 <div class="appbar">
+
 <div class="logo">INVELLA</div>
+
 <div class="toolbar">
-<button class="ghost" onclick="goHome()">← Шаблоны</button>
-<button class="primary" onclick="publishDemo()">Опубликовать</button>
+
+<button type="button" class="ghost" onclick="goHome()">
+← Шаблоны
+</button>
+
+<button type="button" class="primary" onclick="publishDemo()">
+Опубликовать
+</button>
+
 </div>
 </div>
+
 
 <div class="editor">
 
 <div class="controls">
 
 <div class="eyebrow">Конструктор</div>
+
 <h2>Ваше приглашение</h2>
 
+
 <div class="row">
+
 <div class="field">
-<label>Имена <span class="tier tier-basic">Базовый</span></label>
+<label for="names">Имена</label>
 <input id="names" value="Анна & Максим">
 </div>
 
 <div class="field">
-<label>Дата <span class="tier tier-basic">Базовый</span></label>
+<label for="date">Дата</label>
 <input id="date" type="date" value="2026-09-12">
 </div>
+
 </div>
 
+
 <div class="row">
+
 <div class="field">
-<label>Время <span class="tier tier-basic">Базовый</span></label>
+<label for="time">Время</label>
 <input id="time" type="time" value="15:00">
 </div>
 
 <div class="field">
-<label>Площадка <span class="tier tier-basic">Базовый</span></label>
+<label for="venue">Площадка</label>
 <input id="venue" value="Усадьба «Лесная»">
 </div>
+
 </div>
 
-<div class="field">
-<label>Адрес <span class="tier tier-basic">Базовый</span></label>
-<input id="address" value="Воронеж, ул. Примерная, 10">
-</div>
 
 <div class="field">
-<label>Текст приглашения <span class="tier tier-basic">Базовый</span></label>
+
+<label for="address">Адрес</label>
+
+<input
+id="address"
+value="Воронеж, ул. Примерная, 10"
+>
+
+</div>
+
+
+<div class="field">
+
+<label for="message">Текст приглашения</label>
+
 <textarea id="message">Будем счастливы разделить с вами один из самых важных дней нашей жизни.</textarea>
+
 </div>
+
 
 <div class="field">
-<label>Программа мероприятия <span class="tier tier-basic">Базовый</span></label>
+
+<label>Программа мероприятия</label>
 
 <div class="timeline-item">
-<input id="p1t" value="15:00">
-<input id="p1" value="Сбор гостей">
-</div>
-
-<div class="timeline-item">
-<input id="p2t" value="15:30">
-<input id="p2" value="Церемония">
+<input id="p1t" value="15:00" aria-label="Время первого события">
+<input id="p1" value="Сбор гостей" aria-label="Первое событие">
 </div>
 
 <div class="timeline-item">
-<input id="p3t" value="17:00">
-<input id="p3" value="Банкет">
+<input id="p2t" value="15:30" aria-label="Время второго события">
+<input id="p2" value="Церемония" aria-label="Второе событие">
 </div>
+
+<div class="timeline-item">
+<input id="p3t" value="17:00" aria-label="Время третьего события">
+<input id="p3" value="Банкет" aria-label="Третье событие">
 </div>
+
+</div>
+
 
 <div class="field">
-<label>Дресс-код <span class="tier tier-basic">Базовый</span></label>
+
+<label for="dress">Дресс-код</label>
+
 <textarea id="dress">Будем рады, если вы поддержите природную палитру нашего вечера.</textarea>
 
 <div class="colors">
-<input class="color" id="c1" type="color" value="#77624f">
-<input class="color" id="c2" type="color" value="#9a9b79">
-<input class="color" id="c3" type="color" value="#d8c7ad">
-<input class="color" id="c4" type="color" value="#eee7dc">
+
+<input
+class="color"
+id="c1"
+type="color"
+value="#77624f"
+aria-label="Первый цвет дресс-кода"
+>
+
+<input
+class="color"
+id="c2"
+type="color"
+value="#9a9b79"
+aria-label="Второй цвет дресс-кода"
+>
+
+<input
+class="color"
+id="c3"
+type="color"
+value="#d8c7ad"
+aria-label="Третий цвет дресс-кода"
+>
+
+<input
+class="color"
+id="c4"
+type="color"
+value="#eee7dc"
+aria-label="Четвёртый цвет дресс-кода"
+>
+
 </div>
 </div>
 
+
 <div class="field">
-<label>Пожелания гостям <span class="tier tier-basic">Базовый</span></label>
+
+<label for="wishes">Пожелания гостям</label>
+
 <textarea id="wishes">Ваше присутствие — лучший подарок для нас.</textarea>
+
 </div>
 
-<div class="field">
-<label>Фотография обложки <span class="tier tier-plus">Расширенный</span></label>
+
+<div class="feature-box">
+
+<div class="feature-head">
+<strong>Фотография обложки</strong>
+<span class="tag">Расширенный</span>
+</div>
+
+<div class="field" style="margin-bottom:0">
 <input id="photo" type="file" accept="image/*">
 </div>
 
-<div class="locked-feature">
-<strong>
-🎵 Музыка
-<span class="tier tier-premium">Premium</span>
-</strong>
-<p>Добавьте любимую композицию, которая будет звучать на сайте-приглашении.</p>
-</div>
-
-<div class="locked-feature">
-<strong>
-📷 Фотогалерея
-<span class="tier tier-premium">Premium</span>
-</strong>
-<p>Добавьте фотографии пары, именинника или самого события.</p>
-</div>
-
-<div class="locked-feature">
-<strong>
-⏳ Таймер до события
-<span class="tier tier-premium">Premium</span>
-</strong>
-<p>Красивый обратный отсчёт дней, часов и минут до праздника.</p>
-</div>
-
-<div class="locked-feature">
-<strong>
-🔗 Персональная ссылка
-<span class="tier tier-premium">Premium</span>
-</strong>
-<p>Красивый индивидуальный адрес вашего приглашения.</p>
-</div>
-
-<p style="font-size:12px;color:#766e68">
-Изменения сохраняются автоматически.
+<p>
+Добавьте фотографию — она сразу появится в предпросмотре.
 </p>
 
-<p style="font-size:13px;color:#766e68;line-height:1.5">
+</div>
+
+
+<div class="feature-box">
+
+<div class="feature-head">
+<strong>RSVP гостей</strong>
+<span class="tag">Расширенный</span>
+</div>
+
+<p>
+Гости смогут подтвердить присутствие, указать количество человек и оставить комментарий.
+</p>
+
+</div>
+
+
+<div class="feature-box">
+
+<div class="feature-head">
+<strong>Музыка</strong>
+<span class="tag premium">Premium</span>
+</div>
+
+<p>
+В Premium можно будет добавить музыкальное сопровождение приглашения.
+</p>
+
+</div>
+
+
+<div class="feature-box">
+
+<div class="feature-head">
+<strong>Фотогалерея</strong>
+<span class="tag premium">Premium</span>
+</div>
+
+<p>
+Отдельный блок для фотографий пары, именинника или события.
+</p>
+
+</div>
+
+
+<div class="feature-box">
+
+<div class="feature-head">
+<strong>Таймер до события</strong>
+<span class="tag premium">Premium</span>
+</div>
+
+<p>
+Обратный отсчёт дней, часов и минут до вашего праздника.
+</p>
+
+</div>
+
+
+<div class="feature-box">
+
+<div class="feature-head">
+<strong>Персональная ссылка</strong>
+<span class="tag premium">Premium</span>
+</div>
+
+<p>
+После подключения публикации Premium сможет включать персональную ссылку приглашения.
+</p>
+
+</div>
+
+
+<p class="draft-note">
+Изменения сохраняются автоматически на этом устройстве.
+</p>
+
+
+<div class="support-box">
+
 Нужна помощь?<br>
-<a href="mailto:hello.invella@bk.ru"><b>hello.invella@bk.ru</b></a>
-</p>
+
+<a href="mailto:hello.invella@bk.ru">
+hello.invella@bk.ru
+</a>
+
+</div>
 
 </div>
 
@@ -594,162 +1422,1210 @@ footer{
 
 <div class="invitation">
 
+
 <div class="inv-hero" id="invHero">
+
 <div class="eyebrow">мы женимся</div>
-<h2 id="vNames">Анна & Максим</h2>
-<div class="inv-date" id="vDate">12 сентября 2026 · 15:00</div>
+
+<h2 id="vNames">
+Анна & Максим
+</h2>
+
+<div class="inv-date" id="vDate">
+12 сентября 2026 · 15:00
 </div>
 
+</div>
+
+
 <div class="block">
+
 <h3>Дорогие гости</h3>
+
 <p id="vMessage"></p>
+
 </div>
 
+
 <div class="block">
+
 <h3>Программа дня</h3>
 
 <div class="timeline">
-<div><b id="vp1t"></b> — <span id="vp1"></span></div>
-<div><b id="vp2t"></b> — <span id="vp2"></span></div>
-<div><b id="vp3t"></b> — <span id="vp3"></span></div>
+
+<div>
+<b id="vp1t"></b>
+—
+<span id="vp1"></span>
+</div>
+
+<div>
+<b id="vp2t"></b>
+—
+<span id="vp2"></span>
+</div>
+
+<div>
+<b id="vp3t"></b>
+—
+<span id="vp3"></span>
 </div>
 
 </div>
+
+</div>
+
 
 <div class="block">
+
 <h3>Место</h3>
+
 <p>
 <b id="vVenue"></b><br>
 <span id="vAddress"></span>
 </p>
-<button class="ghost" onclick="route()">Построить маршрут</button>
+
+<button type="button" class="ghost" onclick="route()">
+Построить маршрут
+</button>
+
 </div>
 
+
 <div class="block">
+
 <h3>Дресс-код</h3>
+
 <p id="vDress"></p>
 
 <div class="palette">
+
 <i class="dot" id="d1"></i>
 <i class="dot" id="d2"></i>
 <i class="dot" id="d3"></i>
 <i class="dot" id="d4"></i>
+
 </div>
 
 </div>
+
 
 <div class="block">
+
 <h3>Пожелания</h3>
+
 <p id="vWishes"></p>
+
 </div>
+
 
 <div class="block rsvp">
 
+<div style="margin-bottom:12px">
+<span class="tag">Расширенный</span>
+</div>
+
 <h3>Вы сможете присутствовать?</h3>
 
-<p style="font-size:12px;color:#766e68">
-Доступно в тарифах «Расширенный» и Premium
-</p>
-
-<input id="guest" placeholder="Имя и фамилия">
+<input
+id="guest"
+placeholder="Имя и фамилия"
+>
 
 <select id="attendance">
-<option value="yes">Да, с удовольствием</option>
-<option value="no">К сожалению, нет</option>
-<option value="maybe">Пока не знаю</option>
+
+<option value="yes">
+Да, с удовольствием
+</option>
+
+<option value="no">
+К сожалению, нет
+</option>
+
+<option value="maybe">
+Пока не знаю
+</option>
+
 </select>
 
-<input id="guestCount" type="number" min="1" max="20" value="1">
+<input
+id="guestCount"
+type="number"
+min="1"
+max="20"
+value="1"
+aria-label="Количество гостей"
+>
 
-<textarea id="comment" placeholder="Комментарий"></textarea>
+<textarea
+id="comment"
+placeholder="Комментарий"
+></textarea>
 
-<button class="primary" onclick="sendRSVP()">Отправить ответ</button>
+<button
+type="button"
+class="primary"
+onclick="sendRSVP()"
+>
+Отправить ответ
+</button>
 
-<div id="rsvpOk" class="success hidden">
+<div
+id="rsvpOk"
+class="success hidden"
+>
 Спасибо! Ответ сохранён.
 </div>
 
 </div>
 
+
 </div>
 </div>
+</div>
+</div>
+
+
+<div id="publishModal" class="modal hidden">
+
+<div class="modal-card">
+
+<div class="modal-top">
+
+<div>
+
+<div class="eyebrow">
+Публикация приглашения
+</div>
+
+<h2>
+Выберите тариф
+</h2>
+
+<p class="sub" style="margin:8px 0 0">
+Оплата пока не подключена. Сейчас это демонстрационный экран будущей публикации.
+</p>
+
+</div>
+
+<button
+type="button"
+class="close-btn"
+onclick="closePublish()"
+aria-label="Закрыть"
+>
+×
+</button>
+
+</div>
+
+
+<div class="pricing">
+
+
+<div class="card price-card">
+
+<div class="plan-name">
+Базовый
+</div>
+
+<div class="price">
+990 ₽
+</div>
+
+<p class="plan-description">
+Красивое приглашение со всеми основными блоками.
+</p>
+
+<ul class="features">
+<li>Сайт-приглашение</li>
+<li>Шаблон</li>
+<li>Дата и время</li>
+<li>Место и адрес</li>
+<li>Программа</li>
+<li>Дресс-код</li>
+<li>Пожелания</li>
+<li>Маршрут</li>
+</ul>
+
+<button
+type="button"
+class="ghost"
+onclick="selectPlan('Базовый',990)"
+>
+Выбрать
+</button>
+
+</div>
+
+
+<div class="card price-card popular">
+
+<div class="popular-badge">
+Самый популярный
+</div>
+
+<div class="plan-name">
+Расширенный
+</div>
+
+<div class="price">
+1 490 ₽
+</div>
+
+<p class="plan-description">
+Фотография и удобные ответы гостей.
+</p>
+
+<ul class="features">
+<li>Всё из Базового</li>
+<li>Фотография обложки</li>
+<li>RSVP</li>
+<li>Количество гостей</li>
+<li>Комментарии гостей</li>
+<li>Дополнительное оформление</li>
+</ul>
+
+<button
+type="button"
+class="primary"
+onclick="selectPlan('Расширенный',1490)"
+>
+Выбрать
+</button>
+
+</div>
+
+
+<div class="card price-card">
+
+<div class="plan-name">
+Premium
+</div>
+
+<div class="price">
+2 490 ₽
+</div>
+
+<p class="plan-description">
+Максимальный набор возможностей Invella.
+</p>
+
+<ul class="features">
+<li>Всё из Расширенного</li>
+<li>Музыка</li>
+<li>Фотогалерея</li>
+<li>Таймер</li>
+<li>Premium-блоки</li>
+<li>Персональная ссылка</li>
+<li>Приоритетная поддержка</li>
+</ul>
+
+<button
+type="button"
+class="ghost"
+onclick="selectPlan('Premium',2490)"
+>
+Выбрать
+</button>
+
+</div>
+
+</div>
+
+
+<div class="modal-note">
+
+На следующем этапе к этим кнопкам можно подключить настоящую оплату и создание персональной ссылки.
+
+</div>
+
 </div>
 </div>
 
 
 <script>
+(function(){
 
-const $ = id => document.getElementById(id);
+'use strict';
 
-const fields = [
-'names','date','time','venue','address','message',
-'p1t','p1','p2t','p2','p3t','p3',
-'dress','wishes','c1','c2','c3','c4'
+
+function $(id){
+  return document.getElementById(id);
+}
+
+
+var fields = [
+  'names',
+  'date',
+  'time',
+  'venue',
+  'address',
+  'message',
+  'p1t',
+  'p1',
+  'p2t',
+  'p2',
+  'p3t',
+  'p3',
+  'dress',
+  'wishes',
+  'c1',
+  'c2',
+  'c3',
+  'c4'
 ];
 
-let template = localStorage.getItem('invella_template') || 'classic';
 
-function openTemplates(){
-  document.getElementById('templates').scrollIntoView({behavior:'smooth'});
-}
+var template = 'classic';
 
-function chooseTemplate(t){
 
-  template = t;
-
-  localStorage.setItem('invella_template',t);
-
-  $('marketing').classList.add('hidden');
-
-  $('app').classList.remove('hidden');
-
-  load();
-
-  render();
-
-  window.scrollTo(0,0);
-}
-
-function goHome(){
-  window.location.replace(window.location.pathname + window.location.search + '#templates');
-  window.location.reload();
-}
-
-function load(){
+function safeGet(key){
 
   try{
 
-    const data = JSON.parse(localStorage.getItem('invella_draft') || '{}');
+    return localStorage.getItem(key);
 
-    fields.forEach(k=>{
-      if(data[k] != null){
-        $(k).value = data[k];
-      }
-    });
+  }catch(error){
 
-  }catch(e){}
+    return null;
+
+  }
+
 }
+
+
+function safeSet(key,value){
+
+  try{
+
+    localStorage.setItem(key,value);
+
+    return true;
+
+  }catch(error){
+
+    return false;
+
+  }
+
+}
+
+
+function getSavedTemplate(){
+
+  var saved = safeGet('invella_template');
+
+  if(
+    saved === 'classic' ||
+    saved === 'editorial' ||
+    saved === 'dark' ||
+    saved === 'botanical' ||
+    saved === 'romance' ||
+    saved === 'modern'
+  ){
+    return saved;
+  }
+
+  return 'classic';
+
+}
+
+
+template = getSavedTemplate();
+
+
+window.openTemplates = function(){
+
+  var marketing = $('marketing');
+  var app = $('app');
+  var templates = $('templates');
+
+  if(marketing){
+    marketing.classList.remove('hidden');
+  }
+
+  if(app){
+    app.classList.add('hidden');
+  }
+
+  if(templates){
+
+    setTimeout(function(){
+
+      try{
+
+        templates.scrollIntoView({
+          behavior:'smooth',
+          block:'start'
+        });
+
+      }catch(error){
+
+        templates.scrollIntoView();
+
+      }
+
+    },20);
+
+  }
+
+};
+
+
+window.chooseTemplate = function(t){
+
+  var validTemplates = [
+    'classic',
+    'editorial',
+    'dark',
+    'botanical',
+    'romance',
+    'modern'
+  ];
+
+  if(validTemplates.indexOf(t) === -1){
+    t = 'classic';
+  }
+
+  template = t;
+
+  safeSet(
+    'invella_template',
+    template
+  );
+
+  var marketing = $('marketing');
+  var app = $('app');
+
+  if(marketing){
+    marketing.classList.add('hidden');
+  }
+
+  if(app){
+    app.classList.remove('hidden');
+  }
+
+  load();
+  render();
+
+  try{
+    window.scrollTo(0,0);
+  }catch(error){}
+
+};
+
+
+window.goHome = function(){
+
+  var app = $('app');
+  var marketing = $('marketing');
+
+  if(app){
+    app.classList.add('hidden');
+  }
+
+  if(marketing){
+    marketing.classList.remove('hidden');
+  }
+
+  var templates = $('templates');
+
+  if(templates){
+
+    setTimeout(function(){
+
+      try{
+
+        templates.scrollIntoView({
+          behavior:'smooth',
+          block:'start'
+        });
+
+      }catch(error){
+
+        templates.scrollIntoView();
+
+      }
+
+    },20);
+
+  }
+
+};
+
+
+function load(){
+
+  var raw = safeGet('invella_draft');
+
+  if(!raw){
+    return;
+  }
+
+  var data;
+
+  try{
+
+    data = JSON.parse(raw);
+
+  }catch(error){
+
+    return;
+
+  }
+
+  if(!data || typeof data !== 'object'){
+    return;
+  }
+
+  fields.forEach(function(key){
+
+    var element = $(key);
+
+    if(
+      element &&
+      data[key] !== null &&
+      typeof data[key] !== 'undefined'
+    ){
+      element.value = data[key];
+    }
+
+  });
+
+}
+
 
 function save(){
 
-  const data = {};
+  var data = {};
 
-  fields.forEach(k=>{
-    data[k] = $(k).value;
+  fields.forEach(function(key){
+
+    var element = $(key);
+
+    if(element){
+      data[key] = element.value;
+    }
+
   });
 
-  localStorage.setItem('invella_draft',JSON.stringify(data));
+  safeSet(
+    'invella_draft',
+    JSON.stringify(data)
+  );
+
 }
+
 
 function dateText(){
 
-  if(!$('date').value){
+  var dateElement = $('date');
+  var timeElement = $('time');
+
+  if(!dateElement || !dateElement.value){
     return 'Дата события';
   }
 
-  const d = new Date($('date').value + 'T12:00:00');
+  var parts = dateElement.value.split('-');
 
-  let result = d.toLocaleDateString('ru-RU',{
-    day:'numeric',
-    month:'long',
-    y
+  if(parts.length !== 3){
+    return dateElement.value;
+  }
+
+  var year = Number(parts[0]);
+  var month = Number(parts[1]) - 1;
+  var day = Number(parts[2]);
+
+  var d = new Date(
+    year,
+    month,
+    day,
+    12,
+    0,
+    0
+  );
+
+  var result;
+
+  try{
+
+    result = d.toLocaleDateString(
+      'ru-RU',
+      {
+        day:'numeric',
+        month:'long',
+        year:'numeric'
+      }
+    );
+
+  }catch(error){
+
+    result = dateElement.value;
+
+  }
+
+  if(
+    timeElement &&
+    timeElement.value
+  ){
+    result += ' · ' + timeElement.value;
+  }
+
+  return result;
+
+}
+
+
+function setText(id,value){
+
+  var element = $(id);
+
+  if(element){
+    element.textContent = value;
+  }
+
+}
+
+
+function applyTemplate(){
+
+  var hero = $('invHero');
+
+  if(!hero){
+    return;
+  }
+
+  hero.style.backgroundImage = 'none';
+  hero.style.backgroundSize = 'cover';
+  hero.style.backgroundPosition = 'center';
+
+  if(template === 'dark'){
+
+    hero.style.backgroundColor = '#20201e';
+    hero.style.color = '#ffffff';
+
+  }else if(template === 'botanical'){
+
+    hero.style.backgroundColor = '#e6eadf';
+    hero.style.color = '#201d1b';
+
+  }else if(template === 'romance'){
+
+    hero.style.backgroundColor = '#eadce0';
+    hero.style.color = '#201d1b';
+
+  }else if(template === 'modern'){
+
+    hero.style.backgroundColor = '#dce4e7';
+    hero.style.color = '#201d1b';
+
+  }else if(template === 'editorial'){
+
+    hero.style.backgroundColor = '#f4eee5';
+    hero.style.color = '#201d1b';
+
+  }else{
+
+    hero.style.backgroundColor = '#e8ded4';
+    hero.style.color = '#201d1b';
+
+  }
+
+}
+
+
+function render(){
+
+  var names = $('names');
+  var message = $('message');
+  var venue = $('venue');
+  var address = $('address');
+  var dress = $('dress');
+  var wishes = $('wishes');
+
+  setText(
+    'vNames',
+    names && names.value
+      ? names.value
+      : 'Ваш праздник'
+  );
+
+  setText(
+    'vDate',
+    dateText()
+  );
+
+  setText(
+    'vMessage',
+    message
+      ? message.value
+      : ''
+  );
+
+  setText(
+    'vVenue',
+    venue
+      ? venue.value
+      : ''
+  );
+
+  setText(
+    'vAddress',
+    address
+      ? address.value
+      : ''
+  );
+
+  setText(
+    'vDress',
+    dress
+      ? dress.value
+      : ''
+  );
+
+  setText(
+    'vWishes',
+    wishes
+      ? wishes.value
+      : ''
+  );
+
+
+  ['1','2','3'].forEach(function(n){
+
+    var timeSource = $('p' + n + 't');
+    var eventSource = $('p' + n);
+
+    setText(
+      'vp' + n + 't',
+      timeSource
+        ? timeSource.value
+        : ''
+    );
+
+    setText(
+      'vp' + n,
+      eventSource
+        ? eventSource.value
+        : ''
+    );
+
+  });
+
+
+  ['1','2','3','4'].forEach(function(n){
+
+    var source = $('c' + n);
+    var dot = $('d' + n);
+
+    if(source && dot){
+      dot.style.backgroundColor = source.value;
+    }
+
+  });
+
+
+  applyTemplate();
+
+  save();
+
+}
+
+
+function attachFieldListeners(){
+
+  fields.forEach(function(id){
+
+    var element = $(id);
+
+    if(!element){
+      return;
+    }
+
+    element.addEventListener(
+      'input',
+      function(){
+        render();
+      }
+    );
+
+    element.addEventListener(
+      'change',
+      function(){
+        render();
+      }
+    );
+
+  });
+
+}
+
+
+function attachPhotoListener(){
+
+  var photo = $('photo');
+
+  if(!photo){
+    return;
+  }
+
+  photo.addEventListener(
+    'change',
+    function(event){
+
+      var target = event.target;
+
+      if(
+        !target ||
+        !target.files ||
+        !target.files.length
+      ){
+        return;
+      }
+
+      var file = target.files[0];
+
+      if(!file){
+        return;
+      }
+
+      if(
+        typeof FileReader === 'undefined'
+      ){
+
+        alert(
+          'Этот браузер не поддерживает предпросмотр фотографии.'
+        );
+
+        return;
+
+      }
+
+      var reader = new FileReader();
+
+      reader.onload = function(){
+
+        var hero = $('invHero');
+
+        if(!hero){
+          return;
+        }
+
+        hero.style.backgroundImage =
+          'linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)), url("' +
+          reader.result +
+          '")';
+
+        hero.style.backgroundSize = 'cover';
+        hero.style.backgroundPosition = 'center';
+        hero.style.color = '#ffffff';
+
+      };
+
+      reader.onerror = function(){
+
+        alert(
+          'Не удалось открыть фотографию. Попробуйте выбрать другое изображение.'
+        );
+
+      };
+
+      try{
+
+        reader.readAsDataURL(file);
+
+      }catch(error){
+
+        alert(
+          'Не удалось открыть фотографию.'
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+window.route = function(){
+
+  var addressElement = $('address');
+
+  if(!addressElement){
+    return;
+  }
+
+  var address =
+    addressElement.value.trim();
+
+  if(!address){
+
+    alert(
+      'Сначала укажите адрес мероприятия.'
+    );
+
+    return;
+
+  }
+
+  var url =
+    'https://www.google.com/maps/search/?api=1&query=' +
+    encodeURIComponent(address);
+
+  try{
+
+    var opened =
+      window.open(
+        url,
+        '_blank'
+      );
+
+    if(!opened){
+
+      window.location.href = url;
+
+    }
+
+  }catch(error){
+
+    window.location.href = url;
+
+  }
+
+};
+
+
+window.sendRSVP = function(){
+
+  var guest = $('guest');
+  var attendance = $('attendance');
+  var guestCount = $('guestCount');
+  var comment = $('comment');
+  var success = $('rsvpOk');
+
+  if(
+    !guest ||
+    !attendance ||
+    !guestCount ||
+    !comment
+  ){
+    return;
+  }
+
+  var guestName =
+    guest.value.trim();
+
+  if(!guestName){
+
+    alert(
+      'Пожалуйста, укажите имя и фамилию.'
+    );
+
+    try{
+      guest.focus();
+    }catch(error){}
+
+    return;
+
+  }
+
+  var responses = [];
+
+  var raw =
+    safeGet('invella_rsvp');
+
+  if(raw){
+
+    try{
+
+      var parsed =
+        JSON.parse(raw);
+
+      if(Array.isArray(parsed)){
+        responses = parsed;
+      }
+
+    }catch(error){
+
+      responses = [];
+
+    }
+
+  }
+
+  responses.push({
+
+    name:guestName,
+
+    attendance:
+      attendance.value,
+
+    count:
+      guestCount.value,
+
+    comment:
+      comment.value,
+
+    createdAt:
+      new Date().toISOString()
+
+  });
+
+  safeSet(
+    'invella_rsvp',
+    JSON.stringify(responses)
+  );
+
+  if(success){
+    success.classList.remove('hidden');
+  }
+
+};
+
+
+window.publishDemo = function(){
+
+  var modal = $('publishModal');
+
+  if(modal){
+
+    modal.classList.remove('hidden');
+
+    try{
+      document.body.style.overflow = 'hidden';
+    }catch(error){}
+
+  }else{
+
+    alert(
+      'Выберите тариф для публикации приглашения.'
+    );
+
+  }
+
+};
+
+
+window.closePublish = function(){
+
+  var modal = $('publishModal');
+
+  if(modal){
+    modal.classList.add('hidden');
+  }
+
+  try{
+    document.body.style.overflow = '';
+  }catch(error){}
+
+};
+
+
+window.selectPlan = function(plan,price){
+
+  var message =
+    'Вы выбрали тариф «' +
+    plan +
+    '» — ' +
+    price.toLocaleString('ru-RU') +
+    ' ₽.\n\n' +
+    'Сейчас это frontend-прототип, поэтому оплата ещё не подключена. ' +
+    'На следующем этапе здесь можно подключить оплату и автоматическую публикацию персональной ссылки.';
+
+  alert(message);
+
+};
+
+
+function attachModalListener(){
+
+  var modal = $('publishModal');
+
+  if(!modal){
+    return;
+  }
+
+  modal.addEventListener(
+    'click',
+    function(event){
+
+      if(event.target === modal){
+        window.closePublish();
+      }
+
+    }
+  );
+
+}
+
+
+function initialize(){
+
+  template =
+    getSavedTemplate();
+
+  load();
+
+  attachFieldListeners();
+
+  attachPhotoListener();
+
+  attachModalListener();
+
+  render();
+
+
+  if(
+    window.location.hash === '#templates'
+  ){
+
+    setTimeout(function(){
+
+      var templates =
+        $('templates');
+
+      if(templates){
+
+        try{
+
+          templates.scrollIntoView({
+            block:'start'
+          });
+
+        }catch(error){
+
+          templates.scrollIntoView();
+
+        }
+
+      }
+
+    },50);
+
+  }
+
+}
+
+
+if(
+  document.readyState === 'loading'
+){
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    initialize
+  );
+
+}else{
+
+  initialize();
+
+}
+
+})();
+</script>
+
+</body>
+</html>
