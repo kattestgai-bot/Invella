@@ -13,34 +13,71 @@
   --ink:#201d1b;
   --muted:#766e68;
   --line:#ddd5cd;
+  --gold:#a58458;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
+a{color:inherit}
 .shell{max-width:1180px;margin:auto;padding:0 22px}
 nav{height:72px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:Georgia,serif;font-size:24px;letter-spacing:.14em}
-.primary,.navbtn{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:14px 20px}
-.ghost{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 18px}
-.hero{min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:45px;padding:55px 0 75px}
-.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:var(--muted)}
+.primary,.navbtn{
+  border:0;border-radius:999px;background:var(--ink);color:#fff;
+  padding:14px 20px
+}
+.ghost{
+  border:1px solid var(--line);background:transparent;color:var(--ink);
+  border-radius:999px;padding:13px 18px
+}
+.hero{
+  min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;
+  align-items:center;gap:45px;padding:55px 0 75px
+}
+.eyebrow{
+  text-transform:uppercase;letter-spacing:.15em;
+  font-size:12px;color:var(--muted)
+}
 h1,h2,h3{font-family:Georgia,serif;font-weight:400}
-h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
-.hero p{font-size:20px;line-height:1.55;color:var(--muted);max-width:650px}
-.phone{width:min(360px,82vw);margin:auto;background:#e9ded3;border:10px solid #25211f;border-radius:42px;padding:12px;box-shadow:0 25px 70px #6b57402b}
-.phone-inner{min-height:610px;border-radius:28px;background:#e8ded4;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px}
+h1{
+  font-size:clamp(58px,8vw,100px);
+  line-height:.88;margin:20px 0 26px
+}
+.hero p{
+  font-size:20px;line-height:1.55;color:var(--muted);max-width:620px
+}
+.phone{
+  width:min(360px,82vw);margin:auto;background:#e9ded3;
+  border:10px solid #25211f;border-radius:42px;padding:12px;
+  box-shadow:0 25px 70px #6b57402b
+}
+.phone-inner{
+  min-height:610px;border-radius:28px;background:#e8ded4;
+  display:flex;flex-direction:column;justify-content:center;
+  text-align:center;padding:28px
+}
 .phone-inner h3{font-size:45px;margin:12px 0}
 .section{padding:72px 0}
 .section h2{font-size:48px;margin:0 0 12px}
 .sub{color:var(--muted);margin-bottom:30px}
-.categories,.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px}
-.category{min-height:145px;display:flex;flex-direction:column;justify-content:flex-end}
+.categories,.templates{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px
+}
+.card{
+  background:var(--paper);border:1px solid var(--line);
+  border-radius:22px;padding:22px
+}
+.category{
+  min-height:145px;display:flex;flex-direction:column;justify-content:flex-end
+}
 .category b{font-family:Georgia,serif;font-size:25px}
 .template{padding:0;overflow:hidden}
-.preview{height:310px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center}
+.preview{
+  height:310px;padding:24px;display:flex;
+  align-items:center;justify-content:center;text-align:center
+}
 .preview h3{font-size:35px;margin:8px}
 .t1{background:#e8ded4}
 .t2{background:#f4eee5}
@@ -53,71 +90,101 @@ h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
 .hidden{display:none!important}
 
 /* ТАРИФЫ */
-
 .pricing{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:18px;
-  align-items:stretch;
+  align-items:stretch
 }
-.plan{
+.price-card{
   position:relative;
   display:flex;
-  flex-direction:column;
+  flex-direction:column
 }
-.plan h3{
-  font-size:31px;
-  margin:0;
-}
-.plan-popular{
+.price-card.featured{
   border:2px solid var(--ink);
-  transform:translateY(-8px);
+  transform:translateY(-6px)
 }
-.badge{
-  display:inline-block;
-  width:max-content;
-  padding:6px 10px;
-  margin-bottom:14px;
-  border-radius:999px;
+.badge-top{
+  position:absolute;
+  top:-13px;
+  right:18px;
   background:var(--ink);
   color:white;
+  border-radius:999px;
+  padding:7px 12px;
   font-size:11px;
-  letter-spacing:.08em;
+  text-transform:uppercase;
+  letter-spacing:.08em
+}
+.price-name{
+  font-family:Georgia,serif;
+  font-size:28px;
+  margin-bottom:8px
 }
 .price{
   font-family:Georgia,serif;
   font-size:42px;
-  margin:14px 0 8px;
+  margin:10px 0
 }
-.plan p{color:var(--muted);line-height:1.5}
-.plan ul{
-  list-style:none;
+.features{
   padding:0;
-  margin:14px 0 24px;
-  flex:1;
+  list-style:none;
+  color:#5e5752;
+  line-height:1.5;
+  flex:1
 }
-.plan li{margin:10px 0;line-height:1.4}
-.plan li:before{content:"✓ ";font-weight:bold}
-.plan button{width:100%}
+.features li{
+  padding:8px 0;
+  border-bottom:1px solid #eee8e2
+}
+.price-card button{width:100%;margin-top:18px}
 
 /* КОНСТРУКТОР */
-
 .app{min-height:100vh;background:#f5f2ed}
-.appbar{height:68px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:5}
-.editor{display:grid;grid-template-columns:minmax(330px,480px) 1fr;min-height:calc(100vh - 68px)}
-.controls{padding:28px;overflow:auto;background:white;border-right:1px solid var(--line)}
+.appbar{
+  min-height:68px;border-bottom:1px solid var(--line);background:white;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;position:sticky;top:0;z-index:5
+}
+.editor{
+  display:grid;grid-template-columns:minmax(330px,480px) 1fr;
+  min-height:calc(100vh - 68px)
+}
+.controls{
+  padding:28px;overflow:auto;background:white;border-right:1px solid var(--line)
+}
 .controls h2{font-size:34px;margin:5px 0 20px}
 .field{margin:15px 0}
-.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
-.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:white}
+.field label{
+  display:block;font-size:13px;color:var(--muted);margin-bottom:7px
+}
+.field input,.field textarea,.field select{
+  width:100%;padding:13px;border:1px solid var(--line);
+  border-radius:11px;background:white
+}
 .field textarea{min-height:88px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .colors{display:flex;gap:8px;flex-wrap:wrap}
-.color{width:34px;height:34px;border:1px solid #bbb;border-radius:50%;padding:0}
-.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0}
-.preview-area{padding:30px;display:flex;justify-content:center;align-items:flex-start}
-.invitation{width:min(430px,100%);background:white;min-height:760px;box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center}
-.inv-hero{min-height:420px;background:#e8ded4;padding:65px 28px;display:flex;flex-direction:column;justify-content:center}
+.color{
+  width:34px!important;height:34px!important;border:1px solid #bbb!important;
+  border-radius:50%!important;padding:0!important
+}
+.timeline-item{
+  display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0
+}
+.preview-area{
+  padding:30px;display:flex;justify-content:center;align-items:flex-start
+}
+.invitation{
+  width:min(430px,100%);background:white;min-height:760px;
+  box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center
+}
+.inv-hero{
+  min-height:420px;background:#e8ded4;padding:65px 28px;
+  display:flex;flex-direction:column;justify-content:center;
+  background-size:cover;background-position:center
+}
 .inv-hero h2{font-size:52px;margin:14px 0}
 .inv-date{font-family:Georgia,serif;font-size:22px}
 .block{padding:38px 28px;border-top:1px solid #eee}
@@ -127,150 +194,86 @@ h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
 .timeline div{padding:9px 0;border-bottom:1px solid #eee}
 .palette{display:flex;justify-content:center;gap:10px}
 .dot{width:34px;height:34px;border-radius:50%}
-.rsvp input,.rsvp select,.rsvp textarea{width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px}
-.success{padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px}
+.rsvp input,.rsvp select,.rsvp textarea{
+  width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px
+}
+.success{
+  padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px
+}
 .toolbar{display:flex;gap:8px}
-.faq details{background:white;border-bottom:1px solid var(--line);padding:18px}
-footer{padding:45px 0;color:var(--muted)}
+.faq details{
+  background:white;border-bottom:1px solid var(--line);padding:18px
+}
 
-/* ТАРИФ В РЕДАКТОРЕ */
-
-.current-plan{
-  background:#f4efe8;
-  border:1px solid #e3d9cf;
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:24px;
-}
-.current-plan small{color:var(--muted)}
-.current-plan b{display:block;margin-top:4px}
-
-/* PREMIUM */
-
-.extra-title{
-  font-family:Georgia,serif;
-  font-size:27px;
-  margin:35px 0 5px;
-}
-.extra-sub{
-  font-size:13px;
-  color:var(--muted);
-  line-height:1.5;
-  margin-bottom:18px;
-}
-.feature{
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:16px;
-  margin:12px 0;
-  background:#fffdf9;
-}
-.feature-head{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  align-items:center;
-}
-.feature-head b{font-size:14px}
-.tag{
-  flex:none;
+/* ПОМЕТКИ ТАРИФОВ */
+.plan-tag{
+  display:inline-block;
+  vertical-align:middle;
+  margin-left:6px;
+  padding:4px 8px;
   border-radius:999px;
-  padding:5px 8px;
-  font-size:9px;
-  letter-spacing:.08em;
-  background:#25211f;
-  color:#fff;
-}
-.tag.turnkey{
-  background:#dfd0c0;
-  color:#332b26;
-}
-.feature p{
-  font-size:12px;
-  line-height:1.5;
-  color:var(--muted);
-}
-.feature button{width:100%}
-.lock-message{
-  display:none;
-  margin-top:10px;
-  padding:10px;
-  border-radius:10px;
-  background:#f4ece4;
-  font-size:12px;
-  line-height:1.4;
-}
-.lock-message.show{display:block}
-
-.premium-panel{
-  margin-top:12px;
-  padding-top:12px;
-  border-top:1px solid var(--line);
-}
-.premium-panel input,
-.premium-panel textarea,
-.premium-panel select{
-  width:100%;
-  padding:11px;
-  margin:5px 0;
-  border:1px solid var(--line);
-  border-radius:10px;
-  background:white;
-}
-audio{width:100%;margin-top:10px}
-
-.gallery-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:5px;
-  margin-top:12px;
-}
-.gallery-grid img{
-  width:100%;
-  height:95px;
-  object-fit:cover;
-}
-
-.countdown{
-  display:flex;
-  justify-content:center;
-  gap:8px;
-  flex-wrap:wrap;
-}
-.countdown-item{
-  min-width:70px;
-  background:#f5f1eb;
-  padding:12px 7px;
-  border-radius:12px;
-}
-.countdown-item b{
-  display:block;
-  font-family:Georgia,serif;
-  font-size:27px;
-}
-.countdown-item small{
-  color:var(--muted);
+  background:#eee9e3;
+  color:#655d57;
   font-size:10px;
+  font-weight:600;
+  letter-spacing:.03em
+}
+.plan-tag.plus{background:#e8eee3;color:#4d6045}
+.plan-tag.premium{background:#eee3d5;color:#755b38}
+.premium-box{
+  padding:16px;
+  border:1px dashed #c9b18f;
+  border-radius:16px;
+  background:#fcf8f1;
+  margin:18px 0
+}
+.premium-box h3{
+  font-family:Arial,sans-serif;
+  font-size:15px;
+  font-weight:600;
+  margin:0 0 12px
+}
+.lock-note{
+  font-size:12px;
+  color:#8a7152;
+  line-height:1.45;
+  margin-top:8px
+}
+
+/* ПОДДЕРЖКА */
+.support-box{
+  background:#201d1b;
+  color:white;
+  border-radius:24px;
+  padding:30px
+}
+.support-box p{color:#d8d1cb}
+.support-box a{color:white;font-weight:bold}
+
+footer{
+  padding:45px 0;color:var(--muted);
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap
 }
 
 @media(max-width:850px){
   .hero{grid-template-columns:1fr}
   .phone{display:none}
-  .categories,.templates,.pricing{grid-template-columns:1fr 1fr}
+  .categories,.templates{grid-template-columns:1fr 1fr}
+  .pricing{grid-template-columns:1fr}
+  .price-card.featured{transform:none}
   .editor{grid-template-columns:1fr}
   .preview-area{padding:15px}
   .controls{border-right:0}
-  .plan-popular{transform:none}
 }
 @media(max-width:560px){
-  .categories,.templates,.pricing{grid-template-columns:1fr}
+  .categories,.templates{grid-template-columns:1fr}
   .section{padding:50px 0}
   .section h2{font-size:38px}
   .row{grid-template-columns:1fr}
   .controls{padding:20px}
-  .appbar{padding:0 10px}
   .toolbar{gap:5px}
-  .toolbar button{padding:10px 12px;font-size:13px}
+  .appbar .primary,.appbar .ghost{padding:10px 12px;font-size:13px}
+  .appbar .logo{font-size:18px}
 }
 </style>
 </head>
@@ -308,9 +311,15 @@ audio{width:100%;margin-top:10px}
 <p class="sub">Свадьба, день рождения, юбилей и другие важные события.</p>
 
 <div class="categories">
-<div class="card category"><span>💍</span><b>Свадьба</b><small>Главная коллекция</small></div>
-<div class="card category"><span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small></div>
-<div class="card category"><span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small></div>
+<div class="card category">
+<span>💍</span><b>Свадьба</b><small>Главная коллекция</small>
+</div>
+<div class="card category">
+<span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small>
+</div>
+<div class="card category">
+<span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small>
+</div>
 </div>
 </section>
 
@@ -389,84 +398,111 @@ audio{width:100%;margin-top:10px}
 </div>
 </section>
 
-<!-- ТАРИФЫ -->
-
-<section class="section" id="pricing">
-<h2>Выберите свой вариант</h2>
-<p class="sub">Создавайте приглашение бесплатно. Тариф понадобится при публикации.</p>
-
-<div class="pricing">
-
-<div class="card plan">
-<h3>Базовый</h3>
-<div class="price">990 ₽</div>
-<p>Всё необходимое для красивого сайта-приглашения.</p>
-<ul>
-<li>Шаблоны</li>
-<li>Дата и время</li>
-<li>Место и маршрут</li>
-<li>Программа события</li>
-<li>Дресс-код и палитра</li>
-<li>Пожелания гостям</li>
-<li>Персональная ссылка</li>
-</ul>
-<button class="ghost" onclick="selectPlan('basic')">Выбрать Базовый</button>
-</div>
-
-<div class="card plan plan-popular">
-<span class="badge">ПОПУЛЯРНЫЙ</span>
-<h3>Premium</h3>
-<div class="price">1 990 ₽</div>
-<p>Интерактивное приглашение с дополнительными возможностями.</p>
-<ul>
-<li>Всё из Базового</li>
-<li>Ответы гостей RSVP</li>
-<li>Музыка</li>
-<li>Фотогалерея</li>
-<li>Таймер до события</li>
-<li>QR-код</li>
-<li>Дополнительные блоки</li>
-</ul>
-<button class="primary" onclick="selectPlan('premium')">Выбрать Premium</button>
-</div>
-
-<div class="card plan">
-<h3>Под ключ</h3>
-<div class="price">3 990 ₽</div>
-<p>Вы присылаете информацию — готовое приглашение оформляется за вас.</p>
-<ul>
-<li>Всё из Premium</li>
-<li>Сборка приглашения</li>
-<li>Подбор оформления</li>
-<li>Помощь с текстами</li>
-<li>Настройка фотографий</li>
-<li>Настройка музыки</li>
-<li>Персональные правки</li>
-</ul>
-<button class="ghost" onclick="selectPlan('turnkey')">Выбрать «Под ключ»</button>
-</div>
-
-</div>
-</section>
-
 <section class="section">
 <h2>Как это работает</h2>
 <div class="categories">
 <div class="card"><b>01. Выберите</b><p>Подберите шаблон.</p></div>
-<div class="card"><b>02. Заполните</b><p>Добавьте дату, место, программу и дресс-код.</p></div>
+<div class="card"><b>02. Заполните</b><p>Добавьте детали вашего события.</p></div>
 <div class="card"><b>03. Отправьте</b><p>Опубликуйте сайт и отправьте гостям ссылку.</p></div>
+</div>
+</section>
+
+<!-- ТАРИФЫ -->
+
+<section class="section" id="prices">
+<h2>Выберите свой формат</h2>
+<p class="sub">Создавайте бесплатно. Оплата понадобится только перед публикацией.</p>
+
+<div class="pricing">
+
+<div class="card price-card">
+<div class="price-name">Базовый</div>
+<div class="price">990 ₽</div>
+<p>Красивое приглашение со всем необходимым.</p>
+<ul class="features">
+<li>✓ 1 сайт-приглашение</li>
+<li>✓ Все основные шаблоны</li>
+<li>✓ Дата, время и место</li>
+<li>✓ Программа мероприятия</li>
+<li>✓ Дресс-код и палитра</li>
+<li>✓ Пожелания гостям</li>
+<li>✓ Карта и маршрут</li>
+</ul>
+<button class="ghost" onclick="selectPlan('basic')">Выбрать</button>
+</div>
+
+<div class="card price-card featured">
+<div class="badge-top">Популярный</div>
+<div class="price-name">Расширенный</div>
+<div class="price">1 490 ₽</div>
+<p>Больше возможностей и обратная связь от гостей.</p>
+<ul class="features">
+<li>✓ Всё из тарифа «Базовый»</li>
+<li>✓ RSVP — ответы гостей</li>
+<li>✓ Количество гостей</li>
+<li>✓ Комментарии гостей</li>
+<li>✓ Фотография на обложке</li>
+<li>✓ Расширенные настройки оформления</li>
+</ul>
+<button class="primary" onclick="selectPlan('plus')">Выбрать</button>
+</div>
+
+<div class="card price-card">
+<div class="price-name">Premium</div>
+<div class="price">2 490 ₽</div>
+<p>Максимальная версия приглашения для особенного события.</p>
+<ul class="features">
+<li>✓ Всё из тарифа «Расширенный»</li>
+<li>✓ Музыка на сайте</li>
+<li>✓ Фотогалерея</li>
+<li>✓ Персональная ссылка</li>
+<li>✓ Таймер до события</li>
+<li>✓ Дополнительные Premium-блоки</li>
+<li>✓ Приоритетная поддержка</li>
+</ul>
+<button class="ghost" onclick="selectPlan('premium')">Выбрать Premium</button>
+</div>
+
 </div>
 </section>
 
 <section class="section faq">
 <h2>Вопросы</h2>
-<details><summary>Можно попробовать бесплатно?</summary><p>Да. Создание и предпросмотр доступны до публикации.</p></details>
-<details><summary>Гости должны регистрироваться?</summary><p>Нет. Они просто открывают ссылку.</p></details>
-<details><summary>Можно изменить приглашение?</summary><p>Да, данные можно редактировать.</p></details>
-<details><summary>Что входит в Premium?</summary><p>RSVP, музыка, фотогалерея, таймер, QR-код и дополнительные блоки.</p></details>
+
+<details>
+<summary>Можно попробовать бесплатно?</summary>
+<p>Да. Создайте приглашение и посмотрите результат. Оплата потребуется перед публикацией.</p>
+</details>
+
+<details>
+<summary>Гости должны регистрироваться?</summary>
+<p>Нет. Гость просто переходит по вашей ссылке.</p>
+</details>
+
+<details>
+<summary>Можно изменить приглашение?</summary>
+<p>Да, информацию можно редактировать.</p>
+</details>
+
+<details>
+<summary>Можно добавить музыку?</summary>
+<p>Да. Добавление музыки доступно в тарифе Premium.</p>
+</details>
 </section>
 
-<footer>© 2026 Invella</footer>
+<section class="section">
+<div class="support-box">
+<div class="eyebrow" style="color:#bdb4ad">Поддержка Invella</div>
+<h2 style="margin-top:12px">Мы рядом, если нужна помощь</h2>
+<p>Вопрос по созданию приглашения, оплате или публикации? Напишите нам.</p>
+<p>✉ <a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a></p>
+</div>
+</section>
+
+<footer>
+<span>© 2026 Invella</span>
+<a href="mailto:hello.invella@bk.ru">Поддержка: hello.invella@bk.ru</a>
+</footer>
 
 </div>
 </div>
@@ -491,47 +527,42 @@ audio{width:100%;margin-top:10px}
 <div class="eyebrow">Конструктор</div>
 <h2>Ваше приглашение</h2>
 
-<div class="current-plan">
-<small>Выбранный тариф</small>
-<b id="currentPlan">Базовый · 990 ₽</b>
-</div>
-
 <div class="row">
 <div class="field">
-<label>Имена</label>
+<label>Имена <span class="plan-tag">Базовый</span></label>
 <input id="names" value="Анна & Максим">
 </div>
 
 <div class="field">
-<label>Дата</label>
+<label>Дата <span class="plan-tag">Базовый</span></label>
 <input id="date" type="date" value="2026-09-12">
 </div>
 </div>
 
 <div class="row">
 <div class="field">
-<label>Время</label>
+<label>Время <span class="plan-tag">Базовый</span></label>
 <input id="time" type="time" value="15:00">
 </div>
 
 <div class="field">
-<label>Площадка</label>
+<label>Площадка <span class="plan-tag">Базовый</span></label>
 <input id="venue" value="Усадьба «Лесная»">
 </div>
 </div>
 
 <div class="field">
-<label>Адрес</label>
+<label>Адрес <span class="plan-tag">Базовый</span></label>
 <input id="address" value="Воронеж, ул. Примерная, 10">
 </div>
 
 <div class="field">
-<label>Текст приглашения</label>
+<label>Текст приглашения <span class="plan-tag">Базовый</span></label>
 <textarea id="message">Будем счастливы разделить с вами один из самых важных дней нашей жизни.</textarea>
 </div>
 
 <div class="field">
-<label>Программа мероприятия</label>
+<label>Программа мероприятия <span class="plan-tag">Базовый</span></label>
 
 <div class="timeline-item">
 <input id="p1t" value="15:00">
@@ -550,7 +581,7 @@ audio{width:100%;margin-top:10px}
 </div>
 
 <div class="field">
-<label>Дресс-код</label>
+<label>Дресс-код <span class="plan-tag">Базовый</span></label>
 <textarea id="dress">Будем рады, если вы поддержите природную палитру нашего вечера.</textarea>
 
 <div class="colors">
@@ -562,173 +593,174 @@ audio{width:100%;margin-top:10px}
 </div>
 
 <div class="field">
-<label>Пожелания гостям</label>
+<label>Пожелания гостям <span class="plan-tag">Базовый</span></label>
 <textarea id="wishes">Ваше присутствие — лучший подарок для нас.</textarea>
 </div>
 
 <div class="field">
-<label>Фотография обложки</label>
+<label>Фотография обложки <span class="plan-tag plus">Расширенный</span></label>
 <input id="photo" type="file" accept="image/*">
 </div>
 
-
-<!-- ВСЕ ВОЗМОЖНОСТИ ВИДНЫ -->
-
-<div class="extra-title">Дополнительные возможности</div>
-<p class="extra-sub">Все функции видны сразу. Возможности Premium отмечены отдельно.</p>
-
-
-<!-- RSVP -->
-
-<div class="feature">
-<div class="feature-head">
-<b>Ответы гостей RSVP</b>
-<span class="tag">PREMIUM</span>
-</div>
-<p>Собирайте подтверждения присутствия и комментарии гостей.</p>
-
-<button class="ghost" onclick="togglePremium('rsvpPanel','rsvpLock')">
-Настроить RSVP
-</button>
-
-<div id="rsvpLock" class="lock-message">
-Доступно в тарифе Premium · 1 990 ₽
-</div>
-
-<div id="rsvpPanel" class="premium-panel hidden">
-<p>RSVP включён. Форма будет показана гостям в приглашении.</p>
-</div>
-</div>
-
-
-<!-- МУЗЫКА -->
-
-<div class="feature">
-<div class="feature-head">
-<b>Музыка</b>
-<span class="tag">PREMIUM</span>
-</div>
-<p>Добавьте музыкальную композицию к приглашению.</p>
-
-<button class="ghost" onclick="togglePremium('musicPanel','musicLock')">
-Добавить музыку
-</button>
-
-<div id="musicLock" class="lock-message">
-Доступно в тарифе Premium · 1 990 ₽
-</div>
-
-<div id="musicPanel" class="premium-panel hidden">
+<div class="premium-box">
+<h3>Музыка <span class="plan-tag premium">Premium</span></h3>
 <input id="music" type="file" accept="audio/*">
-<audio id="musicPlayer" controls class="hidden"></audio>
-</div>
-</div>
-
-
-<!-- ГАЛЕРЕЯ -->
-
-<div class="feature">
-<div class="feature-head">
-<b>Фотогалерея</b>
-<span class="tag">PREMIUM</span>
-</div>
-<p>Добавьте фотографии, которые увидят гости.</p>
-
-<button class="ghost" onclick="togglePremium('galleryPanel','galleryLock')">
-Добавить фотографии
-</button>
-
-<div id="galleryLock" class="lock-message">
-Доступно в тарифе Premium · 1 990 ₽
+<div class="lock-note">Музыка будет доступна после выбора тарифа Premium.</div>
 </div>
 
-<div id="galleryPanel" class="premium-panel hidden">
+<div class="premium-box">
+<h3>Фотогалерея <span class="plan-tag premium">Premium</span></h3>
 <input id="gallery" type="file" accept="image/*" multiple>
+<div class="lock-note">Добавление галереи доступно в Premium.</div>
+</div>
+
+<div class="premium-box">
+<h3>Таймер до события <span class="plan-tag premium">Premium</span></h3>
+<label style="display:flex;gap:10px;align-items:center">
+<input id="countdownToggle" type="checkbox" style="width:auto">
+Показывать таймер гостям
+</label>
+</div>
+
+<p style="font-size:12px;color:#766e68">
+Изменения сохраняются автоматически.
+</p>
+
+<p style="font-size:13px">
+Нужна помощь?
+<a href="mailto:hello.invella@bk.ru"><b>hello.invella@bk.ru</b></a>
+</p>
+
+</div>
+
+
+<div class="preview-area">
+
+<div class="invitation">
+
+<div class="inv-hero" id="invHero">
+<div class="eyebrow">мы женимся</div>
+<h2 id="vNames">Анна & Максим</h2>
+<div class="inv-date" id="vDate">12 сентября 2026 · 15:00</div>
+</div>
+
+<div id="countdownBlock" class="block hidden">
+<h3>До нашего дня</h3>
+<p id="countdownText">Совсем скоро ✨</p>
+</div>
+
+<div class="block">
+<h3>Дорогие гости</h3>
+<p id="vMessage"></p>
+</div>
+
+<div class="block">
+<h3>Программа дня</h3>
+
+<div class="timeline">
+<div><b id="vp1t"></b> — <span id="vp1"></span></div>
+<div><b id="vp2t"></b> — <span id="vp2"></span></div>
+<div><b id="vp3t"></b> — <span id="vp3"></span></div>
+</div>
+</div>
+
+<div class="block">
+<h3>Место</h3>
+<p>
+<b id="vVenue"></b><br>
+<span id="vAddress"></span>
+</p>
+<button class="ghost" onclick="route()">Построить маршрут</button>
+</div>
+
+<div class="block">
+<h3>Дресс-код</h3>
+<p id="vDress"></p>
+
+<div class="palette">
+<i class="dot" id="d1"></i>
+<i class="dot" id="d2"></i>
+<i class="dot" id="d3"></i>
+<i class="dot" id="d4"></i>
+</div>
+</div>
+
+<div class="block">
+<h3>Пожелания</h3>
+<p id="vWishes"></p>
+</div>
+
+<div class="block rsvp">
+<h3>Вы сможете присутствовать?</h3>
+<p style="font-size:12px">Доступно в тарифе «Расширенный» и Premium</p>
+
+<input id="guest" placeholder="Имя и фамилия">
+
+<select id="attendance">
+<option value="yes">Да, с удовольствием</option>
+<option value="no">К сожалению, нет</option>
+<option value="maybe">Пока не знаю</option>
+</select>
+
+<input id="guestCount" type="number" min="1" max="20" value="1">
+
+<textarea id="comment" placeholder="Комментарий"></textarea>
+
+<button class="primary" onclick="sendRSVP()">Отправить ответ</button>
+
+<div id="rsvpOk" class="success hidden">
+Спасибо! Ответ сохранён.
+</div>
+</div>
+
+</div>
+</div>
 </div>
 </div>
 
 
-<!-- ТАЙМЕР -->
+<script>
+const $ = id => document.getElementById(id);
 
-<div class="feature">
-<div class="feature-head">
-<b>Таймер до события</b>
-<span class="tag">PREMIUM</span>
-</div>
-<p>Покажите гостям обратный отсчёт до праздника.</p>
+const fields = [
+'names','date','time','venue','address','message',
+'p1t','p1','p2t','p2','p3t','p3',
+'dress','wishes','c1','c2','c3','c4'
+];
 
-<button class="ghost" onclick="enableCountdown()">
-Добавить таймер
-</button>
+let template = localStorage.getItem('invella_template') || 'classic';
+let selectedPlan = localStorage.getItem('invella_plan') || 'basic';
 
-<div id="timerLock" class="lock-message">
-Доступно в тарифе Premium · 1 990 ₽
-</div>
-</div>
+function openTemplates(){
+  const el = document.getElementById('templates');
+  if(el){
+    el.scrollIntoView({behavior:'smooth'});
+  }
+}
 
+function chooseTemplate(t){
+  template = t;
+  localStorage.setItem('invella_template',t);
 
-<!-- QR -->
+  $('marketing').classList.add('hidden');
+  $('app').classList.remove('hidden');
 
-<div class="feature">
-<div class="feature-head">
-<b>QR-код приглашения</b>
-<span class="tag">PREMIUM</span>
-</div>
-<p>QR-код можно будет использовать на печатных карточках и декоре.</p>
+  load();
+  render();
 
-<button class="ghost" onclick="premiumInfo('qrLock')">
-Создать QR-код
-</button>
+  window.scrollTo(0,0);
+}
 
-<div id="qrLock" class="lock-message">
-Доступно в тарифе Premium · 1 990 ₽. QR-код будет создан после публикации персональной ссылки.
-</div>
-</div>
+function goHome(){
+  $('app').classList.add('hidden');
+  $('marketing').classList.remove('hidden');
 
+  setTimeout(function(){
+    const el = document.getElementById('templates');
+    if(el){
+      el.scrollIntoView({behavior:'smooth'});
+    }
+  },50);
+}
 
-<!-- БЛОКИ -->
-
-<div class="feature">
-<div class="feature-head">
-<b>Дополнительные блоки</b>
-<span class="tag">PREMIUM</span>
-</div>
-<p>История пары, информация о подарках, контакты организатора и другие разделы.</p>
-
-<button class="ghost" onclick="togglePremium('extraPanel','extraLock')">
-Добавить блок
-</button>
-
-<div id="extraLock" class="lock-message">
-Доступно в тарифе Premium · 1 990 ₽
-</div>
-
-<div id="extraPanel" class="premium-panel hidden">
-<textarea id="extraText" placeholder="Например: Наша история, информация о подарках или контакты организатора"></textarea>
-<button class="ghost" onclick="addExtraBlock()">Добавить в приглашение</button>
-</div>
-</div>
-
-
-<!-- ПОД КЛЮЧ -->
-
-<div class="feature">
-<div class="feature-head">
-<b>Собрать приглашение за меня</b>
-<span class="tag turnkey">ПОД КЛЮЧ</span>
-</div>
-<p>Вы присылаете информацию и пожелания — оформление делается за вас.</p>
-
-<button class="ghost" onclick="toggleTurnkey()">
-Открыть заявку
-</button>
-
-<div id="turnkeyLock" class="lock-message">
-Доступно в тарифе «Под ключ» · 3 990 ₽
-</div>
-
-<div id="turnkeyPanel" class="premium-panel hidden">
-<input id="clientName" placeholder="Ваше имя">
-<input id="clientContact" placeholder="Телефон или Telegram">
-<textarea id="clientWish" placeholder="Расскажите, каким хотите видеть приглашение"></textarea>
-<button class="primary" onclick="sendTurnkey()">Отправить заявку</b
+fu
