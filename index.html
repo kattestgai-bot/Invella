@@ -13,8 +13,6 @@
   --ink:#201d1b;
   --muted:#766e68;
   --line:#ddd5cd;
-  --premium:#8b6d50;
-  --soft:#f1ebe3;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -24,150 +22,35 @@ button{cursor:pointer}
 .shell{max-width:1180px;margin:auto;padding:0 22px}
 nav{height:72px;display:flex;align-items:center;justify-content:space-between}
 .logo{font-family:Georgia,serif;font-size:24px;letter-spacing:.14em}
-
-.primary,.navbtn{
-  border:0;
-  border-radius:999px;
-  background:var(--ink);
-  color:#fff;
-  padding:14px 20px;
-}
-
-.ghost{
-  border:1px solid var(--line);
-  background:transparent;
-  color:var(--ink);
-  border-radius:999px;
-  padding:13px 18px;
-}
-
-.hero{
-  min-height:72vh;
-  display:grid;
-  grid-template-columns:1.1fr .9fr;
-  align-items:center;
-  gap:45px;
-  padding:55px 0 75px;
-}
-
-.eyebrow{
-  text-transform:uppercase;
-  letter-spacing:.15em;
-  font-size:12px;
-  color:var(--muted);
-}
-
-h1,h2,h3{
-  font-family:Georgia,serif;
-  font-weight:400;
-}
-
-h1{
-  font-size:clamp(58px,8vw,100px);
-  line-height:.88;
-  margin:20px 0 26px;
-}
-
-.hero p{
-  font-size:20px;
-  line-height:1.55;
-  color:var(--muted);
-  max-width:620px;
-}
-
-.phone{
-  width:min(360px,82vw);
-  margin:auto;
-  background:#e9ded3;
-  border:10px solid #25211f;
-  border-radius:42px;
-  padding:12px;
-  box-shadow:0 25px 70px #6b57402b;
-}
-
-.phone-inner{
-  min-height:610px;
-  border-radius:28px;
-  background:#e8ded4;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  text-align:center;
-  padding:28px;
-}
-
-.phone-inner h3{
-  font-size:45px;
-  margin:12px 0;
-}
-
+.primary,.navbtn{border:0;border-radius:999px;background:var(--ink);color:#fff;padding:14px 20px}
+.ghost{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 18px}
+.hero{min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:45px;padding:55px 0 75px}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:var(--muted)}
+h1,h2,h3{font-family:Georgia,serif;font-weight:400}
+h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}
+.hero p{font-size:20px;line-height:1.55;color:var(--muted);max-width:650px}
+.phone{width:min(360px,82vw);margin:auto;background:#e9ded3;border:10px solid #25211f;border-radius:42px;padding:12px;box-shadow:0 25px 70px #6b57402b}
+.phone-inner{min-height:610px;border-radius:28px;background:#e8ded4;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px}
+.phone-inner h3{font-size:45px;margin:12px 0}
 .section{padding:72px 0}
-
-.section h2{
-  font-size:48px;
-  margin:0 0 12px;
-}
-
-.sub{
-  color:var(--muted);
-  margin-bottom:30px;
-}
-
-.categories,.templates{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:16px;
-}
-
-.card{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:22px;
-  padding:22px;
-}
-
-.category{
-  min-height:145px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-}
-
-.category b{
-  font-family:Georgia,serif;
-  font-size:25px;
-}
-
-.template{
-  padding:0;
-  overflow:hidden;
-}
-
-.preview{
-  height:310px;
-  padding:24px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
-
-.preview h3{
-  font-size:35px;
-  margin:8px;
-}
-
+.section h2{font-size:48px;margin:0 0 12px}
+.sub{color:var(--muted);margin-bottom:30px}
+.categories,.templates{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:22px}
+.category{min-height:145px;display:flex;flex-direction:column;justify-content:flex-end}
+.category b{font-family:Georgia,serif;font-size:25px}
+.template{padding:0;overflow:hidden}
+.preview{height:310px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center}
+.preview h3{font-size:35px;margin:8px}
 .t1{background:#e8ded4}
 .t2{background:#f4eee5}
 .t3{background:#20201e;color:white}
 .t4{background:#e6eadf}
 .t5{background:#eadce0}
 .t6{background:#dce4e7}
-
 .template-info{padding:18px}
 .template-info button{width:100%}
 .hidden{display:none!important}
-
 
 /* ТАРИФЫ */
 
@@ -177,357 +60,198 @@ h1{
   gap:18px;
   align-items:stretch;
 }
-
 .plan{
   position:relative;
   display:flex;
   flex-direction:column;
-  padding:28px;
 }
-
-.plan.popular{
-  border:2px solid var(--ink);
-  transform:translateY(-8px);
-}
-
-.badge{
-  display:inline-block;
-  width:max-content;
-  background:var(--ink);
-  color:#fff;
-  padding:6px 10px;
-  border-radius:999px;
-  font-size:11px;
-  letter-spacing:.08em;
-  margin-bottom:15px;
-}
-
 .plan h3{
   font-size:31px;
   margin:0;
 }
-
+.plan-popular{
+  border:2px solid var(--ink);
+  transform:translateY(-8px);
+}
+.badge{
+  display:inline-block;
+  width:max-content;
+  padding:6px 10px;
+  margin-bottom:14px;
+  border-radius:999px;
+  background:var(--ink);
+  color:white;
+  font-size:11px;
+  letter-spacing:.08em;
+}
 .price{
   font-family:Georgia,serif;
-  font-size:43px;
-  margin:15px 0 5px;
+  font-size:42px;
+  margin:14px 0 8px;
 }
-
-.plan-description{
-  color:var(--muted);
-  line-height:1.5;
-}
-
+.plan p{color:var(--muted);line-height:1.5}
 .plan ul{
-  padding:0;
-  margin:20px 0 25px;
   list-style:none;
+  padding:0;
+  margin:14px 0 24px;
   flex:1;
 }
+.plan li{margin:10px 0;line-height:1.4}
+.plan li:before{content:"✓ ";font-weight:bold}
+.plan button{width:100%}
 
-.plan li{
-  margin:10px 0;
-  line-height:1.4;
+/* КОНСТРУКТОР */
+
+.app{min-height:100vh;background:#f5f2ed}
+.appbar{height:68px;border-bottom:1px solid var(--line);background:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:5}
+.editor{display:grid;grid-template-columns:minmax(330px,480px) 1fr;min-height:calc(100vh - 68px)}
+.controls{padding:28px;overflow:auto;background:white;border-right:1px solid var(--line)}
+.controls h2{font-size:34px;margin:5px 0 20px}
+.field{margin:15px 0}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:white}
+.field textarea{min-height:88px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.color{width:34px;height:34px;border:1px solid #bbb;border-radius:50%;padding:0}
+.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0}
+.preview-area{padding:30px;display:flex;justify-content:center;align-items:flex-start}
+.invitation{width:min(430px,100%);background:white;min-height:760px;box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center}
+.inv-hero{min-height:420px;background:#e8ded4;padding:65px 28px;display:flex;flex-direction:column;justify-content:center}
+.inv-hero h2{font-size:52px;margin:14px 0}
+.inv-date{font-family:Georgia,serif;font-size:22px}
+.block{padding:38px 28px;border-top:1px solid #eee}
+.block h3{font-size:30px;margin:0 0 15px}
+.block p{line-height:1.55;color:#615b56}
+.timeline{text-align:left;max-width:300px;margin:auto}
+.timeline div{padding:9px 0;border-bottom:1px solid #eee}
+.palette{display:flex;justify-content:center;gap:10px}
+.dot{width:34px;height:34px;border-radius:50%}
+.rsvp input,.rsvp select,.rsvp textarea{width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px}
+.success{padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px}
+.toolbar{display:flex;gap:8px}
+.faq details{background:white;border-bottom:1px solid var(--line);padding:18px}
+footer{padding:45px 0;color:var(--muted)}
+
+/* ТАРИФ В РЕДАКТОРЕ */
+
+.current-plan{
+  background:#f4efe8;
+  border:1px solid #e3d9cf;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:24px;
 }
+.current-plan small{color:var(--muted)}
+.current-plan b{display:block;margin-top:4px}
 
-.plan li:before{
-  content:"✓ ";
+/* PREMIUM */
+
+.extra-title{
+  font-family:Georgia,serif;
+  font-size:27px;
+  margin:35px 0 5px;
 }
-
-.plan button{
-  width:100%;
-}
-
-
-/* APP */
-
-.app{
-  min-height:100vh;
-  background:#f5f2ed;
-}
-
-.appbar{
-  height:68px;
-  border-bottom:1px solid var(--line);
-  background:white;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 20px;
-  position:sticky;
-  top:0;
-  z-index:5;
-}
-
-.editor{
-  display:grid;
-  grid-template-columns:minmax(330px,480px) 1fr;
-  min-height:calc(100vh - 68px);
-}
-
-.controls{
-  padding:28px;
-  overflow:auto;
-  background:white;
-  border-right:1px solid var(--line);
-}
-
-.controls h2{
-  font-size:34px;
-  margin:5px 0 20px;
-}
-
-.field{
-  margin:15px 0;
-}
-
-.field label{
-  display:block;
+.extra-sub{
   font-size:13px;
   color:var(--muted);
-  margin-bottom:7px;
+  line-height:1.5;
+  margin-bottom:18px;
 }
-
-.field input,
-.field textarea,
-.field select{
-  width:100%;
-  padding:13px;
-  border:1px solid var(--line);
-  border-radius:11px;
-  background:white;
-}
-
-.field textarea{
-  min-height:88px;
-  resize:vertical;
-}
-
-.row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.colors{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.color{
-  width:34px;
-  height:34px;
-  border:1px solid #bbb;
-  border-radius:50%;
-  padding:0;
-}
-
-.timeline-item{
-  display:grid;
-  grid-template-columns:90px 1fr;
-  gap:8px;
-  margin:8px 0;
-}
-
-.preview-area{
-  padding:30px;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-}
-
-.invitation{
-  width:min(430px,100%);
-  background:white;
-  min-height:760px;
-  box-shadow:0 18px 60px #493d3120;
-  overflow:hidden;
-  text-align:center;
-}
-
-.inv-hero{
-  min-height:420px;
-  background:#e8ded4;
-  padding:65px 28px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.inv-hero h2{
-  font-size:52px;
-  margin:14px 0;
-}
-
-.inv-date{
-  font-family:Georgia,serif;
-  font-size:22px;
-}
-
-.block{
-  padding:38px 28px;
-  border-top:1px solid #eee;
-}
-
-.block h3{
-  font-size:30px;
-  margin:0 0 15px;
-}
-
-.block p{
-  line-height:1.55;
-  color:#615b56;
-}
-
-.timeline{
-  text-align:left;
-  max-width:300px;
-  margin:auto;
-}
-
-.timeline div{
-  padding:9px 0;
-  border-bottom:1px solid #eee;
-}
-
-.palette{
-  display:flex;
-  justify-content:center;
-  gap:10px;
-}
-
-.dot{
-  width:34px;
-  height:34px;
-  border-radius:50%;
-}
-
-.rsvp input,
-.rsvp select,
-.rsvp textarea{
-  width:100%;
-  margin:6px 0;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:10px;
-}
-
-.success{
-  padding:12px;
-  border-radius:10px;
-  background:#eef5ec;
-  margin-top:10px;
-}
-
-.toolbar{
-  display:flex;
-  gap:8px;
-}
-
-
-/* ВОЗМОЖНОСТИ */
-
-.option-card{
+.feature{
   border:1px solid var(--line);
   border-radius:16px;
-  padding:17px;
-  margin:15px 0;
-  background:#fff;
+  padding:16px;
+  margin:12px 0;
+  background:#fffdf9;
 }
-
-.option-top{
+.feature-head{
   display:flex;
   justify-content:space-between;
-  align-items:flex-start;
   gap:10px;
+  align-items:center;
 }
-
-.option-top b{
-  font-size:15px;
-}
-
-.option-card p{
-  color:var(--muted);
-  font-size:13px;
-  line-height:1.45;
-  margin:8px 0 12px;
-}
-
+.feature-head b{font-size:14px}
 .tag{
   flex:none;
-  font-size:10px;
-  letter-spacing:.07em;
   border-radius:999px;
   padding:5px 8px;
-  background:#ede7df;
-  color:#67584c;
+  font-size:9px;
+  letter-spacing:.08em;
+  background:#25211f;
+  color:#fff;
 }
-
-.tag.premium{
-  background:#272321;
-  color:white;
-}
-
 .tag.turnkey{
-  background:#dfd2c3;
-  color:#3c3028;
+  background:#dfd0c0;
+  color:#332b26;
 }
-
-.feature-btn{
-  width:100%;
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:11px;
-  background:#faf8f5;
-  color:var(--ink);
+.feature p{
+  font-size:12px;
+  line-height:1.5;
+  color:var(--muted);
 }
-
-.premium-message{
+.feature button{width:100%}
+.lock-message{
   display:none;
   margin-top:10px;
   padding:10px;
-  background:#f5eee7;
   border-radius:10px;
-  color:#705b4b;
+  background:#f4ece4;
   font-size:12px;
+  line-height:1.4;
 }
+.lock-message.show{display:block}
 
-.premium-message.show{
-  display:block;
+.premium-panel{
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid var(--line);
 }
-
-.feature-title{
-  margin-top:32px;
-  font-family:Georgia,serif;
-  font-size:24px;
-}
-
-.plan-current{
-  background:#f2ede6;
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:20px;
-  font-size:13px;
-}
-
-.plan-current b{
-  display:block;
-  margin-top:4px;
-  font-size:15px;
-}
-
-.faq details{
+.premium-panel input,
+.premium-panel textarea,
+.premium-panel select{
+  width:100%;
+  padding:11px;
+  margin:5px 0;
+  border:1px solid var(--line);
+  border-radius:10px;
   background:white;
-  border-bottom:1px solid var(--line);
-  padding:18px;
+}
+audio{width:100%;margin-top:10px}
+
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+  margin-top:12px;
+}
+.gallery-grid img{
+  width:100%;
+  height:95px;
+  object-fit:cover;
 }
 
-footer{
-  padding:45px 0;
+.countdown{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.countdown-item{
+  min-width:70px;
+  background:#f5f1eb;
+  padding:12px 7px;
+  border-radius:12px;
+}
+.countdown-item b{
+  display:block;
+  font-family:Georgia,serif;
+  font-size:27px;
+}
+.countdown-item small{
   color:var(--muted);
+  font-size:10px;
 }
-
 
 @media(max-width:850px){
   .hero{grid-template-columns:1fr}
@@ -536,9 +260,8 @@ footer{
   .editor{grid-template-columns:1fr}
   .preview-area{padding:15px}
   .controls{border-right:0}
-  .plan.popular{transform:none}
+  .plan-popular{transform:none}
 }
-
 @media(max-width:560px){
   .categories,.templates,.pricing{grid-template-columns:1fr}
   .section{padding:50px 0}
@@ -552,7 +275,6 @@ footer{
 </style>
 </head>
 
-
 <body>
 
 <div id="marketing">
@@ -563,261 +285,124 @@ footer{
 <button class="navbtn" onclick="openTemplates()">Создать приглашение</button>
 </nav>
 
-
 <section class="hero">
-
 <div>
 <div class="eyebrow">Персональные сайты-приглашения</div>
-
 <h1>Ваш день.<br>В одном красивом сайте.</h1>
-
-<p>
-Выберите дизайн, добавьте детали праздника
-и отправьте гостям одну красивую ссылку.
-</p>
-
-<button class="primary" onclick="openTemplates()">
-Создать приглашение
-</button>
+<p>Выберите дизайн, добавьте детали праздника и отправьте гостям одну красивую ссылку.</p>
+<button class="primary" onclick="openTemplates()">Создать приглашение</button>
 </div>
 
 <div class="phone">
 <div class="phone-inner">
-
 <div class="eyebrow">мы женимся</div>
-
-<h3>
-Анна<br>
-&<br>
-Максим
-</h3>
-
+<h3>Анна<br>&<br>Максим</h3>
 <div>12 сентября 2026</div>
-
-<p>
-Будем счастливы разделить этот день с вами
-</p>
-
+<p>Будем счастливы разделить этот день с вами</p>
 </div>
 </div>
-
 </section>
-
 
 <section class="section">
-
 <h2>Для любого события</h2>
-
-<p class="sub">
-Свадьба, день рождения, юбилей и другие важные события.
-</p>
+<p class="sub">Свадьба, день рождения, юбилей и другие важные события.</p>
 
 <div class="categories">
-
-<div class="card category">
-<span>💍</span>
-<b>Свадьба</b>
-<small>Главная коллекция</small>
-</div>
-
-<div class="card category">
-<span>🎂</span>
-<b>День рождения</b>
-<small>Тёплые и яркие дизайны</small>
-</div>
-
-<div class="card category">
-<span>✨</span>
-<b>Другой праздник</b>
-<small>Юбилей, baby shower, вечеринка</small>
-</div>
-
+<div class="card category"><span>💍</span><b>Свадьба</b><small>Главная коллекция</small></div>
+<div class="card category"><span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small></div>
+<div class="card category"><span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small></div>
 </div>
 </section>
 
-
 <section class="section" id="templates">
-
 <h2>Выберите шаблон</h2>
-
-<p class="sub">
-Выберите настроение будущего приглашения.
-</p>
+<p class="sub">Выберите настроение будущего приглашения.</p>
 
 <div class="templates">
 
-
 <div class="card template">
-
 <div class="preview t1">
-<div>
-<small>MINIMAL</small>
-<h3>Анна & Максим</h3>
-<span>12 · 09 · 2026</span>
+<div><small>MINIMAL</small><h3>Анна & Максим</h3><span>12 · 09 · 2026</span></div>
 </div>
-</div>
-
 <div class="template-info">
 <b>Тихая классика</b>
 <p>Воздух и кремовые оттенки.</p>
-
-<button
-class="primary"
-onclick="chooseTemplate('classic')">
-Выбрать
-</button>
-
+<button class="primary" onclick="chooseTemplate('classic')">Выбрать</button>
 </div>
 </div>
-
 
 <div class="card template">
-
 <div class="preview t2">
-<div>
-<small>EDITORIAL</small>
-<h3>А + М</h3>
-<span>THE WEDDING DAY</span>
+<div><small>EDITORIAL</small><h3>А + М</h3><span>THE WEDDING DAY</span></div>
 </div>
-</div>
-
 <div class="template-info">
 <b>Editorial</b>
 <p>Журнальная типографика.</p>
-
-<button
-class="primary"
-onclick="chooseTemplate('editorial')">
-Выбрать
-</button>
-
+<button class="primary" onclick="chooseTemplate('editorial')">Выбрать</button>
 </div>
 </div>
-
 
 <div class="card template">
-
 <div class="preview t3">
-<div>
-<small>EVENING</small>
-<h3>Anna<br>Maxim</h3>
-<span>SEPTEMBER 12</span>
+<div><small>EVENING</small><h3>Anna<br>Maxim</h3><span>SEPTEMBER 12</span></div>
 </div>
-</div>
-
 <div class="template-info">
 <b>Black tie</b>
 <p>Тёмный вечерний стиль.</p>
-
-<button
-class="primary"
-onclick="chooseTemplate('dark')">
-Выбрать
-</button>
-
+<button class="primary" onclick="chooseTemplate('dark')">Выбрать</button>
 </div>
 </div>
-
 
 <div class="card template">
-
 <div class="preview t4">
-<div>
-<small>BOTANICAL</small>
-<h3>А & М</h3>
-<span>НАША СВАДЬБА</span>
+<div><small>BOTANICAL</small><h3>А & М</h3><span>НАША СВАДЬБА</span></div>
 </div>
-</div>
-
 <div class="template-info">
 <b>Botanical</b>
 <p>Природная палитра.</p>
-
-<button
-class="primary"
-onclick="chooseTemplate('botanical')">
-Выбрать
-</button>
-
+<button class="primary" onclick="chooseTemplate('botanical')">Выбрать</button>
 </div>
 </div>
-
 
 <div class="card template">
-
 <div class="preview t5">
-<div>
-<small>ROMANCE</small>
-<h3>Анна<br>и Максим</h3>
-<span>навсегда начинается здесь</span>
+<div><small>ROMANCE</small><h3>Анна<br>и Максим</h3><span>навсегда начинается здесь</span></div>
 </div>
-</div>
-
 <div class="template-info">
 <b>Romance</b>
 <p>Мягкий романтичный дизайн.</p>
-
-<button
-class="primary"
-onclick="chooseTemplate('romance')">
-Выбрать
-</button>
-
+<button class="primary" onclick="chooseTemplate('romance')">Выбрать</button>
 </div>
 </div>
-
 
 <div class="card template">
-
 <div class="preview t6">
-<div>
-<small>MODERN</small>
-<h3>12.09</h3>
-<span>ANNA × MAXIM</span>
+<div><small>MODERN</small><h3>12.09</h3><span>ANNA × MAXIM</span></div>
 </div>
-</div>
-
 <div class="template-info">
 <b>Modern</b>
 <p>Современный графичный стиль.</p>
-
-<button
-class="primary"
-onclick="chooseTemplate('modern')">
-Выбрать
-</button>
-
+<button class="primary" onclick="chooseTemplate('modern')">Выбрать</button>
 </div>
 </div>
 
 </div>
 </section>
 
+<!-- ТАРИФЫ -->
 
-<section class="section" id="prices">
-
+<section class="section" id="pricing">
 <h2>Выберите свой вариант</h2>
-
-<p class="sub">
-Создавайте и смотрите результат бесплатно.
-Оплата понадобится только перед публикацией.
-</p>
+<p class="sub">Создавайте приглашение бесплатно. Тариф понадобится при публикации.</p>
 
 <div class="pricing">
 
-
 <div class="card plan">
-
 <h3>Базовый</h3>
-
 <div class="price">990 ₽</div>
-
-<p class="plan-description">
-Красивое приглашение со всем необходимым.
-</p>
-
+<p>Всё необходимое для красивого сайта-приглашения.</p>
 <ul>
-<li>Шаблоны приглашений</li>
+<li>Шаблоны</li>
 <li>Дата и время</li>
 <li>Место и маршрут</li>
 <li>Программа события</li>
@@ -825,137 +410,60 @@ onclick="chooseTemplate('modern')">
 <li>Пожелания гостям</li>
 <li>Персональная ссылка</li>
 </ul>
-
-<button
-class="ghost"
-onclick="selectPlan('basic')">
-Выбрать Базовый
-</button>
-
+<button class="ghost" onclick="selectPlan('basic')">Выбрать Базовый</button>
 </div>
 
-
-<div class="card plan popular">
-
+<div class="card plan plan-popular">
 <span class="badge">ПОПУЛЯРНЫЙ</span>
-
 <h3>Premium</h3>
-
 <div class="price">1 990 ₽</div>
-
-<p class="plan-description">
-Для полноценного интерактивного приглашения.
-</p>
-
+<p>Интерактивное приглашение с дополнительными возможностями.</p>
 <ul>
 <li>Всё из Базового</li>
-<li>RSVP — ответы гостей</li>
+<li>Ответы гостей RSVP</li>
 <li>Музыка</li>
 <li>Фотогалерея</li>
 <li>Таймер до события</li>
 <li>QR-код</li>
 <li>Дополнительные блоки</li>
 </ul>
-
-<button
-class="primary"
-onclick="selectPlan('premium')">
-Выбрать Premium
-</button>
-
+<button class="primary" onclick="selectPlan('premium')">Выбрать Premium</button>
 </div>
 
-
 <div class="card plan">
-
 <h3>Под ключ</h3>
-
 <div class="price">3 990 ₽</div>
-
-<p class="plan-description">
-Вы присылаете информацию — приглашение оформляем за вас.
-</p>
-
+<p>Вы присылаете информацию — готовое приглашение оформляется за вас.</p>
 <ul>
 <li>Всё из Premium</li>
-<li>Сборка приглашения за вас</li>
-<li>Подбор дизайна</li>
+<li>Сборка приглашения</li>
+<li>Подбор оформления</li>
 <li>Помощь с текстами</li>
-<li>Оформление фотографий</li>
+<li>Настройка фотографий</li>
 <li>Настройка музыки</li>
 <li>Персональные правки</li>
 </ul>
-
-<button
-class="ghost"
-onclick="selectPlan('turnkey')">
-Выбрать «Под ключ»
-</button>
-
+<button class="ghost" onclick="selectPlan('turnkey')">Выбрать «Под ключ»</button>
 </div>
 
 </div>
 </section>
-
 
 <section class="section">
-
 <h2>Как это работает</h2>
-
 <div class="categories">
-
-<div class="card">
-<b>01. Выберите</b>
-<p>Подберите шаблон.</p>
-</div>
-
-<div class="card">
-<b>02. Заполните</b>
-<p>Добавьте дату, место, программу и дресс-код.</p>
-</div>
-
-<div class="card">
-<b>03. Отправьте</b>
-<p>Опубликуйте сайт и отправьте гостям ссылку.</p>
-</div>
-
+<div class="card"><b>01. Выберите</b><p>Подберите шаблон.</p></div>
+<div class="card"><b>02. Заполните</b><p>Добавьте дату, место, программу и дресс-код.</p></div>
+<div class="card"><b>03. Отправьте</b><p>Опубликуйте сайт и отправьте гостям ссылку.</p></div>
 </div>
 </section>
 
-
 <section class="section faq">
-
 <h2>Вопросы</h2>
-
-<details>
-<summary>Можно попробовать бесплатно?</summary>
-<p>
-Да. Создание и предпросмотр доступны до публикации.
-</p>
-</details>
-
-<details>
-<summary>Гости должны регистрироваться?</summary>
-<p>
-Нет. Они просто открывают ссылку.
-</p>
-</details>
-
-<details>
-<summary>Можно изменить приглашение?</summary>
-<p>
-Да, данные можно редактировать.
-</p>
-</details>
-
-<details>
-<summary>Что входит в Premium?</summary>
-<p>
-Музыка, фотогалерея, RSVP, таймер,
-QR-код и дополнительные блоки.
-</p>
-</details>
-
+<details><summary>Можно попробовать бесплатно?</summary><p>Да. Создание и предпросмотр доступны до публикации.</p></details>
+<details><summary>Гости должны регистрироваться?</summary><p>Нет. Они просто открывают ссылку.</p></details>
+<details><summary>Можно изменить приглашение?</summary><p>Да, данные можно редактировать.</p></details>
+<details><summary>Что входит в Premium?</summary><p>RSVP, музыка, фотогалерея, таймер, QR-код и дополнительные блоки.</p></details>
 </section>
 
 <footer>© 2026 Invella</footer>
@@ -964,56 +472,31 @@ QR-код и дополнительные блоки.
 </div>
 
 
-
 <!-- КОНСТРУКТОР -->
 
 <div id="app" class="app hidden">
 
 <div class="appbar">
-
 <div class="logo">INVELLA</div>
-
 <div class="toolbar">
-
-<button
-class="ghost"
-onclick="goHome()">
-← Шаблоны
-</button>
-
-<button
-class="primary"
-onclick="publishDemo()">
-Опубликовать
-</button>
-
+<button class="ghost" onclick="goHome()">← Шаблоны</button>
+<button class="primary" onclick="publishDemo()">Опубликовать</button>
 </div>
 </div>
-
 
 <div class="editor">
-
 
 <div class="controls">
 
 <div class="eyebrow">Конструктор</div>
-
 <h2>Ваше приглашение</h2>
 
-
-<div class="plan-current">
-
-Ваш тариф
-
-<b id="currentPlan">
-Базовый · 990 ₽
-</b>
-
+<div class="current-plan">
+<small>Выбранный тариф</small>
+<b id="currentPlan">Базовый · 990 ₽</b>
 </div>
 
-
 <div class="row">
-
 <div class="field">
 <label>Имена</label>
 <input id="names" value="Анна & Максим">
@@ -1021,57 +504,33 @@ onclick="publishDemo()">
 
 <div class="field">
 <label>Дата</label>
-<input
-id="date"
-type="date"
-value="2026-09-12">
+<input id="date" type="date" value="2026-09-12">
 </div>
-
 </div>
-
 
 <div class="row">
-
 <div class="field">
 <label>Время</label>
-<input
-id="time"
-type="time"
-value="15:00">
+<input id="time" type="time" value="15:00">
 </div>
 
 <div class="field">
 <label>Площадка</label>
-<input
-id="venue"
-value="Усадьба «Лесная»">
+<input id="venue" value="Усадьба «Лесная»">
 </div>
-
 </div>
-
 
 <div class="field">
-
 <label>Адрес</label>
-
-<input
-id="address"
-value="Воронеж, ул. Примерная, 10">
-
+<input id="address" value="Воронеж, ул. Примерная, 10">
 </div>
 
-
 <div class="field">
-
 <label>Текст приглашения</label>
-
 <textarea id="message">Будем счастливы разделить с вами один из самых важных дней нашей жизни.</textarea>
-
 </div>
 
-
 <div class="field">
-
 <label>Программа мероприятия</label>
 
 <div class="timeline-item">
@@ -1088,381 +547,188 @@ value="Воронеж, ул. Примерная, 10">
 <input id="p3t" value="17:00">
 <input id="p3" value="Банкет">
 </div>
-
 </div>
 
-
 <div class="field">
-
 <label>Дресс-код</label>
-
 <textarea id="dress">Будем рады, если вы поддержите природную палитру нашего вечера.</textarea>
 
 <div class="colors">
-
-<input
-class="color"
-id="c1"
-type="color"
-value="#77624f">
-
-<input
-class="color"
-id="c2"
-type="color"
-value="#9a9b79">
-
-<input
-class="color"
-id="c3"
-type="color"
-value="#d8c7ad">
-
-<input
-class="color"
-id="c4"
-type="color"
-value="#eee7dc">
-
+<input class="color" id="c1" type="color" value="#77624f">
+<input class="color" id="c2" type="color" value="#9a9b79">
+<input class="color" id="c3" type="color" value="#d8c7ad">
+<input class="color" id="c4" type="color" value="#eee7dc">
 </div>
 </div>
-
 
 <div class="field">
-
 <label>Пожелания гостям</label>
-
 <textarea id="wishes">Ваше присутствие — лучший подарок для нас.</textarea>
-
 </div>
-
 
 <div class="field">
-
 <label>Фотография обложки</label>
-
-<input
-id="photo"
-type="file"
-accept="image/*">
-
+<input id="photo" type="file" accept="image/*">
 </div>
 
 
+<!-- ВСЕ ВОЗМОЖНОСТИ ВИДНЫ -->
 
-<!-- PREMIUM ВОЗМОЖНОСТИ -->
-
-
-<div class="feature-title">
-Дополнительные возможности
-</div>
+<div class="extra-title">Дополнительные возможности</div>
+<p class="extra-sub">Все функции видны сразу. Возможности Premium отмечены отдельно.</p>
 
 
-<div class="option-card">
+<!-- RSVP -->
 
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>Ответы гостей RSVP</b>
-
-<span class="tag premium">
-PREMIUM
-</span>
-
+<span class="tag">PREMIUM</span>
 </div>
+<p>Собирайте подтверждения присутствия и комментарии гостей.</p>
 
-<p>
-Гости смогут подтвердить присутствие,
-указать количество человек и оставить комментарий.
-</p>
-
-<button
-class="feature-btn"
-onclick="premiumFeature('RSVP')">
+<button class="ghost" onclick="togglePremium('rsvpPanel','rsvpLock')">
 Настроить RSVP
 </button>
 
-<div
-id="msg-rsvp"
-class="premium-message">
+<div id="rsvpLock" class="lock-message">
 Доступно в тарифе Premium · 1 990 ₽
 </div>
 
+<div id="rsvpPanel" class="premium-panel hidden">
+<p>RSVP включён. Форма будет показана гостям в приглашении.</p>
+</div>
 </div>
 
 
+<!-- МУЗЫКА -->
 
-<div class="option-card">
-
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>Музыка</b>
-
-<span class="tag premium">
-PREMIUM
-</span>
-
+<span class="tag">PREMIUM</span>
 </div>
+<p>Добавьте музыкальную композицию к приглашению.</p>
 
-<p>
-Добавьте композицию, которая будет создавать
-атмосферу вашего приглашения.
-</p>
-
-<button
-class="feature-btn"
-onclick="premiumFeature('music')">
+<button class="ghost" onclick="togglePremium('musicPanel','musicLock')">
 Добавить музыку
 </button>
 
-<div
-id="msg-music"
-class="premium-message">
+<div id="musicLock" class="lock-message">
 Доступно в тарифе Premium · 1 990 ₽
 </div>
 
+<div id="musicPanel" class="premium-panel hidden">
+<input id="music" type="file" accept="audio/*">
+<audio id="musicPlayer" controls class="hidden"></audio>
+</div>
 </div>
 
 
+<!-- ГАЛЕРЕЯ -->
 
-<div class="option-card">
-
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>Фотогалерея</b>
-
-<span class="tag premium">
-PREMIUM
-</span>
-
+<span class="tag">PREMIUM</span>
 </div>
+<p>Добавьте фотографии, которые увидят гости.</p>
 
-<p>
-Добавьте любимые фотографии прямо
-на страницу приглашения.
-</p>
-
-<button
-class="feature-btn"
-onclick="premiumFeature('gallery')">
+<button class="ghost" onclick="togglePremium('galleryPanel','galleryLock')">
 Добавить фотографии
 </button>
 
-<div
-id="msg-gallery"
-class="premium-message">
+<div id="galleryLock" class="lock-message">
 Доступно в тарифе Premium · 1 990 ₽
 </div>
 
+<div id="galleryPanel" class="premium-panel hidden">
+<input id="gallery" type="file" accept="image/*" multiple>
+</div>
 </div>
 
 
+<!-- ТАЙМЕР -->
 
-<div class="option-card">
-
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>Таймер до события</b>
-
-<span class="tag premium">
-PREMIUM
-</span>
-
+<span class="tag">PREMIUM</span>
 </div>
+<p>Покажите гостям обратный отсчёт до праздника.</p>
 
-<p>
-Красивый обратный отсчёт до вашего дня.
-</p>
-
-<button
-class="feature-btn"
-onclick="premiumFeature('timer')">
+<button class="ghost" onclick="enableCountdown()">
 Добавить таймер
 </button>
 
-<div
-id="msg-timer"
-class="premium-message">
+<div id="timerLock" class="lock-message">
 Доступно в тарифе Premium · 1 990 ₽
 </div>
-
 </div>
 
 
+<!-- QR -->
 
-<div class="option-card">
-
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>QR-код приглашения</b>
-
-<span class="tag premium">
-PREMIUM
-</span>
-
+<span class="tag">PREMIUM</span>
 </div>
+<p>QR-код можно будет использовать на печатных карточках и декоре.</p>
 
-<p>
-QR-код для печати на карточках,
-конвертах или декоре.
-</p>
-
-<button
-class="feature-btn"
-onclick="premiumFeature('qr')">
+<button class="ghost" onclick="premiumInfo('qrLock')">
 Создать QR-код
 </button>
 
-<div
-id="msg-qr"
-class="premium-message">
-Доступно в тарифе Premium · 1 990 ₽
+<div id="qrLock" class="lock-message">
+Доступно в тарифе Premium · 1 990 ₽. QR-код будет создан после публикации персональной ссылки.
 </div>
-
 </div>
 
 
+<!-- БЛОКИ -->
 
-<div class="option-card">
-
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>Дополнительные блоки</b>
-
-<span class="tag premium">
-PREMIUM
-</span>
-
+<span class="tag">PREMIUM</span>
 </div>
+<p>История пары, информация о подарках, контакты организатора и другие разделы.</p>
 
-<p>
-Добавьте историю знакомства, подарки,
-контакты организатора и другие разделы.
-</p>
-
-<button
-class="feature-btn"
-onclick="premiumFeature('blocks')">
+<button class="ghost" onclick="togglePremium('extraPanel','extraLock')">
 Добавить блок
 </button>
 
-<div
-id="msg-blocks"
-class="premium-message">
+<div id="extraLock" class="lock-message">
 Доступно в тарифе Premium · 1 990 ₽
 </div>
 
+<div id="extraPanel" class="premium-panel hidden">
+<textarea id="extraText" placeholder="Например: Наша история, информация о подарках или контакты организатора"></textarea>
+<button class="ghost" onclick="addExtraBlock()">Добавить в приглашение</button>
 </div>
-
+</div>
 
 
 <!-- ПОД КЛЮЧ -->
 
-
-<div class="option-card">
-
-<div class="option-top">
-
+<div class="feature">
+<div class="feature-head">
 <b>Собрать приглашение за меня</b>
-
-<span class="tag turnkey">
-ПОД КЛЮЧ
-</span>
-
+<span class="tag turnkey">ПОД КЛЮЧ</span>
 </div>
+<p>Вы присылаете информацию и пожелания — оформление делается за вас.</p>
 
-<p>
-Вы присылаете информацию, фотографии
-и пожелания — готовое приглашение оформляется за вас.
-</p>
-
-<button
-class="feature-btn"
-onclick="turnkeyFeature()">
-Хочу «Под ключ»
+<button class="ghost" onclick="toggleTurnkey()">
+Открыть заявку
 </button>
 
-<div
-id="msg-turnkey"
-class="premium-message">
+<div id="turnkeyLock" class="lock-message">
 Доступно в тарифе «Под ключ» · 3 990 ₽
 </div>
 
-</div>
-
-
-<p style="font-size:12px;color:#766e68">
-Изменения сохраняются автоматически.
-</p>
-
-</div>
-
-
-
-<!-- ПРЕДПРОСМОТР -->
-
-
-<div class="preview-area">
-
-<div class="invitation">
-
-
-<div
-class="inv-hero"
-id="invHero">
-
-<div class="eyebrow">
-мы женимся
-</div>
-
-<h2 id="vNames">
-Анна & Максим
-</h2>
-
-<div
-class="inv-date"
-id="vDate">
-12 сентября 2026 · 15:00
-</div>
-
-</div>
-
-
-<div class="block">
-
-<h3>Дорогие гости</h3>
-
-<p id="vMessage"></p>
-
-</div>
-
-
-<div class="block">
-
-<h3>Программа дня</h3>
-
-<div class="timeline">
-
-<div>
-<b id="vp1t"></b>
-—
-<span id="vp1"></span>
-</div>
-
-<div>
-<b id="vp2t"></b>
-—
-<span id="vp2"></span>
-</div>
-
-<div>
-<b id="vp3t"></b>
-—
-<span id="vp3"></span>
-</div>
-
-</div>
-
-</div>
-
-
-<
+<div id="turnkeyPanel" class="premium-panel hidden">
+<input id="clientName" placeholder="Ваше имя">
+<input id="clientContact" placeholder="Телефон или Telegram">
+<textarea id="clientWish" placeholder="Расскажите, каким хотите видеть приглашение"></textarea>
+<button class="primary" onclick="sendTurnkey()">Отправить заявку</b
