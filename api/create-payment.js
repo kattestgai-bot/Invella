@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { plan } = req.body || {};
+    const { plan, invitationId } = req.body || {};
 
     const plans = {
       basic: {
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       },
       pro: {
         amount: "1490.00",
-        description: "Invella — Расширенный тариф"
+        description: "Invella — Pro тариф"
       },
       premium: {
         amount: "2490.00",
@@ -24,47 +24,64 @@ export default async function handler(req, res) {
     const selectedPlan = plans[plan];
 
     if (!selectedPlan) {
-      return res.status(400).json({ error: "Неизвестный тариф" });
+      return res.status(400).json({
+        error: "Неизвестный тариф"
+      });
+    }
+
+    if (!invitationId) {
+      return res.status(400).json({
+        error: "Не указано приглашение"
+      });
     }
 
     const shopId = process.env.YOOKASSA_SHOP_ID;
     const secretKey = process.env.YOOKASSA_SECRET_KEY;
 
     if (!shopId || !secretKey) {
-      return res.status(500).json({ error: "YooKassa не настроена" });
+      return res.status(500).json({
+        error: "YooKassa не настроена"
+      });
     }
 
     const idempotenceKey = crypto.randomUUID();
 
-    const response = await fetch("https://api.yookassa.ru/v3/payments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Idempotence-Key": idempotenceKey,
-        Authorization:
-          "Basic " +
-          Buffer.from(`${shopId}:${secretKey}`).toString("base64")
-      },
-      body: JSON.stringify({
-        amount: {
-          value: selectedPlan.amount,
-          currency: "RUB"
+    const response = await fetch(
+      "https://api.yookassa.ru/v3/payments",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotence-Key": idempotenceKey,
+          Authorization:
+            "Basic " +
+            Buffer.from(`${shopId}:${secretKey}`).toString("base64")
         },
 
-        capture: true,
+        body: JSON.stringify({
+          amount: {
+            value: selectedPlan.amount,
+            currency: "RUB"
+          },
 
-        confirmation: {
-          type: "redirect",
-          return_url: "https://invella-xi.vercel.app/?payment=success"
-        },
+          capture: true,
 
-        description: selectedPlan.description,
+          confirmation: {
+            type: "redirect",
+            return_url:
+              "https://invella-xi.vercel.app/?payment=success"
+          },
 
-        metadata: {
-          plan: plan
-        }
-      })
-    });
+          description: selectedPlan.description,
+
+          metadata: {
+            plan: plan,
+            invitationId: invitationId
+          }
+        })
+      }
+    );
 
     const payment = await response.json();
 
@@ -78,7 +95,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       paymentId: payment.id,
-      confirmationUrl: payment.confirmation?.confirmation_url
+      confirmationUrl:
+        payment.confirmation?.confirmation_url
     });
 
   } catch (error) {
@@ -88,4 +106,4 @@ export default async function handler(req, res) {
       error: "Ошибка создания платежа"
     });
   }
-      }
+}
