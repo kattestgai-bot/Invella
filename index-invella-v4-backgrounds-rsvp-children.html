@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invella — сайты-приглашения</title>
+<meta name="description" content="Создайте красивый персональный сайт-приглашение за несколько минут.">
+<style>
+:root{--bg:#f4f0e9;--paper:#fffdfa;--ink:#191715;--muted:#746c65;--line:#d9d0c6;--soft:#ebe3d9;--premium:#8a6c45;--lux:#b89a70}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:'Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink)}
+button,input,textarea,select{font:inherit}button{cursor:pointer}a{color:inherit}.shell{max-width:1180px;margin:auto;padding:0 22px}
+nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.logo{font-family:Georgia,serif;font-size:23px;letter-spacing:.22em;font-weight:500}
+nav{border-bottom:1px solid rgba(120,100,80,.14)}
+.hero{position:relative}
+.hero:before{content:"";position:absolute;right:2%;top:7%;width:330px;height:330px;border-radius:50%;background:radial-gradient(circle,#d8c4aa55,transparent 68%);filter:blur(10px);pointer-events:none}
+.hero h1{letter-spacing:-.045em}
+.eyebrow{font-weight:600}
+.section h2{letter-spacing:-.025em}
+.template{transition:transform .25s ease,box-shadow .25s ease}.template:hover{transform:translateY(-4px);box-shadow:0 24px 60px #493d3118}
+.preview{position:relative}.preview:after{content:"";position:absolute;inset:12px;border:1px solid rgba(80,60,45,.14);border-radius:2px;pointer-events:none}
+.price-card{padding:28px}.price-card.popular{transform:translateY(-8px);background:linear-gradient(150deg,#fffdfa,#f3e8d9);box-shadow:0 28px 70px #493d311a}
+.invitation{border-radius:4px}
+.primary,.navbtn{border:0;border-radius:999px;background:linear-gradient(135deg,#191715,#3a3028);color:#fff;padding:14px 20px;transition:.2s;box-shadow:0 8px 24px #241c161c}
+.primary:active,.navbtn:active,.ghost:active{transform:scale(.98)}.ghost{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:13px 18px}
+.hero{min-height:72vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:45px;padding:55px 0 75px}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:12px;color:var(--muted)}h1,h2,h3{font-family:Georgia,serif;font-weight:400}
+h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}.hero p{font-size:20px;line-height:1.55;color:var(--muted);max-width:620px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}.phone{width:min(360px,82vw);margin:auto;background:#e9ded3;border:10px solid #25211f;border-radius:42px;padding:12px;box-shadow:0 25px 70px #6b57402b}
+.phone-inner{min-height:610px;border-radius:28px;background:#e8ded4;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:28px}.phone-inner h3{font-size:45px;margin:12px 0}
+.section{padding:72px 0}.section h2{font-size:48px;margin:0 0 12px}.sub{color:var(--muted);margin-bottom:30px;line-height:1.55}
+.categories,.templates,.pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:linear-gradient(145deg,#fffdfa,#faf6f0);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 14px 38px #493d310a}
+.category{min-height:145px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px}.category span{font-size:25px;margin-bottom:auto}.category b{font-family:Georgia,serif;font-size:25px}.category small{color:var(--muted)}
+.template{padding:0;overflow:hidden}.preview{height:310px;padding:24px;display:flex;align-items:center;justify-content:center;text-align:center}.preview h3{font-size:35px;margin:8px}
+.t1{background:#e8ded4}.t2{background:#f4eee5}.t3{background:#20201e;color:#fff}.t4{background:#e6eadf}.t5{background:#eadce0}.t6{background:#dce4e7}
+.template-info{padding:18px}.template-info p{color:var(--muted);min-height:38px}.template-info button,.price-card button{width:100%}.hidden{display:none!important}
+.pricing{gap:18px;align-items:stretch}.price-card{position:relative;display:flex;flex-direction:column}.price-card.popular{border-color:#a88960;box-shadow:0 18px 45px #5b463215}
+.popular-badge{position:absolute;top:14px;right:14px;background:var(--ink);color:#fff;border-radius:999px;padding:7px 10px;font-size:11px}.plan-name{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.price{font-family:Georgia,serif;font-size:42px;margin-bottom:8px}.plan-description{color:var(--muted);line-height:1.5;min-height:48px}.features{padding:0;margin:18px 0 25px;list-style:none;flex:1}.features li{padding:8px 0;border-bottom:1px solid #eee7df}.features li:before{content:"✓";margin-right:9px}
+.app{min-height:100vh;background:#f5f2ed}.appbar{min-height:68px;border-bottom:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 20px;position:sticky;top:0;z-index:10}
+.editor{display:grid;grid-template-columns:minmax(330px,480px) 1fr;min-height:calc(100vh - 68px)}.controls{padding:28px;overflow:auto;background:#fff;border-right:1px solid var(--line)}.controls h2{font-size:34px;margin:5px 0 20px}
+.field{margin:15px 0}.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}.field input,.field textarea,.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink)}.field textarea{min-height:88px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.colors{display:flex;gap:8px;flex-wrap:wrap}.color{width:38px!important;height:38px;border:1px solid #bbb!important;border-radius:50%!important;padding:2px!important}.timeline-item{display:grid;grid-template-columns:90px 1fr;gap:8px;margin:8px 0}
+.feature-box{margin:18px 0;padding:17px;border:1px solid var(--line);border-radius:16px;background:#faf8f4}.feature-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}.feature-head strong{font-family:Georgia,serif;font-size:18px;font-weight:400}.feature-box p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.tag{flex:none;display:inline-block;padding:5px 8px;border-radius:999px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:#eee8df;color:#655a50}.tag.premium{background:#282421;color:#fff}
+.preview-area{padding:30px;display:flex;justify-content:center;align-items:flex-start}.invitation{width:min(430px,100%);background:#fff;min-height:760px;box-shadow:0 18px 60px #493d3120;overflow:hidden;text-align:center}.inv-hero{min-height:420px;background:#e8ded4;padding:65px 28px;display:flex;flex-direction:column;justify-content:center;background-size:cover;background-position:center}.inv-hero h2{font-size:52px;margin:14px 0}.inv-date{font-family:Georgia,serif;font-size:22px}
+.block{padding:38px 28px;border-top:1px solid #eee}.block h3{font-size:30px;margin:0 0 15px}.block p{line-height:1.55;color:#615b56}.timeline{text-align:left;max-width:300px;margin:auto}.timeline div{padding:9px 0;border-bottom:1px solid #eee}.palette{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.dot{width:34px;height:34px;border-radius:50%;border:1px solid #ddd}
+.rsvp input,.rsvp select,.rsvp textarea{width:100%;margin:6px 0;padding:12px;border:1px solid #ddd;border-radius:10px}.success{padding:12px;border-radius:10px;background:#eef5ec;margin-top:10px}.toolbar{display:flex;gap:8px}.draft-note,.support-box{font-size:12px;color:var(--muted);line-height:1.5}.support-box{margin-top:25px;padding-top:20px;border-top:1px solid var(--line)}
+.faq details{background:#fff;border-bottom:1px solid var(--line);padding:18px}.faq summary{cursor:pointer}.faq p{color:var(--muted);line-height:1.5}footer{padding:45px 0;color:var(--muted);border-top:1px solid var(--line)}.footer-inner{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:#201d1ba8;z-index:100;display:flex;align-items:center;justify-content:center;padding:18px}.modal-card{width:min(950px,100%);max-height:90vh;overflow:auto;background:var(--bg);border-radius:24px;padding:24px;box-shadow:0 25px 80px #0004}.modal-top{display:flex;justify-content:space-between;gap:15px;margin-bottom:20px}.modal-top h2{margin:0;font-size:36px}.close-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:22px;flex:none}
+.auth-card{width:min(460px,100%)}.auth-tabs{display:flex;gap:8px;margin:18px 0}.auth-tabs button{flex:1}.auth-message{font-size:13px;line-height:1.5;margin-top:12px}.auth-message.error{color:#9a2e2e}.auth-message.ok{color:#35643b}.user-chip{font-size:12px;color:var(--muted);max-width:210px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:850px){.hero{grid-template-columns:1fr}.phone{display:none}.categories,.templates,.pricing{grid-template-columns:1fr 1fr}.editor{grid-template-columns:1fr}.controls{border-right:0}.pricing{grid-template-columns:1fr}}
+@media(max-width:560px){.shell{padding:0 16px}nav{min-height:66px}.logo{font-size:20px}.hero{min-height:auto;padding:55px 0 65px}h1{font-size:52px}.hero p{font-size:17px}.categories,.templates,.pricing{grid-template-columns:1fr}.section{padding:50px 0}.section h2{font-size:38px}.row{grid-template-columns:1fr}.controls{padding:20px}.appbar{padding:9px 12px}.appbar .logo{display:none}.toolbar{width:100%}.toolbar button{flex:1;padding:11px 10px;font-size:13px}.preview-area{padding:10px}.inv-hero{min-height:360px}.inv-hero h2{font-size:42px}.block{padding:32px 22px}.modal-card{padding:18px}.nav-actions .navbtn{padding:11px 14px;font-size:13px}.user-chip{display:none}}
+</style>
+
+<style>
+/* INVELLA LUXURY REDESIGN */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@300;400;500;600&display=swap');
+
+:root{
+ --bg:#f3eee6;--paper:#fbf8f2;--ink:#17130f;--muted:#756b61;
+ --line:rgba(62,47,34,.16);--soft:#e9dfd1;--premium:#8c6b43;--lux:#b79768;
+}
+html{background:#17130f}
+body{
+ font-family:'Manrope',Arial,sans-serif;
+ background:
+ radial-gradient(circle at 78% 4%,rgba(184,151,104,.15),transparent 25rem),
+ linear-gradient(180deg,#f7f2ea 0,#efe7dc 100%);
+ color:var(--ink)
+}
+.shell{max-width:1280px;padding:0 42px}
+.logo,h1,h2,h3,.price,.plan-name,.template-info b,.category b{
+ font-family:'Cormorant Garamond',Georgia,serif
+}
+nav{
+ min-height:92px;border-bottom:1px solid rgba(50,38,28,.12);
+ position:relative;z-index:5
+}
+.logo{font-size:27px;letter-spacing:.32em}
+.nav-actions{gap:12px}
+.primary,.navbtn,.ghost{
+ min-height:48px;padding:13px 23px;border-radius:2px;
+ text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:600
+}
+.primary,.navbtn{
+ background:#191510;color:#fff;box-shadow:none;border:1px solid #191510
+}
+.primary:hover,.navbtn:hover{background:#a48358;border-color:#a48358}
+.ghost{background:transparent;border:1px solid rgba(45,35,27,.28)}
+.hero{
+ min-height:790px;grid-template-columns:1.08fr .92fr;gap:80px;padding:80px 0 110px;
+ position:relative
+}
+.hero:after{
+ content:"INVELLA";position:absolute;left:-10px;bottom:10px;
+ font-family:'Cormorant Garamond',serif;font-size:180px;letter-spacing:.05em;
+ color:rgba(95,72,50,.035);pointer-events:none
+}
+.eyebrow{font-size:10px;letter-spacing:.28em;color:#91795e}
+h1{
+ font-size:clamp(72px,8.4vw,128px);line-height:.79;letter-spacing:-.055em;
+ margin:28px 0 34px;font-weight:400
+}
+.hero p{font-size:17px;line-height:1.8;max-width:540px;color:#70665c;font-weight:300}
+.hero-actions{margin-top:35px}
+.phone{
+ width:min(390px,82vw);padding:0;border:0;border-radius:0;background:#d8c5ad;
+ box-shadow:0 45px 100px rgba(45,31,19,.22);position:relative
+}
+.phone:before{
+ content:"";position:absolute;inset:-18px;border:1px solid rgba(110,83,55,.3);z-index:-1
+}
+.phone-inner{
+ min-height:650px;border-radius:0;
+ background:
+ linear-gradient(rgba(31,24,18,.16),rgba(31,24,18,.2)),
+ radial-gradient(circle at 50% 15%,#f5eadb,#d2b99b 70%);
+ color:#fff;padding:45px
+}
+.phone-inner .eyebrow{color:#fff;opacity:.85}
+.phone-inner h3{font-size:64px;line-height:.85;font-weight:400}
+.phone-inner p{color:#fff;font-family:'Cormorant Garamond',serif;font-size:19px}
+.section{padding:105px 0}
+.section>h2{font-size:65px;line-height:.95;font-weight:400;margin-bottom:18px}
+.sub{font-size:14px;line-height:1.8}
+.categories,.templates,.pricing{gap:24px}
+.card{
+ background:rgba(255,252,247,.72);border:1px solid rgba(71,53,38,.14);
+ border-radius:0;padding:30px;box-shadow:none
+}
+.category{min-height:205px;padding:32px}
+.category span{font-size:31px;filter:grayscale(.35)}
+.category b{font-size:34px;font-weight:500}
+.category small{font-size:11px;letter-spacing:.06em}
+.template{background:#f9f4ec}
+.preview{height:390px;padding:34px}
+.preview:after{inset:20px;border-color:rgba(60,44,32,.19);border-radius:0}
+.preview h3{font-size:49px;line-height:.95}
+.template-info{padding:25px}
+.template-info b{font-size:27px;font-weight:500}
+.template-info p{font-size:13px;line-height:1.6}
+.t1{background:linear-gradient(145deg,#e7d9ca,#f5ede4)}
+.t2{background:#eee6da}
+.t3{background:linear-gradient(145deg,#12100e,#2c261f)}
+.t4{background:linear-gradient(145deg,#dce1d4,#f2eee4)}
+.t5{background:linear-gradient(145deg,#ead7d7,#f7efeb)}
+.t6{background:linear-gradient(145deg,#d9e0df,#eee9df)}
+.pricing{gap:0;border:1px solid rgba(71,53,38,.15)}
+.price-card{border:0;border-right:1px solid rgba(71,53,38,.15);padding:40px 34px;background:#f8f3eb}
+.price-card:last-child{border-right:0}
+.price-card.popular{
+ transform:none;background:#1b1713;color:#f8f2e9;box-shadow:none;border-color:#1b1713
+}
+.price-card.popular .plan-description,.price-card.popular .plan-name{color:#cbbba7}
+.price-card.popular .features li{border-color:rgba(255,255,255,.13)}
+.price-card.popular .primary{background:#f1e4d1;color:#1b1713;border-color:#f1e4d1}
+.popular-badge{
+ top:20px;right:20px;border-radius:0;background:#b28d5e;color:#fff;
+ text-transform:uppercase;letter-spacing:.14em;padding:8px 11px
+}
+.plan-name{font-size:19px;letter-spacing:.12em}
+.price{font-size:57px;font-weight:400;margin:16px 0}
+.features li{padding:13px 0;font-size:13px}
+.features li:before{content:"—";color:#a28058}
+.faq details{background:transparent;padding:23px 0}
+footer{border-top:1px solid rgba(71,53,38,.14)}
+/* Builder */
+.app{background:#eee7dd}
+.appbar{min-height:78px;background:#181410;color:#fff;border:0;padding:13px 28px}
+.appbar .ghost{border-color:rgba(255,255,255,.28);color:#fff}
+.controls{padding:38px;background:#faf7f1;border-color:rgba(70,50,35,.12)}
+.controls h2{font-size:43px}
+.field label{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.field input,.field textarea,.field select{
+ border-radius:0;border:0;border-bottom:1px solid #cfc3b5;background:transparent;padding:14px 3px
+}
+.feature-box{border-radius:0;background:#f5efe6;padding:22px}
+.invitation{box-shadow:0 35px 90px rgba(55,39,25,.17);background:#fffdf9}
+.inv-hero{min-height:500px}
+.inv-hero h2{font-size:65px}
+.block{padding:48px 34px}
+.block h3{font-size:39px}
+.modal{background:rgba(20,16,12,.78);backdrop-filter:blur(8px)}
+.modal-card{border-radius:0;background:#f5efe6;padding:35px}
+.close-btn{border-radius:0}
+@media(max-width:850px){
+ .shell{padding:0 22px}.hero{min-height:auto;gap:40px}.pricing{border:0;gap:16px}
+ .price-card{border:1px solid rgba(71,53,38,.15)}
+}
+@media(max-width:560px){
+ .shell{padding:0 18px}nav{min-height:76px}.logo{font-size:20px}
+ .hero{padding:60px 0 75px}.hero:after{display:none}
+ h1{font-size:64px;line-height:.83}.hero p{font-size:15px}
+ .section{padding:72px 0}.section>h2{font-size:48px}
+ .preview{height:340px}.category{min-height:170px}
+ .price-card{padding:30px 24px}.price{font-size:49px}
+ .controls{padding:24px 18px}.modal-card{padding:22px 18px}
+}
+</style>
+
+
+<style>
+.password-wrap{position:relative}.password-wrap input{padding-right:48px!important}.password-eye{position:absolute;right:2px;bottom:8px;width:42px;height:38px;border:0;background:transparent;font-size:18px;padding:0;color:var(--muted)}
+.guest-greeting{font-family:'Cormorant Garamond',Georgia,serif;font-size:26px;color:inherit;margin:0 0 8px}
+.alcohol-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;margin:10px 0 12px}.alcohol-choice{display:flex;align-items:center;gap:8px;padding:10px;border:1px solid #ddd;font-size:13px}.alcohol-choice input{width:auto!important;margin:0!important}
+.payment-success-card{text-align:center;max-width:520px}.payment-success-card .success-mark{font-family:'Cormorant Garamond',serif;font-size:72px;line-height:1;margin:4px 0 14px}.payment-success-card h2{font-size:48px;margin:0 0 12px}.payment-success-card .primary,.payment-success-card .ghost{width:100%;margin-top:9px}
+@media(max-width:560px){.alcohol-grid{grid-template-columns:1fr}.payment-success-card h2{font-size:39px}}
+</style>
+
+<style id="invella-couture-v3">
+/* INVELLA COUTURE COLLECTION — six independent art directions */
+#templates{padding-top:84px}
+#templates>h2{max-width:780px;font-size:clamp(46px,7vw,84px);line-height:.88;letter-spacing:-.045em;margin-bottom:20px}
+#templates>.sub{max-width:580px;font-size:15px;line-height:1.8;margin-bottom:44px}
+#templates .templates{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px}
+#templates .template{border:0;border-radius:0;background:#f8f3eb;box-shadow:0 22px 70px rgba(43,32,23,.08);overflow:hidden;transition:transform .35s ease,box-shadow .35s ease}
+#templates .template:hover{transform:translateY(-8px);box-shadow:0 34px 90px rgba(43,32,23,.14)}
+#templates .preview{height:520px;padding:0;overflow:hidden;isolation:isolate}
+#templates .preview:after{display:none}
+#templates .template-info{padding:27px 28px 30px;background:#fbf8f2;border-top:1px solid rgba(48,37,29,.09)}
+#templates .template-info b{display:block;font-size:30px;font-weight:400;letter-spacing:-.02em;margin-bottom:7px}
+#templates .template-info p{font-size:12px;letter-spacing:.02em;line-height:1.65;min-height:40px;margin:0 0 19px;color:#81776f}
+#templates .template-info button{border-radius:0;letter-spacing:.13em;text-transform:uppercase;font-size:10px;padding:15px 18px}
+
+/* 01 MAISON — ivory stationery, blind emboss, monogram */
+.t1{background:linear-gradient(145deg,#e9ddcf,#f7f0e6 56%,#ded0c0);color:#30251d}
+.t1:before{content:"";position:absolute;inset:27px;border:1px solid rgba(91,67,48,.28);box-shadow:inset 0 0 0 7px rgba(255,255,255,.18);z-index:-1}
+.t1 .art{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:55px 42px;position:relative}
+.t1 .art:before{content:"A  ·  M";display:grid;place-items:center;width:74px;height:74px;border:1px solid #8b715c;border-radius:50%;font-family:Georgia,serif;font-size:17px;letter-spacing:.12em;margin-bottom:54px}
+.t1 small{font-size:8px;letter-spacing:.48em;text-transform:uppercase;margin-bottom:18px}
+.t1 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:61px!important;font-weight:400;line-height:.82!important;margin:0 0 27px!important}
+.t1 span{font-family:Arial,sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;border-top:1px solid #9e8b7b;padding-top:16px}
+
+/* 02 VOGUE EDITORIAL — typography as architecture */
+.t2{background:#e8e3da;color:#0d0d0c;text-align:left;align-items:stretch!important;justify-content:stretch!important}
+.t2 .art{height:100%;width:100%;position:relative;padding:28px 28px 34px;display:flex;flex-direction:column;align-items:flex-start}
+.t2 .issue{font:700 9px/1 Arial,sans-serif;letter-spacing:.2em;border:1px solid #111;padding:7px 8px}
+.t2 .number{position:absolute;right:22px;top:16px;font:800 112px/.8 Arial,sans-serif;letter-spacing:-.1em;color:rgba(0,0,0,.08)}
+.t2 h3{font-family:Arial,sans-serif!important;font-size:66px!important;line-height:.76!important;letter-spacing:-.085em!important;font-weight:800!important;text-transform:uppercase;margin:auto 0 24px!important;max-width:90%}
+.t2 .rule{width:100%;height:8px;background:#111;margin-bottom:18px}
+.t2 span{font:700 10px/1.4 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;max-width:240px}
+
+/* 03 NOIR — black tie, champagne foil, cinematic */
+.t3{background:radial-gradient(circle at 50% 28%,#35302a 0,#171512 48%,#090908 100%);color:#f0e6d6}
+.t3:before{content:"";position:absolute;inset:19px;border:1px solid rgba(203,175,128,.35);z-index:-1}
+.t3:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(203,175,128,.14);border-radius:50%;top:70px;left:50%;transform:translateX(-50%);z-index:-1}
+.t3 .art{height:100%;width:100%;padding:48px 38px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t3 small{font-size:8px;letter-spacing:.55em;color:#c5aa7d;margin-bottom:72px}
+.t3 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:66px!important;line-height:.78!important;font-weight:300!important;margin:0 0 48px!important;color:#f6eee2}
+.t3 .diamond{width:7px;height:7px;background:#c5aa7d;transform:rotate(45deg);margin-bottom:22px}
+.t3 span{font-size:9px;letter-spacing:.32em;color:#cbbca7;text-transform:uppercase}
+
+/* 04 HERBARIUM — botanical atelier, illustrated leaves */
+.t4{background:#e9eadf;color:#2d3a2c}
+.t4 .art{height:100%;width:100%;padding:54px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.t4 .leaf{position:absolute;width:120px;height:230px;border-left:1px solid #6f8069;opacity:.7;transform-origin:bottom}
+.t4 .leaf:before,.t4 .leaf:after{content:"";position:absolute;width:58px;height:24px;border:1px solid #71826b;border-radius:100% 0 100% 0}
+.t4 .leaf:before{left:-58px;top:54px;transform:rotate(25deg)}.t4 .leaf:after{left:0;top:105px;transform:rotate(-25deg) scaleX(-1)}
+.t4 .l1{left:17px;bottom:-15px;transform:rotate(-15deg)}.t4 .l2{right:8px;top:-22px;transform:rotate(165deg)}
+.t4 small{font-size:8px;letter-spacing:.42em;margin-bottom:27px;z-index:1}
+.t4 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:69px!important;line-height:.82!important;font-style:italic;font-weight:400!important;margin:0 0 26px!important;z-index:1}
+.t4 span{font-size:9px;letter-spacing:.25em;text-transform:uppercase;z-index:1}
+.t4 .seal{margin-top:45px;width:36px;height:36px;border:1px solid #788873;border-radius:50%;display:grid;place-items:center;font-family:Georgia,serif;font-size:12px;z-index:1}
+
+/* 05 AMOUR — couture blush, silk ribbon, handwritten mood */
+.t5{background:linear-gradient(155deg,#f5e8e4 0,#ead5d2 52%,#f7eeea 100%);color:#57393b}
+.t5:before{content:"";position:absolute;width:160%;height:92px;background:rgba(255,255,255,.3);transform:rotate(-38deg);left:-45%;top:43%;box-shadow:0 10px 30px rgba(90,50,50,.08);z-index:-1}
+.t5 .art{height:100%;width:100%;padding:45px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t5 small{font-family:Arial,sans-serif;font-size:8px;letter-spacing:.5em;margin-bottom:38px}
+.t5 .amp{font-family:'Cormorant Garamond',Georgia,serif;font-size:34px;font-style:italic;color:#a06f72;margin:-8px 0}
+.t5 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:67px!important;line-height:.72!important;font-style:italic;font-weight:400!important;margin:0!important}
+.t5 span{font-size:9px;letter-spacing:.22em;text-transform:uppercase;margin-top:44px}
+.t5 .kiss{font-family:Georgia,serif;font-size:20px;margin-top:24px;color:#9b686c}
+
+/* 06 GALLERY — modern art-book, cobalt accent */
+.t6{background:#efede6;color:#111;text-align:left;align-items:stretch!important;justify-content:stretch!important}
+.t6 .art{height:100%;width:100%;padding:25px;position:relative;display:grid;grid-template-rows:auto 1fr auto}
+.t6 .top{display:flex;justify-content:space-between;font:700 8px/1 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}
+.t6 .shape{position:absolute;width:58%;height:45%;right:-8%;top:22%;background:#293f85;border-radius:50% 0 0 50%;opacity:.96;z-index:-1}
+.t6 .shape:after{content:"";position:absolute;width:105px;height:105px;background:#d4c5a7;left:-62px;bottom:-55px;transform:rotate(45deg)}
+.t6 h3{align-self:center;font-family:Arial,sans-serif!important;font-size:74px!important;line-height:.78!important;letter-spacing:-.09em!important;font-weight:300!important;margin:0!important;max-width:250px}
+.t6 .bottom{display:grid;grid-template-columns:1fr 1fr;gap:20px;border-top:1px solid #111;padding-top:14px;font:700 9px/1.4 Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em}
+
+/* Invitation canvas — shared premium frame */
+.preview-area{background:linear-gradient(145deg,#d9d0c4,#f0e9df 45%,#d7cec2);padding:44px}
+.invitation{position:relative;isolation:isolate;width:min(460px,100%);box-shadow:0 35px 110px rgba(34,26,20,.22);overflow:hidden}
+.invitation .eyebrow{font-size:8px;letter-spacing:.45em;text-transform:uppercase}
+.invitation .block{position:relative}
+
+/* MAISON invitation */
+.theme-classic{background:#fbf7ef;color:#2e241d;border:1px solid #d6c8b8}
+.theme-classic:before{content:"";position:absolute;inset:13px;border:1px solid rgba(109,82,60,.22);z-index:5;pointer-events:none}
+.theme-classic .inv-hero{min-height:570px!important;background:linear-gradient(145deg,#eee3d6,#f8f2e9)!important;padding:72px 44px!important}
+.theme-classic .inv-hero:before{content:"A  ·  M";display:grid;place-items:center;width:70px;height:70px;border:1px solid #9a8068;border-radius:50%;font:16px Georgia,serif;letter-spacing:.12em;margin:0 auto 52px}
+.theme-classic .inv-hero h2{font:400 64px/.8 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.03em;margin:10px 0 35px!important}
+.theme-classic .inv-date{font:10px Arial,sans-serif!important;letter-spacing:.22em;text-transform:uppercase;border-top:1px solid #ad9988;padding-top:18px}
+.theme-classic .block{padding:54px 42px!important;border-top:1px solid #dfd4c7!important;background:#fbf7ef}
+.theme-classic .block h3{font:400 37px/1 'Cormorant Garamond',Georgia,serif!important}
+
+/* EDITORIAL invitation */
+.theme-editorial{background:#f1eee8;color:#0d0d0d;text-align:left!important}
+.theme-editorial .inv-hero{min-height:570px!important;background:#e7e2d9!important;text-align:left!important;align-items:flex-start!important;justify-content:flex-end!important;padding:42px 34px!important;border-bottom:10px solid #111;position:relative}
+.theme-editorial .inv-hero:after{content:"02";position:absolute;right:22px;top:20px;font:800 120px/.8 Arial,sans-serif;color:rgba(0,0,0,.07);letter-spacing:-.1em}
+.theme-editorial .inv-hero h2{font:800 70px/.75 Arial,sans-serif!important;letter-spacing:-.09em!important;text-transform:uppercase;max-width:340px;margin:0 0 30px!important}
+.theme-editorial .inv-date{font:700 10px Arial,sans-serif!important;letter-spacing:.12em;text-transform:uppercase}
+.theme-editorial .block{text-align:left!important;padding:43px 34px!important;border-top:2px solid #111!important;background:#f1eee8}
+.theme-editorial .block h3{font:800 11px Arial,sans-serif!important;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid #111;padding-bottom:13px}
+.theme-editorial .timeline{margin-left:0!important;max-width:none!important}
+
+/* NOIR invitation */
+.theme-dark{background:#11100e;color:#eee5d7;border:1px solid #4e4438}
+.theme-dark .inv-hero{min-height:590px!important;background:radial-gradient(circle at 50% 30%,#3b342b,#151310 55%,#080807)!important;color:#f3eadc!important;border-bottom:1px solid #574c3e}
+.theme-dark .inv-hero:before{content:"BLACK TIE · PRIVATE CELEBRATION";font:8px Arial,sans-serif;letter-spacing:.35em;color:#c3a777;margin-bottom:70px}
+.theme-dark .inv-hero h2{font:300 68px/.78 'Cormorant Garamond',Georgia,serif!important;color:#f6eee2;margin:0 0 42px!important}
+.theme-dark .inv-date{font:9px Arial,sans-serif!important;letter-spacing:.27em;color:#cbbca7;text-transform:uppercase}
+.theme-dark .block{background:#11100e!important;border-top:1px solid #3c352d!important;padding:55px 40px!important}
+.theme-dark .block h3{font:300 38px 'Cormorant Garamond',Georgia,serif!important;color:#e8dcc9}.theme-dark .block p,.theme-dark .timeline{color:#aaa094}.theme-dark .timeline div{border-color:#38322c}.theme-dark button{color:#e8dcc9;border-color:#8b7557;background:transparent}
+
+/* HERBARIUM invitation */
+.theme-botanical{background:#f1f2e9;color:#2b382a}
+.theme-botanical .inv-hero{min-height:580px!important;background:linear-gradient(155deg,#dce2d5,#f0f1e8 55%,#ced8c9)!important;overflow:hidden;position:relative}
+.theme-botanical .inv-hero:before,.theme-botanical .inv-hero:after{content:"❧";position:absolute;font:150px Georgia,serif;color:#788972;opacity:.55}.theme-botanical .inv-hero:before{left:-30px;top:-5px;transform:rotate(-35deg)}.theme-botanical .inv-hero:after{right:-30px;bottom:-10px;transform:rotate(145deg)}
+.theme-botanical .inv-hero>*{position:relative;z-index:1}.theme-botanical .inv-hero h2{font:400 italic 67px/.78 'Cormorant Garamond',Georgia,serif!important;margin:15px 0 34px!important}.theme-botanical .inv-date{font:9px Arial,sans-serif!important;letter-spacing:.25em;text-transform:uppercase}
+.theme-botanical .block{padding:53px 40px!important;border:0!important;background:#f4f4ec}.theme-botanical .block:nth-of-type(even){background:#e7ebe1}.theme-botanical .block h3{font:400 italic 39px 'Cormorant Garamond',Georgia,serif!important}
+
+/* AMOUR invitation */
+.theme-romance{background:#fff8f5;color:#553638}
+.theme-romance .inv-hero{min-height:580px!important;background:linear-gradient(155deg,#f5e8e3,#e4cac9 55%,#f6ece8)!important;position:relative;overflow:hidden}
+.theme-romance .inv-hero:before{content:"";position:absolute;width:160%;height:100px;background:rgba(255,255,255,.3);transform:rotate(-37deg);box-shadow:0 10px 30px rgba(92,53,53,.08)}
+.theme-romance .inv-hero>*{position:relative;z-index:1}.theme-romance .inv-hero h2{font:400 italic 70px/.74 'Cormorant Garamond',Georgia,serif!important;margin:18px 0 38px!important}.theme-romance .inv-date{font:9px Arial,sans-serif!important;letter-spacing:.24em;text-transform:uppercase}.theme-romance .block{padding:56px 42px!important;border:0!important;background:#fff8f5}.theme-romance .block:after{content:"♡";display:block;font:17px Georgia,serif;color:#a8787a;margin-top:35px}.theme-romance .block h3{font:400 italic 40px 'Cormorant Garamond',Georgia,serif!important}
+
+/* GALLERY invitation */
+.theme-modern{background:#efede7;color:#111;text-align:left!important}
+.theme-modern .inv-hero{min-height:570px!important;background:linear-gradient(135deg,#ece9e2 0 62%,#d8cfbd 62%)!important;text-align:left!important;align-items:flex-start!important;padding:34px!important;justify-content:space-between!important;position:relative;overflow:hidden}
+.theme-modern .inv-hero:after{content:"";position:absolute;width:270px;height:270px;border-radius:50%;background:#293f85;right:-120px;top:115px;z-index:0}.theme-modern .inv-hero>*{position:relative;z-index:1}.theme-modern .inv-hero h2{font:300 65px/.78 Arial,sans-serif!important;letter-spacing:-.085em!important;max-width:270px;margin:auto 0 30px!important}.theme-modern .inv-date{font:700 9px Arial,sans-serif!important;letter-spacing:.08em;text-transform:uppercase}.theme-modern .block{text-align:left!important;padding:44px 34px!important;border-top:1px solid #aaa69d!important;background:#efede7}.theme-modern .block h3{font:400 29px Arial,sans-serif!important;letter-spacing:-.055em}.theme-modern .timeline{margin-left:0!important;max-width:none!important}.theme-modern .palette{justify-content:flex-start!important}
+
+@media(max-width:760px){#templates{padding-top:56px}#templates .templates{grid-template-columns:1fr;gap:26px}#templates .preview{height:470px}#templates .template-info{padding:23px 22px 26px}.preview-area{padding:0!important;background:#ddd4c8!important}.invitation{width:100%!important;box-shadow:none!important}.theme-classic .inv-hero,.theme-editorial .inv-hero,.theme-dark .inv-hero,.theme-botanical .inv-hero,.theme-romance .inv-hero,.theme-modern .inv-hero{min-height:520px!important}}
+</style>
+
+
+<style id="invella-public-fast-bg">
+html.public-route #marketing{display:none!important}
+html.public-route #app{display:block!important}
+html.public-route .appbar,html.public-route .controls{display:none!important}
+html.public-route .editor{grid-template-columns:1fr!important}
+html.public-route body{background:#e9e0d4}
+html.public-route .preview-area{min-height:100vh}
+.public-loading{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:linear-gradient(145deg,#e8ded0,#f6f0e7 45%,#d8ccbd);transition:opacity .22s ease}
+.public-loading.hidden{opacity:0;pointer-events:none;display:grid!important}
+.public-loading-card{width:min(390px,82vw);height:72vh;max-height:720px;border:1px solid rgba(92,70,50,.22);background:rgba(255,252,247,.72);box-shadow:0 30px 90px rgba(49,35,24,.12);display:grid;place-items:center;text-align:center;padding:30px}
+.public-loading-card:before{content:'INVELLA';font:400 19px 'Cormorant Garamond',Georgia,serif;letter-spacing:.34em;color:#7d6a57}
+</style>
+<script>if(/^\/i\/[a-z0-9-]+\/?$/.test(location.pathname))document.documentElement.classList.add('public-route');</script>
+
+<style id="invella-backgrounds-v1">
+.preview-area{position:relative;isolation:isolate;transition:background .35s ease}
+.preview-area:before,.preview-area:after{content:"";position:absolute;pointer-events:none;z-index:-1}
+.preview-area[data-bg="auto"]{background:var(--event-bg,linear-gradient(145deg,#d9d0c4,#f0e9df 45%,#d7cec2))}
+.preview-area[data-bg="silk"]{background:radial-gradient(ellipse at 20% 10%,#fff9f0 0 8%,transparent 38%),linear-gradient(125deg,#d8c6b3 0,#f7efe5 32%,#cdb9a4 55%,#f4eadf 78%,#d7c3ad)}
+.preview-area[data-bg="silk"]:before{inset:-15%;background:repeating-linear-gradient(118deg,transparent 0 13%,rgba(255,255,255,.18) 14%,transparent 28%);filter:blur(18px)}
+.preview-area[data-bg="garden"]{background:radial-gradient(circle at 12% 18%,rgba(245,238,218,.9),transparent 20%),radial-gradient(circle at 86% 72%,rgba(182,194,161,.75),transparent 27%),linear-gradient(145deg,#6f7c62,#c8cdb9 48%,#e9e3d4)}
+.preview-area[data-bg="garden"]:before{width:360px;height:520px;left:-110px;top:-70px;border:1px solid rgba(240,236,215,.42);border-radius:50%;transform:rotate(-28deg);box-shadow:80px 120px 0 -1px rgba(255,255,255,.08)}
+.preview-area[data-bg="marble"]{background:linear-gradient(120deg,#eee9e2,#d8d3cc 24%,#faf8f4 48%,#d3cec8 67%,#eeeae4)}
+.preview-area[data-bg="marble"]:before{inset:0;background:repeating-linear-gradient(154deg,transparent 0 17%,rgba(113,104,96,.12) 17.4%,transparent 18.2%,transparent 34%);filter:blur(1px)}
+.preview-area[data-bg="noir"]{background:radial-gradient(circle at 50% 15%,#4a4136 0,#201d19 38%,#0d0c0b 100%)}
+.preview-area[data-bg="noir"]:before{inset:22px;border:1px solid rgba(199,170,123,.18)}
+.preview-area[data-bg="blush"]{background:radial-gradient(circle at 22% 18%,#f9eeee 0,transparent 30%),radial-gradient(circle at 82% 75%,#d7b8b6 0,transparent 32%),linear-gradient(145deg,#ead6d3,#f6ebe5 55%,#d9bdb9)}
+.preview-area[data-bg="editorial"]{background:linear-gradient(90deg,#e8e4dc 0 49.5%,#171717 49.5% 50.5%,#f5f2ec 50.5%);}
+.bg-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.bg-choice{border:1px solid var(--line);background:#fff;padding:7px;text-align:left;cursor:pointer}.bg-choice i{display:block;height:48px;margin-bottom:7px;border:1px solid rgba(0,0,0,.06)}.bg-choice span{font-size:10px;letter-spacing:.04em}.bg-choice.active{outline:2px solid #9c7a52;outline-offset:1px}.bg-auto{background:linear-gradient(135deg,#e6d8c7,#f6f0e8,#cad1c2)}.bg-silk{background:linear-gradient(125deg,#d7c3ae,#fff5e8,#cbb49d)}.bg-garden{background:linear-gradient(135deg,#6d7a61,#dce0cc)}.bg-marble{background:linear-gradient(135deg,#eee,#bbb,#fafafa)}.bg-noir{background:radial-gradient(circle,#4b4136,#111)}.bg-blush{background:linear-gradient(135deg,#f4e6e3,#d2ada9)}
+@media(max-width:760px){html.public-route .preview-area{padding:0!important;min-height:100vh}.bg-picker{grid-template-columns:repeat(2,1fr)}}
+</style>
+
+<style id="invella-polish-v2">
+html.public-route,html.public-route body{margin:0!important;width:100%!important;min-width:0!important;background:#eee7dd!important;overflow-x:hidden!important}
+html.public-route #app,html.public-route .editor,html.public-route .preview-area{width:100%!important;max-width:none!important;margin:0!important}
+html.public-route .editor{display:block!important}
+html.public-route .preview-area{min-height:100vh!important;padding:clamp(18px,4vw,54px)!important;box-sizing:border-box!important}
+html.public-route .invitation{margin:0 auto!important}
+.premium-upload-preview{height:76px;border:1px dashed var(--line);display:grid;place-items:center;background:#f4eee6 center/cover no-repeat;margin-top:10px;font-size:11px;color:var(--muted)}
+.wish-presets{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.wish-presets button{font-size:10px;padding:9px 11px}
+.child-note{padding:42px 28px;text-align:center;border-top:1px solid #eee}.child-note h3{margin:0 0 12px}.child-question{margin-top:10px;text-align:left}.child-question label{display:block;font-size:12px;color:#766e68;margin-bottom:5px}
+@media(max-width:760px){html.public-route .preview-area{padding:0!important}.preview-area:before{display:none!important}html.public-route .invitation{width:100%!important;max-width:100%!important}}
+</style>
+</head>
+<body><div id="publicLoading" class="public-loading hidden"><div class="public-loading-card"></div></div>
+<div id="marketing"><div class="shell">
+<nav><div class="logo">INVELLA</div><div class="nav-actions"><span id="userChip" class="user-chip hidden"></span><button id="myInvitesBtn" type="button" class="ghost hidden" onclick="openDashboard()">Мои приглашения</button><button id="authBtn" type="button" class="ghost" onclick="openAuth()">Войти</button><button id="logoutBtn" type="button" class="ghost hidden" onclick="logout()">Выйти</button><button type="button" class="navbtn" onclick="openTemplates()">Создать приглашение</button></div></nav>
+<section class="hero"><div><div class="eyebrow">Персональные сайты-приглашения</div><h1>Ваш день.<br>В одном красивом сайте.</h1><p>Выберите дизайн, добавьте детали праздника и отправьте гостям одну красивую ссылку.</p><div class="hero-actions"><button type="button" class="primary" onclick="openTemplates()">Создать приглашение</button></div></div><div class="phone"><div class="phone-inner"><div class="eyebrow">мы женимся</div><h3>Анна<br>&<br>Максим</h3><div>12 сентября 2026</div><p>Будем счастливы разделить этот день с вами</p></div></div></section>
+<section class="section"><h2>Для любого события</h2><p class="sub">Свадьба, день рождения, юбилей и другие важные события.</p><div class="categories"><div class="card category"><span>💍</span><b>Свадьба</b><small>Главная коллекция</small></div><div class="card category"><span>🎂</span><b>День рождения</b><small>Тёплые и яркие дизайны</small></div><div class="card category"><span>✨</span><b>Другой праздник</b><small>Юбилей, baby shower, вечеринка</small></div></div></section>
+<section class="section" id="templates"><h2>Выберите шаблон</h2><p class="sub">Выберите настроение будущего приглашения.</p><div class="templates">
+<div class="card template"><div class="preview t1"><div class="art"><small>MAISON INVELLA</small><h3>Анна<br>& Максим</h3><span>12 · 09 · 2026 · MOSCOW</span></div></div><div class="template-info"><b>Maison</b><p>Тихая роскошь, слоновая кость и эстетика свадебной полиграфии haute couture.</p><button class="primary" onclick="chooseTemplate('classic')">Выбрать Maison</button></div></div>
+<div class="card template"><div class="preview t2"><div class="art"><div class="issue">ISSUE 01</div><div class="number">02</div><h3>ANNA<br>MAXIM</h3><div class="rule"></div><span>A wedding story · September twelve</span></div></div><div class="template-info"><b>Vogue Editorial</b><p>Смелая журнальная верстка: типографика становится главным визуальным объектом.</p><button class="primary" onclick="chooseTemplate('editorial')">Выбрать Editorial</button></div></div>
+<div class="card template"><div class="preview t3"><div class="art"><small>PRIVATE CELEBRATION</small><h3>Anna<br>Maxim</h3><div class="diamond"></div><span>September · XII · MMXXVI</span></div></div><div class="template-info"><b>Noir Black Tie</b><p>Кинематографичный вечер: глубокий чёрный, шампань и тонкие ювелирные детали.</p><button class="primary" onclick="chooseTemplate('dark')">Выбрать Noir</button></div></div>
+<div class="card template"><div class="preview t4"><div class="art"><i class="leaf l1"></i><i class="leaf l2"></i><small>THE HERBARIUM</small><h3>Анна<br>& Максим</h3><span>Среди сада · среди своих</span><div class="seal">A&M</div></div></div><div class="template-info"><b>Herbarium</b><p>Иллюстративная ботаника, приглушённая зелень и настроение загородной свадьбы.</p><button class="primary" onclick="chooseTemplate('botanical')">Выбрать Herbarium</button></div></div>
+<div class="card template"><div class="preview t5"><div class="art"><small>AMOUR</small><h3>Анна</h3><div class="amp">et</div><h3>Максим</h3><span>une histoire pour toujours</span><div class="kiss">♡</div></div></div><div class="template-info"><b>Amour Couture</b><p>Пудровый шёлк, французская романтика и мягкая эстетика свадебного ателье.</p><button class="primary" onclick="chooseTemplate('romance')">Выбрать Amour</button></div></div>
+<div class="card template"><div class="preview t6"><div class="art"><div class="top"><span>INVELLA / 06</span><span>12.09.26</span></div><div class="shape"></div><h3>A<br>×<br>M</h3><div class="bottom"><span>Anna & Maxim</span><span>Wedding / 15:00</span></div></div></div><div class="template-info"><b>Gallery 06</b><p>Арт-дирекшн как у дизайнерской книги: геометрия, воздух и неожиданный кобальтовый акцент.</p><button class="primary" onclick="chooseTemplate('modern')">Выбрать Gallery</button></div></div>
+</div></section>
+<section class="section"><h2>Как это работает</h2><div class="categories"><div class="card"><b>01. Выберите</b><p>Подберите дизайн будущего приглашения.</p></div><div class="card"><b>02. Заполните</b><p>Добавьте дату, место, программу, фотографию и дресс-код.</p></div><div class="card"><b>03. Отправьте</b><p>Опубликуйте сайт и отправьте гостям персональную ссылку.</p></div></div></section>
+<section class="section"><h2>Выберите возможности</h2><p class="sub">Создавать и смотреть приглашение можно бесплатно. Тариф понадобится только перед публикацией.</p><div class="pricing">
+<div class="card price-card"><div class="plan-name">Базовый</div><div class="price">990 ₽</div><p class="plan-description">Всё необходимое для красивого сайта-приглашения.</p><ul class="features"><li>Сайт-приглашение</li><li>Шаблон</li><li>Дата и время</li><li>Место и адрес</li><li>Программа</li><li>Дресс-код</li><li>Пожелания</li><li>Маршрут</li></ul><button class="ghost" onclick="openTemplates()">Создать приглашение</button></div>
+<div class="card price-card popular"><div class="popular-badge">Самый популярный</div><div class="plan-name">Pro</div><div class="price">1 490 ₽</div><p class="plan-description">Для персонального приглашения и удобной работы с гостями.</p><ul class="features"><li>Всё из Базового</li><li>Фотография обложки</li><li>RSVP гостей</li><li>Количество гостей</li><li>Комментарии гостей</li><li>Вопрос по напиткам</li><li>Выбор дизайнерского фона</li><li>Персональные ссылки для гостей</li></ul><button class="primary" onclick="openTemplates()">Создать приглашение</button></div>
+<div class="card price-card"><div class="plan-name">Premium</div><div class="price">2 490 ₽</div><p class="plan-description">Максимальные возможности для особенного события.</p><ul class="features"><li>Всё из Pro</li><li>Загрузка собственного фона</li><li>Музыка</li><li>Фотогалерея</li><li>Таймер</li><li>Premium-блоки</li><li>Персональная ссылка</li></ul><button class="ghost" onclick="openTemplates()">Создать приглашение</button></div>
+</div></section>
+<section class="section faq"><h2>Вопросы</h2><details><summary>Можно попробовать бесплатно?</summary><p>Да. Создание и предпросмотр доступны бесплатно до публикации.</p></details><details><summary>Гости должны регистрироваться?</summary><p>Нет. Они просто открывают полученную ссылку.</p></details><details><summary>Можно изменить приглашение?</summary><p>Да. Данные приглашения можно редактировать.</p></details></section>
+<footer><div class="footer-inner"><span>© 2026 Invella</span><span>Поддержка: <a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a></span></div></footer>
+</div></div>
+
+<div id="app" class="app hidden"><div class="appbar"><div class="logo">INVELLA</div><div class="toolbar"><button class="ghost" onclick="goHome()">← Шаблоны</button><button class="primary" onclick="publishDemo()">Опубликовать</button></div></div>
+<div class="editor"><div class="controls"><div class="eyebrow">Конструктор</div><h2>Ваше приглашение</h2>
+<div class="field"><label>На какое событие приглашаете?</label><select id="eventType" onchange="toggleCustomEvent()"><option value="Свадьба">Свадьба</option><option value="День рождения">День рождения</option><option value="Юбилей">Юбилей</option><option value="Помолвка">Помолвка</option><option value="Годовщина">Годовщина</option><option value="Baby shower">Baby shower</option><option value="Гендер-пати">Гендер-пати</option><option value="Выпускной">Выпускной</option><option value="Корпоратив">Корпоратив</option><option value="Вечеринка">Вечеринка</option><option value="Другое событие">Другое событие</option></select></div>
+<div class="field hidden" id="customEventWrap"><label>Как называется ваше событие?</label><input id="customEvent" placeholder="Например: Встреча выпускников"></div>
+<div class="row"><div class="field"><label>Имена / название праздника</label><input id="names" value="Анна & Максим"></div><div class="field"><label>Дата</label><input id="date" type="date" value="2026-09-12"></div></div>
+<div class="row"><div class="field"><label>Время</label><input id="time" type="time" value="15:00"></div><div class="field"><label>Площадка</label><input id="venue" value="Усадьба «Лесная»"></div></div>
+<div class="field"><label>Адрес</label><input id="address" value="Воронеж, ул. Примерная, 10"></div><div class="field"><label>Текст приглашения</label><textarea id="message">Будем счастливы разделить с вами один из самых важных дней нашей жизни.</textarea></div>
+<div class="field"><label>Программа мероприятия</label><div class="timeline-item"><input id="p1t" value="15:00"><input id="p1" value="Сбор гостей"></div><div class="timeline-item"><input id="p2t" value="15:30"><input id="p2" value="Церемония"></div><div class="timeline-item"><input id="p3t" value="17:00"><input id="p3" value="Банкет"></div></div>
+<div class="field"><label>Дресс-код</label><textarea id="dress">Будем рады, если вы поддержите природную палитру нашего вечера.</textarea><div class="colors"><input class="color" id="c1" type="color" value="#77624f"><input class="color" id="c2" type="color" value="#9a9b79"><input class="color" id="c3" type="color" value="#d8c7ad"><input class="color" id="c4" type="color" value="#eee7dc"></div></div>
+<div class="field"><label>Пожелания гостям</label><textarea id="wishes">Ваше присутствие — лучший подарок для нас.</textarea><div class="wish-presets"><button type="button" class="ghost" onclick="addWishPreset('flowers')">Без цветов</button><button type="button" class="ghost" onclick="addWishPreset('gifts')">О подарках</button><button type="button" class="ghost" onclick="addWishPreset('taxi')">Такси</button></div></div><div class="feature-box"><div class="feature-head"><strong>Дети на празднике</strong><span class="tag">Настройка</span></div><div class="field" style="margin:0"><select id="childrenPolicy"><option value="unspecified">Не указывать отдельно</option><option value="adults_only">Только взрослые — свадьба без детей</option><option value="welcome">Можно приходить с детьми</option></select></div><p>Если выбрано «Только взрослые», вопрос про ребёнка в RSVP автоматически исчезнет.</p></div>
+<div class="feature-box"><div class="feature-head"><strong>Фон приглашения</strong><span class="tag">Pro</span></div><p><b>Basic:</b> красивый автоматический фон. <b>Pro:</b> выбор готового фона. <b>Premium:</b> ещё и загрузка собственного изображения.</p><input id="backgroundStyle" type="hidden" value="auto"><input id="backgroundCustomUrl" type="hidden" value=""><div class="bg-picker" id="bgPicker"><button type="button" class="bg-choice active" data-bg="auto" onclick="setInvitationBackground('auto')"><i class="bg-auto"></i><span>Авто · Basic</span></button><button type="button" class="bg-choice" data-bg="silk" onclick="setInvitationBackground('silk')"><i class="bg-silk"></i><span>Шёлк · Pro</span></button><button type="button" class="bg-choice" data-bg="garden" onclick="setInvitationBackground('garden')"><i class="bg-garden"></i><span>Сад · Pro</span></button><button type="button" class="bg-choice" data-bg="marble" onclick="setInvitationBackground('marble')"><i class="bg-marble"></i><span>Мрамор · Pro</span></button><button type="button" class="bg-choice" data-bg="noir" onclick="setInvitationBackground('noir')"><i class="bg-noir"></i><span>Noir · Pro</span></button><button type="button" class="bg-choice" data-bg="blush" onclick="setInvitationBackground('blush')"><i class="bg-blush"></i><span>Пудра · Pro</span></button></div><div class="field" style="margin-top:14px"><label>Свой фон · Premium</label><input id="customBackgroundFile" type="file" accept="image/*"><div id="customBgPreview" class="premium-upload-preview">Загрузите фотографию или текстуру</div></div></div><div class="feature-box"><div class="feature-head"><strong>Блоки приглашения</strong><span class="tag">Настройка</span></div>
+<p>Оставьте только то, что нужно именно для вашего события.</p>
+<div style="display:grid;gap:9px;margin-top:12px">
+<label><input type="checkbox" id="showProgram" checked onchange="render()"> Программа</label>
+<label><input type="checkbox" id="showVenue" checked onchange="render()"> Место и маршрут</label>
+<label><input type="checkbox" id="showDress" checked onchange="render()"> Дресс-код</label>
+<label><input type="checkbox" id="showWishes" checked onchange="render()"> Пожелания</label>
+<label><input type="checkbox" id="showRSVP" checked onchange="render()"> RSVP гостей</label>
+</div></div>
+<div class="feature-box"><div class="feature-head"><strong>Фотография обложки</strong><span class="tag">Pro</span></div><div class="field" style="margin-bottom:0"><input id="photo" type="file" accept="image/*"></div><p>Добавьте фотографию — она сразу появится в предпросмотре.</p></div>
+<div class="feature-box"><div class="feature-head"><strong>RSVP гостей</strong><span class="tag">Pro</span></div><p>Гости смогут подтвердить присутствие, указать количество человек и оставить комментарий.</p></div>
+<div class="feature-box"><div class="feature-head"><strong>Персональные ссылки для гостей</strong><span class="tag">Pro</span></div>
+<div class="field"><label>Имена гостей — каждое с новой строки</label><textarea id="guestNamesForLinks" placeholder="Мария Иванова&#10;Алексей Петров"></textarea></div>
+<button type="button" class="ghost" style="width:100%" onclick="makeGuestLinks()">Создать персональные ссылки</button>
+<div id="guestLinksBox" class="draft-note" style="margin-top:10px"></div>
+<p>Для каждого гостя создаётся отдельная ссылка с его именем. Её можно скопировать и отправить в мессенджере.</p></div><div class="feature-box"><div class="feature-head"><strong>Музыка</strong><span class="tag premium">Premium</span></div><p>В Premium можно будет добавить музыкальное сопровождение приглашения.</p></div>
+<div class="feature-box"><div class="feature-head"><strong>Фотогалерея</strong><span class="tag premium">Premium</span></div><p>Отдельный блок для фотографий.</p></div>
+<div class="feature-box"><div class="feature-head"><strong>Таймер до события</strong><span class="tag premium">Premium</span></div><p>Обратный отсчёт до праздника.</p></div>
+<p class="draft-note">Изменения сохраняются автоматически на этом устройстве.</p><div class="support-box">Нужна помощь?<br><a href="mailto:hello.invella@bk.ru">hello.invella@bk.ru</a></div>
+</div>
+<div class="preview-area" id="invitationStage" data-bg="auto"><div class="invitation"><div class="inv-hero" id="invHero"><div class="eyebrow" id="vEventType">Свадьба</div><h2 id="vNames">Анна & Максим</h2><div class="inv-date" id="vDate">12 сентября 2026 · 15:00</div></div>
+<div class="block"><div id="guestGreeting" class="guest-greeting hidden"></div><h3 id="guestHeading">Дорогие гости</h3><p id="vMessage"></p></div><div class="block" id="blockProgram"><h3>Программа дня</h3><div class="timeline"><div><b id="vp1t"></b> — <span id="vp1"></span></div><div><b id="vp2t"></b> — <span id="vp2"></span></div><div><b id="vp3t"></b> — <span id="vp3"></span></div></div></div>
+<div class="block" id="blockVenue"><h3>Место</h3><p><b id="vVenue"></b><br><span id="vAddress"></span></p><button class="ghost" onclick="route()">Построить маршрут</button></div>
+<div class="block" id="blockDress"><h3>Дресс-код</h3><p id="vDress"></p><div class="palette"><i class="dot" id="d1"></i><i class="dot" id="d2"></i><i class="dot" id="d3"></i><i class="dot" id="d4"></i></div></div><div class="block" id="blockWishes"><h3>Пожелания</h3><p id="vWishes"></p></div><div class="child-note hidden" id="blockChildren"><h3>Только взрослые</h3><p>Мы очень любим ваших малышей, но этот праздник решили провести в кругу взрослых. Надеемся на ваше понимание ♡</p></div>
+<div class="block rsvp" id="blockRSVP"><span class="tag">Pro</span><h3>Вы сможете присутствовать?</h3><input id="guest" placeholder="Имя и фамилия"><select id="attendance"><option value="yes">Да, с удовольствием</option><option value="no">К сожалению, нет</option><option value="maybe">Пока не знаю</option></select><select id="guestCount"><option value="1">Буду один / одна</option><option value="2">Будем вдвоём (+1)</option></select><div class="child-question hidden" id="childQuestion"><label>Будете с ребёнком?</label><select id="withChild"><option value="no">Нет</option><option value="yes">Да</option></select></div>
+<label style="display:block;text-align:left;margin-top:8px;color:#766e68;font-size:13px">Какой алкоголь вы предпочитаете? Можно выбрать несколько вариантов.</label>
+<div class="alcohol-grid" id="alcoholChoices">
+<label class="alcohol-choice"><input type="checkbox" value="Не пью алкоголь"> Не пью алкоголь</label>
+<label class="alcohol-choice"><input type="checkbox" value="Игристое / шампанское"> Игристое / шампанское</label>
+<label class="alcohol-choice"><input type="checkbox" value="Белое вино"> Белое вино</label>
+<label class="alcohol-choice"><input type="checkbox" value="Красное вино"> Красное вино</label>
+<label class="alcohol-choice"><input type="checkbox" value="Водка"> Водка</label>
+<label class="alcohol-choice"><input type="checkbox" value="Виски"> Виски</label>
+<label class="alcohol-choice"><input type="checkbox" value="Коньяк"> Коньяк</label>
+<label class="alcohol-choice"><input type="checkbox" value="Другое"> Другое</label>
+</div>
+<textarea id="comment" placeholder="Комментарий"></textarea><button class="primary" onclick="sendRSVP()">Отправить ответ</button><div id="rsvpOk" class="success hidden">Спасибо! Ответ сохранён.</div></div>
+</div></div></div></div>
+
+<div id="publishModal" class="modal hidden"><div class="modal-card"><div class="modal-top"><div><div class="eyebrow">Публикация приглашения</div><h2>Выберите тариф</h2><p class="sub">После выбора тарифа вы перейдёте на защищённую страницу оплаты ЮKassa.</p></div><button class="close-btn" onclick="closePublish()">×</button></div><div class="pricing">
+<div class="card price-card"><div class="plan-name">Базовый</div><div class="price">990 ₽</div><button class="ghost" onclick="selectPlan('basic',990)">Оплатить 990 ₽</button></div><div class="card price-card popular"><div class="plan-name">Pro</div><div class="price">1 490 ₽</div><button class="primary" onclick="selectPlan('pro',1490)">Оплатить 1 490 ₽</button></div><div class="card price-card"><div class="plan-name">Premium</div><div class="price">2 490 ₽</div><button class="ghost" onclick="selectPlan('premium',2490)">Оплатить 2 490 ₽</button></div></div></div></div>
+
+<div id="paymentSuccessModal" class="modal hidden"><div class="modal-card payment-success-card"><div class="eyebrow">INVELLA</div><div class="success-mark">✓</div><h2>Оплата прошла</h2><p class="sub" id="paymentSuccessText">Заказ успешно оплачен. Ваше приглашение готово.</p><button class="primary" onclick="openPaidInvitation()">Перейти к приглашению</button><button class="ghost" onclick="closePaymentSuccess();openDashboard()">Мои приглашения</button></div></div>
+<div id="dashboardModal" class="modal hidden"><div class="modal-card"><div class="modal-top"><div><div class="eyebrow">Личный кабинет</div><h2>Мои приглашения</h2></div><button class="close-btn" onclick="closeDashboard()">×</button></div><div id="dashboardList"><p class="sub">Загрузка…</p></div></div></div>
+<div id="authModal" class="modal hidden"><div class="modal-card auth-card"><div class="modal-top"><div><div class="eyebrow">Аккаунт Invella</div><h2 id="authTitle">Войти</h2></div><button class="close-btn" onclick="closeAuth()">×</button></div>
+<div class="auth-tabs"><button id="loginTab" class="primary" onclick="setAuthMode('login')">Вход</button><button id="signupTab" class="ghost" onclick="setAuthMode('signup')">Регистрация</button></div>
+<div class="field"><label>Email</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="field password-wrap"><label>Пароль</label><input id="authPassword" type="password" autocomplete="current-password" placeholder="Минимум 8 символов"><button type="button" class="password-eye" aria-label="Показать пароль" onclick="togglePassword('authPassword',this)">◉</button></div>
+<div id="passwordTips" class="draft-note hidden" style="margin:-5px 0 12px">Рекомендуем не менее 8 символов: используйте буквы разного регистра, цифры и специальный символ.</div>
+<div id="confirmPasswordWrap" class="field password-wrap hidden"><label>Повторите пароль</label><input id="authPasswordConfirm" type="password" autocomplete="new-password" placeholder="Введите пароль ещё раз"><button type="button" class="password-eye" aria-label="Показать пароль" onclick="togglePassword('authPasswordConfirm',this)">◉</button></div>
+<button id="authSubmit" class="primary" style="width:100%" onclick="submitAuth()">Войти</button>
+<button id="forgotPasswordBtn" type="button" class="ghost" style="width:100%;margin-top:9px" onclick="forgotPassword()">Забыли пароль?</button>
+<div id="authMessage" class="auth-message"></div></div></div>
+
+<div id="resetPasswordModal" class="modal hidden"><div class="modal-card auth-card"><div class="modal-top"><div><div class="eyebrow">Безопасность</div><h2>Новый пароль</h2></div></div><p class="sub">Придумайте новый пароль для аккаунта Invella.</p><div class="field password-wrap"><label>Новый пароль</label><input id="newPassword" type="password" autocomplete="new-password" placeholder="Минимум 8 символов"><button type="button" class="password-eye" onclick="togglePassword('newPassword',this)">◉</button></div><div class="field password-wrap"><label>Повторите пароль</label><input id="newPasswordConfirm" type="password" autocomplete="new-password" placeholder="Повторите пароль"><button type="button" class="password-eye" onclick="togglePassword('newPasswordConfirm',this)">◉</button></div><button id="saveNewPasswordBtn" type="button" class="primary" style="width:100%" onclick="saveNewPassword()">Сохранить новый пароль</button><div id="resetPasswordMessage" class="auth-message"></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+'use strict';
+var SUPABASE_URL='https://lwanymjmbcstvggmhevx.supabase.co';
+var SUPABASE_KEY='sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J';
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+var currentUser=null,authMode='login',template='classic',currentInvitationId=null,currentInvitationSlug=null,cloudTimer=null,cloudReady=false,currentPublicPlan=null;
+var fields=['eventType','customEvent','names','date','time','venue','address','message','p1t','p1','p2t','p2','p3t','p3','dress','wishes','childrenPolicy','backgroundStyle','backgroundCustomUrl','c1','c2','c3','c4'];
+function $(id){return document.getElementById(id)}
+function safeGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function safeSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function updateAuthUI(){var a=$('authBtn'),l=$('logoutBtn'),c=$('userChip'),m=$('myInvitesBtn');if(currentUser){a.classList.add('hidden');l.classList.remove('hidden');m.classList.remove('hidden');c.classList.remove('hidden');c.textContent=currentUser.email||'Аккаунт'}else{a.classList.remove('hidden');l.classList.add('hidden');m.classList.add('hidden');c.classList.add('hidden');c.textContent=''}}
+window.openAuth=function(){setAuthMode('login');$('authModal').classList.remove('hidden');document.body.style.overflow='hidden'}
+window.closeAuth=function(){$('authModal').classList.add('hidden');document.body.style.overflow=''}
+window.togglePassword=function(id,btn){var input=$(id);if(!input)return;var show=input.type==='password';input.type=show?'text':'password';btn.textContent=show?'◌':'◉';btn.setAttribute('aria-label',show?'Скрыть пароль':'Показать пароль')}
+window.setAuthMode=function(mode){authMode=mode;var signup=mode==='signup';$('authTitle').textContent=signup?'Регистрация':'Войти';$('authSubmit').textContent=signup?'Создать аккаунт':'Войти';$('loginTab').className=signup?'ghost':'primary';$('signupTab').className=signup?'primary':'ghost';$('authMessage').textContent='';$('authPassword').autocomplete=signup?'new-password':'current-password';$('confirmPasswordWrap').classList.toggle('hidden',!signup);$('passwordTips').classList.toggle('hidden',!signup);$('forgotPasswordBtn').classList.toggle('hidden',signup)}
+window.submitAuth=async function(){var email=$('authEmail').value.trim(),password=$('authPassword').value,confirm=$('authPasswordConfirm').value,msg=$('authMessage'),btn=$('authSubmit');msg.className='auth-message';if(!email||!password){msg.className+=' error';msg.textContent='Введите email и пароль.';return}if(password.length<8){msg.className+=' error';msg.textContent='Пароль должен содержать минимум 8 символов.';return}if(authMode==='signup'&&password!==confirm){msg.className+=' error';msg.textContent='Пароли не совпадают.';return}btn.disabled=true;btn.textContent='Подождите…';try{if(authMode==='signup'){var r=await sb.auth.signUp({email:email,password:password,options:{emailRedirectTo:window.location.origin+window.location.pathname}});if(r.error)throw r.error;msg.className+=' ok';msg.textContent=r.data.session?'Аккаунт создан.':'Готово! Откройте письмо от Invella и подтвердите email.';if(r.data.session){currentUser=r.data.user;updateAuthUI();setTimeout(closeAuth,700)}}else{var r2=await sb.auth.signInWithPassword({email:email,password:password});if(r2.error)throw r2.error;currentUser=r2.data.user;updateAuthUI();closeAuth()}}catch(e){msg.className+=' error';msg.textContent=e.message==='Invalid login credentials'?'Неверный email или пароль.':(e.message||'Не удалось выполнить действие.')}finally{btn.disabled=false;btn.textContent=authMode==='signup'?'Создать аккаунт':'Войти'}}
+window.forgotPassword=async function(){var email=$('authEmail').value.trim(),msg=$('authMessage');msg.className='auth-message';if(!email){msg.className+=' error';msg.textContent='Введите email, на который зарегистрирован аккаунт.';return}try{var r=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/?reset=password'});if(r.error)throw r.error;msg.className+=' ok';msg.textContent='Отправили письмо для восстановления пароля. Проверьте почту.'}catch(e){msg.className+=' error';msg.textContent=e.message||'Не удалось отправить письмо.'}}
+window.saveNewPassword=async function(){var p=$('newPassword').value,c=$('newPasswordConfirm').value,msg=$('resetPasswordMessage'),btn=$('saveNewPasswordBtn');msg.className='auth-message';if(p.length<8){msg.className+=' error';msg.textContent='Пароль должен содержать минимум 8 символов.';return}if(p!==c){msg.className+=' error';msg.textContent='Пароли не совпадают.';return}btn.disabled=true;btn.textContent='Сохраняем…';try{var r=await sb.auth.updateUser({password:p});if(r.error)throw r.error;msg.className+=' ok';msg.textContent='Пароль изменён. Теперь можно входить с новым паролем.';history.replaceState(null,'','/');setTimeout(function(){$('resetPasswordModal').classList.add('hidden');document.body.style.overflow=''},1100)}catch(e){msg.className+=' error';msg.textContent=e.message||'Не удалось изменить пароль.'}finally{btn.disabled=false;btn.textContent='Сохранить новый пароль'}}
+function openResetPassword(){if($('resetPasswordModal')){$('resetPasswordModal').classList.remove('hidden');document.body.style.overflow='hidden'}}
+window.logout=async function(){await sb.auth.signOut();currentUser=null;updateAuthUI();if(location.pathname!=='/'){history.replaceState(null,'','/');location.reload()}}
+async function initAuth(){var r=await sb.auth.getSession();currentUser=r.data.session?r.data.session.user:null;updateAuthUI();var wantsReset=new URLSearchParams(location.search).get('reset')==='password';if(wantsReset&&currentUser)openResetPassword();sb.auth.onAuthStateChange(function(event,session){currentUser=session?session.user:null;updateAuthUI();if(event==='PASSWORD_RECOVERY'){openResetPassword();return}if(event==='SIGNED_IN'&&new URLSearchParams(location.search).get('reset')==='password'){openResetPassword();return}if(event==='SIGNED_IN'&&window.location.hash.indexOf('access_token')!==-1){history.replaceState(null,'',window.location.pathname)}})}
+
+async function restoreUserCloudState(){
+if(!currentUser)return;
+var savedId=safeGet('invella_cloud_id_'+currentUser.id);
+if(!savedId)return;
+try{
+var r=await sb.from('invitations').select('*').eq('id',savedId).eq('owner_id',currentUser.id).maybeSingle();
+if(r.error||!r.data)return;
+currentInvitationId=r.data.id;
+currentInvitationSlug=r.data.slug;
+template=r.data.template_key||template;
+var d=r.data.content&&typeof r.data.content==='object'?r.data.content:{};
+fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});
+['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k)&&d[k]!=null)$(k).checked=Boolean(d[k])});
+render();
+}catch(e){console.error('Invella restore:',e)}
+}
+
+function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});return d}
+function makeSlug(){var base=($('names').value||'invitation').toLowerCase().replace(/[а-яё]/g,function(ch){var m={'а':'a','б':'b','в':'v','г':'g','д':'d','е':'e','ё':'e','ж':'zh','з':'z','и':'i','й':'y','к':'k','л':'l','м':'m','н':'n','о':'o','п':'p','р':'r','с':'s','т':'t','у':'u','ф':'f','х':'h','ц':'c','ч':'ch','ш':'sh','щ':'sch','ъ':'','ы':'y','ь':'','э':'e','ю':'yu','я':'ya'};return m[ch]||''}).replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,45);if(base.length<3)base='invitation';return base+'-'+Math.random().toString(36).slice(2,7)}
+function eventISO(){var d=$('date').value,t=$('time').value||'12:00';return d?new Date(d+'T'+t+':00').toISOString():null}
+async function cloudSave(){if(!currentUser)return false;var data=collectData(),payload={owner_id:currentUser.id,title:$('names').value||'Новое приглашение',event_date:eventISO(),venue_name:$('venue').value,venue_address:$('address').value,template_key:template,content:data,design:{colors:[data.c1,data.c2,data.c3,data.c4]}};try{if(currentInvitationId){var u=await sb.from('invitations').update(payload).eq('id',currentInvitationId).eq('owner_id',currentUser.id).select('id,slug').maybeSingle();if(u.error)throw u.error;if(u.data){currentInvitationSlug=u.data.slug;return true}currentInvitationId=null;currentInvitationSlug=null}payload.slug=makeSlug();var r=await sb.from('invitations').insert(payload).select('id,slug').single();if(r.error)throw r.error;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;safeSet('invella_cloud_id_'+currentUser.id,r.data.id);safeSet('invella_cloud_slug_'+currentUser.id,r.data.slug);return true}catch(e){console.error('Invella save:',e);return false}}
+function scheduleCloudSave(){clearTimeout(cloudTimer);if(!cloudReady||!currentUser)return;cloudTimer=setTimeout(cloudSave,900)}
+async function compressImage(file){if(!file||!file.type.startsWith('image/'))return file;try{var bitmap=await createImageBitmap(file),max=1600,scale=Math.min(1,max/Math.max(bitmap.width,bitmap.height)),w=Math.max(1,Math.round(bitmap.width*scale)),h=Math.max(1,Math.round(bitmap.height*scale)),canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(bitmap,0,0,w,h);bitmap.close();var blob=await new Promise(function(resolve){canvas.toBlob(resolve,'image/webp',.82)});return blob?new File([blob],'cover.webp',{type:'image/webp'}):file}catch(e){return file}}
+async function uploadCover(file){if(!currentUser||!currentInvitationId||!file)return;var ext=(file.name.split('.').pop()||'jpg').toLowerCase(),path=currentUser.id+'/'+currentInvitationId+'/cover-'+Date.now()+'.'+ext;var u=await sb.storage.from('invitation-media').upload(path,file,{upsert:true});if(u.error)return;await sb.from('invitations').update({cover_url:path}).eq('id',currentInvitationId)}
+window.openDashboard=async function(){if(!currentUser)return openAuth();$('dashboardModal').classList.remove('hidden');document.body.style.overflow='hidden';var box=$('dashboardList');box.innerHTML='<p class="sub">Загрузка…</p>';var r=await sb.from('invitations').select('id,title,slug,status,plan,preview_published,updated_at').order('updated_at',{ascending:false});if(r.error){box.textContent='Не удалось загрузить приглашения.';return}if(!r.data.length){box.innerHTML='<p class="sub">У вас пока нет сохранённых приглашений.</p>';return}box.innerHTML=r.data.map(function(x){var openBtn=(x.status==='published'||x.preview_published)?`<button class="ghost" style="margin-left:6px" onclick="window.open('/i/${x.slug}','_blank')">Открыть</button>`:'';var answersBtn=(x.status==='published'||x.preview_published)?`<button class="ghost" style="margin-left:6px;margin-top:8px" onclick="showResponses('${x.id}')">Ответы гостей</button>`:'';var state=x.status==='published'?'Опубликовано':(x.preview_published?'Тестовая публикация':'Черновик');var deleteBtn=(x.status!=='published')?`<button class="ghost" style="margin-left:6px;color:#8b2f2f" onclick="deleteDraft('${x.id}')">Удалить</button>`:'';var adminBtn=(currentUser&&String(currentUser.email||'').toLowerCase()==='gaimana2015@yandex.ru'&&x.status!=='published')?`<button class="ghost" style="margin-left:6px;margin-top:8px" onclick="manualActivate('${x.id}')">Активировать вручную</button>`:'';return `<div class="card" style="margin:10px 0"><b>${escapeHtml(x.title||'Приглашение')}</b><p class="sub" style="margin:8px 0">${state}</p><button class="primary" onclick="editCloudInvitation('${x.id}')">Редактировать</button>${deleteBtn}${openBtn}${answersBtn}${adminBtn}<div id="responses-${x.id}"></div></div>`}).join('')}
+window.showResponses=async function(id){var box=$('responses-'+id);if(!box)return;box.innerHTML='<p class="sub">Загрузка ответов…</p>';var r=await sb.from('rsvp_responses').select('guest_name,attendance,guest_count,comment,created_at').eq('invitation_id',id).order('created_at',{ascending:false});if(r.error){box.innerHTML='<p class="sub">Не удалось загрузить ответы.</p>';return}if(!r.data.length){box.innerHTML='<p class="sub" style="margin-top:10px">Ответов пока нет.</p>';return}var labels={yes:'Будет',no:'Не будет',maybe:'Пока не знает'};box.innerHTML='<div style="margin-top:12px">'+r.data.map(function(a){return `<div style="padding:10px 0;border-top:1px solid var(--line)"><b>${escapeHtml(a.guest_name)}</b> · ${labels[a.attendance]||escapeHtml(a.attendance)} · гостей: ${Number(a.guest_count)||1}${a.comment?`<div class="sub" style="margin-top:4px">${escapeHtml(a.comment)}</div>`:''}</div>`}).join('')+'</div>'}
+window.manualActivate=async function(id){if(!currentUser)return;var raw=prompt('Какой тариф включить? Введите: basic, pro или premium');if(!raw)return;var plan=raw.trim().toLowerCase();if(!['basic','pro','premium'].includes(plan)){alert('Введите basic, pro или premium.');return}if(!confirm('Активировать тариф '+plan.toUpperCase()+' вручную? Делайте это только после проверки перевода.'))return;try{var sess=await sb.auth.getSession();var token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сначала войдите в аккаунт владельца.');var resp=await fetch(SUPABASE_URL+'/functions/v1/admin-activate-invitation',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token,'apikey':SUPABASE_KEY},body:JSON.stringify({invitationId:id,plan:plan})});var data=await resp.json();if(!resp.ok)throw new Error(data.error||'Не удалось активировать.');alert('Готово. Тариф активирован, приглашение опубликовано.');await openDashboard()}catch(e){alert(e.message||'Не удалось активировать приглашение.')}}
+window.deleteDraft=async function(id){if(!currentUser)return;if(!confirm('Удалить эту тестовую публикацию/черновик? Это действие нельзя отменить.'))return;var r=await sb.from('invitations').delete().eq('id',id).eq('owner_id',currentUser.id).neq('status','published');if(r.error){alert('Не удалось удалить черновик.');return}if(currentInvitationId===id){currentInvitationId=null;currentInvitationSlug=null;try{localStorage.removeItem('invella_cloud_id_'+currentUser.id);localStorage.removeItem('invella_cloud_slug_'+currentUser.id)}catch(e){}}await openDashboard()}
+window.closeDashboard=function(){$('dashboardModal').classList.add('hidden');document.body.style.overflow=''}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+window.editCloudInvitation=async function(id){var r=await sb.from('invitations').select('*').eq('id',id).single();if(r.error||!r.data)return;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;template=r.data.template_key||'classic';var d=r.data.content||{};fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});closeDashboard();$('marketing').classList.add('hidden');$('app').classList.remove('hidden');render();scrollTo(0,0)}
+function isPublicPath(){return /^\/i\/[a-z0-9-]+\/?$/.test(location.pathname)}
+function showPublicNotFound(){document.body.innerHTML='<main class="shell section" style="min-height:100vh;display:grid;place-content:center;text-align:center"><div><div class="eyebrow">INVELLA</div><h2>Приглашение не найдено</h2><p class="sub">Ссылка неверна или приглашение больше не опубликовано.</p><a class="primary" href="/" style="display:inline-block;text-decoration:none">На главную</a></div></main>'}
+async function loadPublicInvitation(){
+var m=location.pathname.match(/^\/i\/([a-z0-9-]+)\/?$/);
+if(!m)return false;
+try{
+var resp=await fetch(SUPABASE_URL+'/functions/v1/public-invitation',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({slug:m[1]})});
+var payload=null;
+try{payload=await resp.json()}catch(e){}
+if(!resp.ok||!payload){showPublicNotFound();return true}
+var x=payload.invitation||payload.data||payload;
+if(!x||!x.id||!x.slug||x.slug!==m[1]){showPublicNotFound();return true}
+var d=x.content&&typeof x.content==='object'?x.content:{};
+template=x.template_key||'classic';
+fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});
+['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k)&&d[k]!=null)$(k).checked=Boolean(d[k])});
+currentInvitationId=x.id;
+currentInvitationSlug=x.slug;
+currentPublicPlan=String(x.plan||'basic').toLowerCase();
+if(currentPublicPlan==='basic'&&$('backgroundStyle'))$('backgroundStyle').value='auto';
+if(currentPublicPlan!=='premium'&&$('backgroundStyle')&&$('backgroundStyle').value==='custom')$('backgroundStyle').value=currentPublicPlan==='pro'?'silk':'auto';
+var guestParam=new URLSearchParams(location.search).get('guest');
+if(guestParam&&['pro','premium'].includes(currentPublicPlan)){
+if($('guest'))$('guest').value=guestParam;
+if($('guestGreeting')){$('guestGreeting').textContent=guestParam+', приглашаем вас';$('guestGreeting').classList.remove('hidden')}
+if($('guestHeading'))$('guestHeading').textContent='Будем рады видеть вас на нашем событии';
+}
+$('marketing').classList.add('hidden');
+$('app').classList.remove('hidden');
+var controls=document.querySelector('.controls'),bar=document.querySelector('.appbar'),editor=document.querySelector('.editor');
+if(controls)controls.classList.add('hidden');
+if(bar)bar.classList.add('hidden');
+if(editor)editor.style.gridTemplateColumns='1fr';
+render();
+if($('publicLoading'))setTimeout(function(){$('publicLoading').classList.add('hidden')},40);
+if(x.cover_url){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+String(x.cover_url).replace(/"/g,'%22')+'")';$('invHero').style.color='#fff'}
+return true;
+}catch(e){console.error('Invella public invitation:',e);showPublicNotFound();return true}
+}
+
+function resetPublicLayout(){var controls=document.querySelector('.controls'),bar=document.querySelector('.appbar'),editor=document.querySelector('.editor');if(controls)controls.classList.remove('hidden');if(bar)bar.classList.remove('hidden');if(editor)editor.style.gridTemplateColumns='';currentInvitationId=null;currentInvitationSlug=null;currentPublicPlan=null}
+
+window.openTemplates=function(){if(location.pathname!=='/')history.replaceState(null,'','/');resetPublicLayout();$('marketing').classList.remove('hidden');$('app').classList.add('hidden');setTimeout(function(){$('templates').scrollIntoView({behavior:'smooth',block:'start'})},20)}
+window.chooseTemplate=function(t){template=t;safeSet('invella_template',t);$('marketing').classList.add('hidden');$('app').classList.remove('hidden');load();render();scrollTo(0,0)}
+window.goHome=function(){if(location.pathname!=='/')history.replaceState(null,'','/');resetPublicLayout();$('app').classList.add('hidden');$('marketing').classList.remove('hidden');setTimeout(function(){$('templates').scrollIntoView({behavior:'smooth'})},20)}
+function load(){template=safeGet('invella_template')||template;var raw=safeGet('invella_draft');if(!raw)return;try{var d=JSON.parse(raw);fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k)&&d[k]!=null)$(k).checked=!!d[k]})}catch(e){}}
+function save(){var d=collectData();safeSet('invella_draft',JSON.stringify(d));scheduleCloudSave()}
+function dateText(){var e=$('date');if(!e.value)return'Дата события';var p=e.value.split('-'),d=new Date(+p[0],+p[1]-1,+p[2],12),s=d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});return s+($('time').value?' · '+$('time').value:'')}
+function setText(id,v){if($(id))$(id).textContent=v}
+function automaticBackground(){var ev=($('eventType')&&$('eventType').value||'').toLowerCase();if(template==='dark')return'noir';if(template==='botanical')return'garden';if(template==='romance')return'blush';if(template==='editorial'||template==='modern')return'editorial';if(ev.includes('день рождения')||ev.includes('вечерин'))return'blush';if(ev.includes('корпоратив')||ev.includes('выпуск'))return'editorial';if(ev.includes('baby')||ev.includes('гендер'))return'silk';return'silk'}
+window.setInvitationBackground=function(v){if($('backgroundStyle'))$('backgroundStyle').value=v;applyInvitationBackground();if(!isPublicPath())save()}
+function applyInvitationBackground(){var chosen=$('backgroundStyle')?$('backgroundStyle').value:'auto',stage=$('invitationStage');if(!stage)return;var actual=chosen==='auto'?automaticBackground():chosen;stage.dataset.bg=actual==='custom'?'auto':actual;stage.style.backgroundImage='';if(actual==='custom'&&$('backgroundCustomUrl')&&$('backgroundCustomUrl').value){stage.style.backgroundImage='linear-gradient(rgba(20,16,12,.10),rgba(20,16,12,.10)),url("'+$('backgroundCustomUrl').value.replace(/"/g,'%22')+'")';stage.style.backgroundSize='cover';stage.style.backgroundPosition='center'}document.querySelectorAll('#bgPicker .bg-choice').forEach(function(b){b.classList.toggle('active',b.dataset.bg===chosen)})}
+function applyTemplate(){var h=$('invHero'),inv=document.querySelector('.invitation'),map={classic:['#e8ded4','#201d1b'],editorial:['#f4eee5','#201d1b'],dark:['#20201e','#fff'],botanical:['#e6eadf','#201d1b'],romance:['#eadce0','#201d1b'],modern:['#dce4e7','#201d1b']},x=map[template]||map.classic;h.style.backgroundImage='none';h.style.backgroundColor=x[0];h.style.color=x[1];if(inv){inv.className='invitation theme-'+template}applyInvitationBackground()}
+function toggleCustomEvent(){var other=$('eventType').value==='Другое событие';$('customEventWrap').classList.toggle('hidden',!other);if(!other)$('customEvent').value=''}
+function setBlockVisible(id,checkboxId){var el=$(id),c=$(checkboxId);if(el&&c)el.classList.toggle('hidden',!c.checked)}
+function render(){toggleCustomEvent();var eventLabel=$('eventType').value==='Другое событие'?($('customEvent').value.trim()||'Ваше событие'):$('eventType').value;setText('vEventType',eventLabel||'Ваш праздник');setText('vNames',$('names').value||'Ваш праздник');setText('vDate',dateText());setText('vMessage',$('message').value);setText('vVenue',$('venue').value);setText('vAddress',$('address').value);setText('vDress',$('dress').value);setText('vWishes',$('wishes').value);['1','2','3'].forEach(function(n){setText('vp'+n+'t',$('p'+n+'t').value);setText('vp'+n,$('p'+n).value)});['1','2','3','4'].forEach(function(n){$('d'+n).style.backgroundColor=$('c'+n).value});setBlockVisible('blockProgram','showProgram');setBlockVisible('blockVenue','showVenue');setBlockVisible('blockDress','showDress');setBlockVisible('blockWishes','showWishes');var cp=$('childrenPolicy')?$('childrenPolicy').value:'unspecified';if($('blockChildren'))$('blockChildren').classList.toggle('hidden',cp!=='adults_only');if($('childQuestion'))$('childQuestion').classList.toggle('hidden',cp!=='welcome');var publicMode=isPublicPath()&&currentPublicPlan!==null;var canUseRSVP=!publicMode||['pro','premium'].includes(currentPublicPlan);var rsvp=$('blockRSVP');if(rsvp)rsvp.classList.toggle('hidden',!canUseRSVP||!$('showRSVP').checked);applyTemplate();if(!publicMode)save()}
+window.route=function(){var a=$('address').value.trim();if(!a)return alert('Сначала укажите адрес мероприятия.');window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a),'_blank')}
+window.sendRSVP=async function(){if(!['pro','premium'].includes(String(currentPublicPlan||'').toLowerCase()))return alert('RSVP доступен только в тарифах Pro и Premium.');var name=$('guest').value.trim();if(!name)return alert('Пожалуйста, укажите имя и фамилию.');if(!currentInvitationSlug||location.pathname.indexOf('/i/')!==0)return alert('Ответ можно отправить только из опубликованного приглашения.');var r=await sb.rpc('submit_rsvp',{p_slug:currentInvitationSlug,p_guest_name:name,p_attendance:$('attendance').value,p_guest_count:Number($('guestCount').value)||1,p_comment:('Напитки: '+(Array.from(document.querySelectorAll('#alcoholChoices input:checked')).map(function(x){return x.value}).join(', ')||'Не указано')+(($('childrenPolicy')&&$('childrenPolicy').value==='welcome')?' | С ребёнком: '+(($('withChild')&&$('withChild').value==='yes')?'Да':'Нет'):'')+($('comment').value.trim()?' | Комментарий: '+$('comment').value.trim():''))});if(r.error)return alert('Не удалось отправить ответ. Попробуйте ещё раз.');$('rsvpOk').classList.remove('hidden');$('guest').value='';$('comment').value=''}
+window.addWishPreset=function(type){var texts={flowers:'Пожалуйста, не дарите нам цветы — после праздника мы не сможем насладиться ими в полной мере.',gifts:'Если захотите порадовать нас подарком, будем благодарны за вклад в осуществление нашей общей мечты.',taxi:'Пожалуйста, не переживайте о дороге домой — после праздника воспользуйтесь такси и берегите себя.'};if(!texts[type])return;var w=$('wishes');w.value=(w.value.trim()?w.value.trim()+'\n\n':'')+texts[type];render()}
+async function uploadCustomBackground(file){if(!file)return;var f=await compressImage(file),r=new FileReader();r.onload=function(){$('backgroundCustomUrl').value=r.result;$('backgroundStyle').value='custom';$('customBgPreview').style.backgroundImage='url("'+r.result+'")';$('customBgPreview').textContent='';applyInvitationBackground();save()};r.readAsDataURL(f);if(currentUser){var saved=await cloudSave();if(saved&&currentInvitationId){var path=currentUser.id+'/'+currentInvitationId+'/background-'+Date.now()+'.webp';var u=await sb.storage.from('invitation-media').upload(path,f,{upsert:true});if(!u.error){var pub=sb.storage.from('invitation-media').getPublicUrl(path);if(pub.data&&pub.data.publicUrl){$('backgroundCustomUrl').value=pub.data.publicUrl;$('backgroundStyle').value='custom';await cloudSave()}}}}}
+window.publishDemo=function(){if(!currentUser){openAuth();$('authMessage').textContent='Чтобы опубликовать приглашение, сначала войдите или зарегистрируйтесь.';return}$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
+window.closePublish=function(){$('publishModal').classList.add('hidden');document.body.style.overflow=''}
+window.selectPlan=async function(plan,price){
+if(!currentUser)return openAuth();
+var saved=await cloudSave();
+if(!saved||!currentInvitationId)return alert('Не удалось сохранить приглашение. Попробуйте ещё раз.');
+var btn=event&&event.target?event.target:null;
+if(btn){btn.disabled=true;btn.textContent='Переходим к оплате…'}
+try{
+var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({plan:plan,invitationId:currentInvitationId})});
+var data=await resp.json();
+if(!resp.ok||!data.confirmationUrl)throw new Error(data.error||'Не удалось создать платёж');
+safeSet('invella_pending_payment',JSON.stringify({paymentId:data.paymentId,plan:plan,invitationId:currentInvitationId}));
+location.href=data.confirmationUrl;
+}catch(e){
+alert(e.message||'Не удалось перейти к оплате.');
+if(btn){btn.disabled=false;btn.textContent='Оплатить '+price.toLocaleString('ru-RU')+' ₽'}
+}
+}
+window.makeGuestLinks=function(){
+var box=$('guestLinksBox'),raw=$('guestNamesForLinks').value.trim();
+if(!raw){box.textContent='Добавьте хотя бы одно имя гостя.';return}
+if(!currentInvitationSlug){box.textContent='Сначала сохраните и опубликуйте приглашение, чтобы появилась ссылка.';return}
+var names=raw.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
+box.innerHTML=names.map(function(name){
+var url=location.origin+'/i/'+currentInvitationSlug+'?guest='+encodeURIComponent(name);
+return '<div style="padding:9px 0;border-top:1px solid var(--line)"><b>'+escapeHtml(name)+'</b><br><button type="button" class="ghost" style="margin-top:6px" data-link="'+escapeHtml(url)+'" onclick="copyGuestLink(this)">Скопировать ссылку</button></div>'
+}).join('');
+}
+window.copyGuestLink=async function(btn){
+var url=btn.getAttribute('data-link');
+try{await navigator.clipboard.writeText(url);btn.textContent='Скопировано ✓';setTimeout(function(){btn.textContent='Скопировать ссылку'},1500)}
+catch(e){prompt('Скопируйте ссылку:',url)}
+}
+window.closePaymentSuccess=function(){$('paymentSuccessModal').classList.add('hidden');document.body.style.overflow=''}
+window.openPaidInvitation=function(){closePaymentSuccess();if(currentInvitationSlug)location.href='/i/'+currentInvitationSlug;else openDashboard()}
+async function maybeShowPaymentSuccess(){
+var q=new URLSearchParams(location.search);
+var raw=safeGet('invella_pending_payment'),p=null;
+try{p=raw?JSON.parse(raw):null}catch(e){}
+if(!p&&q.get('recoverPayment'))p={paymentId:q.get('recoverPayment')};
+if(q.get('payment')==='success'||q.get('paid')==='1')history.replaceState(null,'',location.pathname);
+if(!currentUser||!p||!p.paymentId)return;
+try{
+var sess=await sb.auth.getSession();
+var token=sess.data&&sess.data.session&&sess.data.session.access_token;
+if(!token)return;
+var resp=await fetch('/api/payment-status',{
+method:'POST',
+headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+body:JSON.stringify({paymentId:p.paymentId})
+});
+var data=await resp.json();
+if(!resp.ok||!data.paid||!data.published)return;
+currentInvitationId=data.invitationId||p.invitationId||currentInvitationId;
+currentInvitationSlug=data.slug||currentInvitationSlug;
+var plan=data.plan||p.plan,labels={basic:'Базовый',pro:'Pro',extended:'Pro',premium:'Premium'};
+$('paymentSuccessText').textContent='Тариф '+(labels[plan]||plan)+' успешно оплачен. Ваше приглашение опубликовано.';
+$('paymentSuccessModal').classList.remove('hidden');
+document.body.style.overflow='hidden';
+try{localStorage.removeItem('invella_pending_payment')}catch(e){}
+}catch(e){console.error('Payment recovery:',e)}
+}
+async function init(){
+currentInvitationId=null;
+currentInvitationSlug=null;
+if(isPublicPath()){
+if($('publicLoading'))$('publicLoading').classList.remove('hidden');
+await loadPublicInvitation();
+return;
+}
+load();
+fields.forEach(function(id){if($(id)){$(id).addEventListener('input',render);$(id).addEventListener('change',render)}});
+['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(id){if($(id))$(id).addEventListener('change',render)});
+$('photo').addEventListener('change',async function(e){var original=e.target.files[0];if(!original)return;var f=await compressImage(original);var r=new FileReader();r.onload=function(){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+r.result+'")';$('invHero').style.color='#fff'};r.readAsDataURL(f);var saved=await cloudSave();if(saved)await uploadCover(f)});
+if($('customBackgroundFile'))$('customBackgroundFile').addEventListener('change',function(e){uploadCustomBackground(e.target.files[0])});
+render();
+await initAuth();
+await restoreUserCloudState();
+cloudReady=true;
+await maybeShowPaymentSuccess();
+[$('authModal'),$('publishModal'),$('dashboardModal'),$('paymentSuccessModal'),$('resetPasswordModal')].forEach(function(m){if(m)m.addEventListener('click',function(e){if(e.target===m){m.classList.add('hidden');document.body.style.overflow=''}})});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+<style>
+.legal-links{padding:22px;text-align:center;border-top:1px solid var(--line);margin-top:28px}
+.legal-links a{margin:0 10px;text-decoration:underline}
+.legal-doc{display:none;position:fixed;inset:0;z-index:99999;background:#fffdf9;overflow:auto;padding:20px}
+.legal-doc:target{display:block}
+.legal-inner{max-width:760px;margin:0 auto;padding:12px 0 60px}
+.legal-inner h1{font-size:38px;margin:18px 0}.legal-inner h2{font-size:22px;margin-top:28px}
+.legal-inner p{line-height:1.6}.legal-back{display:inline-block;margin-bottom:12px;text-decoration:none}
+</style>
+
+<footer class="legal-links">
+  <a href="#offer">Публичная оферта</a>
+  <a href="#privacy">Политика конфиденциальности</a>
+  <div class="sub" style="margin-top:12px">Поддержка: hello.invella@bk.ru</div>
+</footer>
+
+<section id="offer" class="legal-doc">
+ <div class="legal-inner">
+  <a class="legal-back" href="#">← Вернуться на сайт</a>
+  <h1>Публичная оферта</h1>
+  <p>Настоящий документ является публичной офертой на оказание цифровых услуг сервиса Invella.</p>
+  <h2>1. Исполнитель и реквизиты</h2>
+  <p>Гаймана Екатерина Романовна, плательщик налога на профессиональный доход (самозанятая). ИНН: 860203202725. Электронная почта: hello.invella@bk.ru.</p>
+  <h2>2. Предмет договора</h2>
+  <p>Исполнитель предоставляет пользователю функциональность сервиса Invella для самостоятельного создания и публикации персонального сайта-приглашения. Состав функций определяется выбранным тарифом.</p>
+  <h2>3. Стоимость и оплата</h2>
+  <p>Актуальная стоимость тарифов указывается на сайте до оплаты. Оплата производится безналичным способом через подключённого платёжного партнёра. Совершение оплаты означает принятие условий настоящей оферты.</p>
+  <h2>4. Порядок получения услуги</h2>
+  <p>Услуга предоставляется дистанционно и полностью в электронном виде. Физическая доставка не осуществляется. После успешной оплаты пользователь получает доступ к функциям оплаченного тарифа и возможность публикации созданного приглашения.</p>
+  <h2>5. Материалы пользователя</h2>
+  <p>Пользователь самостоятельно отвечает за достоверность и законность загружаемых материалов, а также за соблюдение прав третьих лиц.</p>
+  <h2>6. Возврат денежных средств</h2>
+  <p>Если оплаченная услуга не была предоставлена по технической причине на стороне Invella, пользователь вправе обратиться по адресу hello.invella@bk.ru. Обращение рассматривается с учётом фактически оказанной части услуги и требований законодательства Российской Федерации.</p>
+  <h2>7. Персональные данные</h2>
+  <p>Обработка персональных данных осуществляется в соответствии с Политикой конфиденциальности Invella.</p>
+  <h2>8. Контакты</h2>
+  <p>По вопросам работы сервиса и исполнения договора: hello.invella@bk.ru.</p>
+ </div>
+</section>
+
+<section id="privacy" class="legal-doc">
+ <div class="legal-inner">
+  <a class="legal-back" href="#">← Вернуться на сайт</a>
+  <h1>Политика конфиденциальности</h1>
+  <p>Настоящая политика определяет порядок обработки персональных данных при использовании сервиса Invella.</p>
+  <h2>1. Оператор</h2>
+  <p>Гаймана Екатерина Романовна, плательщик налога на профессиональный доход. Электронная почта для обращений: hello.invella@bk.ru.</p>
+  <h2>2. Обрабатываемые данные</h2>
+  <p>Сервис может обрабатывать адрес электронной почты пользователя, сведения о мероприятии и данные, которые пользователь самостоятельно вводит при создании приглашения.</p>
+  <p>При заполнении RSVP гости могут передавать имя, решение об участии, количество гостей и комментарий. Эти сведения доступны владельцу соответствующего приглашения.</p>
+  <h2>3. Цели обработки</h2>
+  <p>Данные используются для регистрации и работы аккаунта, сохранения и публикации приглашений, обработки ответов гостей, поддержки пользователей и исполнения договора.</p>
+  <h2>4. Технические сервисы</h2>
+  <p>Для работы Invella могут использоваться поставщики хостинга, базы данных, авторизации и платёжной обработки в объёме, необходимом для предоставления соответствующих функций.</p>
+  <h2>5. Обращения</h2>
+  <p>По вопросам обработки, уточнения или удаления персональных данных можно обратиться по адресу hello.invella@bk.ru.</p>
+ </div>
+</section>
+
+</body></html>
