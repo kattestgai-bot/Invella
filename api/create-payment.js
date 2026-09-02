@@ -26,7 +26,8 @@ module.exports = async function handler(req, res) {
     const {
       plan,
       invitationId,
-      promoCode = ""
+      promoCode = "",
+      validatePromoOnly = false
     } = req.body || {};
 
     const selected = PLANS[plan];
@@ -37,25 +38,20 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    if (!invitationId) {
-      return res.status(400).json({
-        error: "Не найдено приглашение. Сохраните приглашение и попробуйте снова."
-      });
-    }
-
     const shopId = process.env.YOOKASSA_SHOP_ID;
     const secretKey = process.env.YOOKASSA_SECRET_KEY;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!shopId || !secretKey || !serviceKey) {
-      console.error("Missing server environment variables");
-
+    if (!serviceKey) {
       return res.status(500).json({
-        error: "Оплата временно недоступна"
+        error: "Сервис временно недоступен"
       });
     }
 
-    // Проверяем пользователя
+    /* =========================
+       ПРОВЕРКА ПОЛЬЗОВАТЕЛЯ
+    ========================= */
+
     const auth = req.headers.authorization || "";
 
     if (!auth.startsWith("Bearer ")) {
@@ -77,14 +73,21 @@ module.exports = async function handler(req, res) {
     const user = await userResponse.json();
 
     if (!userResponse.ok || !user?.id) {
-      console.error("Supabase user error:", user);
-
       return res.status(401).json({
         error: "Сессия истекла. Войдите в аккаунт снова."
       });
     }
 
-    // Проверяем, что приглашение принадлежит пользователю
+    /* =========================
+       ПРОВЕРКА ПРИГЛАШЕНИЯ
+    ========================= */
+
+    if (!invitationId) {
+      return res.status(400).json({
+        error: "Не найдено приглашение"
+      });
+    }
+
     const invitationResponse = await fetch(
       `${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(
         invitationId
@@ -106,12 +109,14 @@ module.exports = async function handler(req, res) {
       !Array.isArray(invitations) ||
       invitations.length !== 1
     ) {
-      console.error("Invitation error:", invitations);
-
       return res.status(403).json({
         error: "Приглашение не найдено"
       });
     }
+
+    /* =========================
+       ПРОМОКОД
+    ========================= */
 
     let amountMinor = selected.amount;
     let appliedPromo = null;
@@ -120,7 +125,6 @@ module.exports = async function handler(req, res) {
       .trim()
       .toUpperCase();
 
-    // Проверяем промокод
     if (code) {
       const promoResponse = await fetch(
         `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(
@@ -137,7 +141,10 @@ module.exports = async function handler(req, res) {
       const promoRows = await promoResponse.json();
 
       if (!promoResponse.ok) {
-        console.error("Promo database error:", promoRows);
+        console.error(
+          "Promo database error:",
+          promoRows
+        );
 
         return res.status(500).json({
           error: "Не удалось проверить промокод"
@@ -155,10 +162,14 @@ module.exports = async function handler(req, res) {
         !promo ||
         promo.active !== true ||
         (promo.plan_key && promo.plan_key !== plan) ||
-        (promo.starts_at &&
-          Date.parse(promo.starts_at) > now) ||
-        (promo.expires_at &&
-          Date.parse(promo.expires_at) < now) ||
+        (
+          promo.starts_at &&
+          Date.parse(promo.starts_at) > now
+        ) ||
+        (
+          promo.expires_at &&
+          Date.parse(promo.expires_at) < now
+        ) ||
         (
           promo.max_uses !== null &&
           promo.max_uses !== undefined &&
@@ -168,35 +179,87 @@ module.exports = async function handler(req, res) {
 
       if (invalidPromo) {
         return res.status(400).json({
-          error: "Промокод недействителен или больше не доступен"
+          validPromo: false,
+          error: "Неверный промокод"
         });
       }
 
-      let discount = 0;
+      let discountMinor = 0;
 
       if (promo.discount_type === "percent") {
         const percent = Math.min(
-          Math.max(Number(promo.discount_value) || 0, 0),
+          Math.max(
+            Number(promo.discount_value) || 0,
+            0
+          ),
           100
         );
 
-        discount = Math.floor(
+        discountMinor = Math.floor(
           amountMinor * percent / 100
         );
-      } else if (promo.discount_type === "fixed") {
-        discount =
+      }
+
+      if (promo.discount_type === "fixed") {
+        discountMinor =
           Number(promo.discount_value) || 0;
       }
 
       amountMinor = Math.max(
         100,
-        amountMinor - discount
+        amountMinor - discountMinor
       );
 
       appliedPromo = promo;
     }
 
-    // Создаём платёж в ЮKassa
+    /* =========================
+       ТОЛЬКО ПРОВЕРКА ПРОМОКОДА
+       ПЛАТЁЖ НЕ СОЗДАЁТСЯ
+    ========================= */
+
+    if (validatePromoOnly === true) {
+      if (!code || !appliedPromo) {
+        return res.status(400).json({
+          validPromo: false,
+          error: "Неверный промокод"
+        });
+      }
+
+      return res.status(200).json({
+        validPromo: true,
+
+        promoCode: appliedPromo.code,
+
+        discountType:
+          appliedPromo.discount_type,
+
+        discountValue:
+          appliedPromo.discount_value,
+
+        originalAmountMinor:
+          selected.amount,
+
+        amountMinor,
+
+        originalAmount:
+          (selected.amount / 100).toFixed(0),
+
+        amount:
+          (amountMinor / 100).toFixed(0)
+      });
+    }
+
+    /* =========================
+       СОЗДАНИЕ ПЛАТЕЖА
+    ========================= */
+
+    if (!shopId || !secretKey) {
+      return res.status(500).json({
+        error: "Оплата временно недоступна"
+      });
+    }
+
     const paymentResponse = await fetch(
       "https://api.yookassa.ru/v3/payments",
       {
@@ -240,7 +303,8 @@ module.exports = async function handler(req, res) {
 
             invitationId,
 
-            ownerId: user.id,
+            ownerId:
+              user.id,
 
             promoCode:
               appliedPromo?.code || "",
@@ -260,8 +324,8 @@ module.exports = async function handler(req, res) {
 
     if (!paymentResponse.ok) {
       console.error(
-        "YooKassa create payment error:",
-        JSON.stringify(payment)
+        "YooKassa error:",
+        payment
       );
 
       return res.status(
@@ -277,22 +341,21 @@ module.exports = async function handler(req, res) {
       !payment?.id ||
       !payment?.confirmation?.confirmation_url
     ) {
-      console.error(
-        "Unexpected YooKassa response:",
-        payment
-      );
-
       return res.status(500).json({
         error:
-          "ЮKassa не вернула ссылку на оплату"
+          "Не удалось открыть страницу оплаты"
       });
     }
 
     return res.status(200).json({
-      paymentId: payment.id,
+      paymentId:
+        payment.id,
 
       confirmationUrl:
         payment.confirmation.confirmation_url,
+
+      originalAmountMinor:
+        selected.amount,
 
       amountMinor,
 
