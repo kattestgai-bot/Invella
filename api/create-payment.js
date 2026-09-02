@@ -15,7 +15,7 @@ const PLANS = {
   }
 };
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed"
@@ -55,10 +55,7 @@ export default async function handler(req, res) {
       });
     }
 
-    /* =========================
-       ПРОВЕРЯЕМ ПОЛЬЗОВАТЕЛЯ
-    ========================= */
-
+    // Проверяем пользователя
     const auth = req.headers.authorization || "";
 
     if (!auth.startsWith("Bearer ")) {
@@ -87,10 +84,7 @@ export default async function handler(req, res) {
       });
     }
 
-    /* =========================
-       ПРОВЕРЯЕМ ПРИГЛАШЕНИЕ
-    ========================= */
-
+    // Проверяем, что приглашение принадлежит пользователю
     const invitationResponse = await fetch(
       `${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(
         invitationId
@@ -119,10 +113,6 @@ export default async function handler(req, res) {
       });
     }
 
-    /* =========================
-       СЧИТАЕМ СТОИМОСТЬ
-    ========================= */
-
     let amountMinor = selected.amount;
     let appliedPromo = null;
 
@@ -130,10 +120,7 @@ export default async function handler(req, res) {
       .trim()
       .toUpperCase();
 
-    /* =========================
-       ПРОМОКОД
-    ========================= */
-
+    // Проверяем промокод
     if (code) {
       const promoResponse = await fetch(
         `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(
@@ -209,10 +196,7 @@ export default async function handler(req, res) {
       appliedPromo = promo;
     }
 
-    /* =========================
-       СОЗДАЁМ ПЛАТЁЖ ЮKASSA
-    ========================= */
-
+    // Создаём платёж в ЮKassa
     const paymentResponse = await fetch(
       "https://api.yookassa.ru/v3/payments",
       {
@@ -268,4 +252,63 @@ export default async function handler(req, res) {
               String(amountMinor)
           }
         })
-     
+      }
+    );
+
+    const payment =
+      await paymentResponse.json();
+
+    if (!paymentResponse.ok) {
+      console.error(
+        "YooKassa create payment error:",
+        JSON.stringify(payment)
+      );
+
+      return res.status(
+        paymentResponse.status || 500
+      ).json({
+        error:
+          payment?.description ||
+          "Не удалось создать платёж"
+      });
+    }
+
+    if (
+      !payment?.id ||
+      !payment?.confirmation?.confirmation_url
+    ) {
+      console.error(
+        "Unexpected YooKassa response:",
+        payment
+      );
+
+      return res.status(500).json({
+        error:
+          "ЮKassa не вернула ссылку на оплату"
+      });
+    }
+
+    return res.status(200).json({
+      paymentId: payment.id,
+
+      confirmationUrl:
+        payment.confirmation.confirmation_url,
+
+      amountMinor,
+
+      promoCode:
+        appliedPromo?.code || null
+    });
+
+  } catch (error) {
+    console.error(
+      "CREATE PAYMENT ERROR:",
+      error
+    );
+
+    return res.status(500).json({
+      error:
+        "Ошибка создания платежа. Если проблема повторяется, напишите hello.invella@bk.ru"
+    });
+  }
+};
