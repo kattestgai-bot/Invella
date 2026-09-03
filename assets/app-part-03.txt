@@ -1,0 +1,71 @@
+function applyInvitationBackground(){var chosen=$('backgroundStyle')?$('backgroundStyle').value:'auto',stage=$('invitationStage');if(!stage)return;var actual=chosen==='auto'?automaticBackground():chosen;stage.dataset.bg=actual==='custom'?'auto':actual;stage.style.backgroundImage='';if(actual==='custom'&&$('backgroundCustomUrl')&&$('backgroundCustomUrl').value){stage.style.backgroundImage='linear-gradient(rgba(20,16,12,.10),rgba(20,16,12,.10)),url("'+$('backgroundCustomUrl').value.replace(/"/g,'%22')+'")';stage.style.backgroundSize='cover';stage.style.backgroundPosition='center'}document.querySelectorAll('#bgPicker .bg-choice').forEach(function(b){b.classList.toggle('active',b.dataset.bg===chosen)})}
+function applyTemplate(){var h=$('invHero'),inv=document.querySelector('.invitation'),map={classic:['#e8ded4','#201d1b'],editorial:['#f4eee5','#201d1b'],dark:['#20201e','#fff'],botanical:['#e6eadf','#201d1b'],romance:['#eadce0','#201d1b'],modern:['#dce4e7','#201d1b']},x=map[template]||map.classic;h.style.backgroundImage='none';h.style.backgroundColor=x[0];h.style.color=x[1];if(inv){inv.className='invitation theme-'+template}applyInvitationBackground()}
+function toggleCustomEvent(){var other=$('eventType').value==='Другое событие';$('customEventWrap').classList.toggle('hidden',!other);if(!other)$('customEvent').value=''}
+function setBlockVisible(id,checkboxId){var el=$(id),c=$(checkboxId);if(el&&c)el.classList.toggle('hidden',!c.checked)}
+function render(){enforceEditorPlan();toggleCustomEvent();var eventLabel=$('eventType').value==='Другое событие'?($('customEvent').value.trim()||'Ваше событие'):$('eventType').value;setText('vEventType',eventLabel||'Ваш праздник');setText('vNames',$('names').value||'Ваш праздник');setText('vDate',dateText());setText('vMessage',$('message').value);setText('vVenue',$('venue').value);setText('vAddress',$('address').value);setText('vDress',$('dress').value);setText('vWishes',$('wishes').value);['1','2','3'].forEach(function(n){setText('vp'+n+'t',$('p'+n+'t').value);setText('vp'+n,$('p'+n).value)});['1','2','3','4'].forEach(function(n){$('d'+n).style.backgroundColor=$('c'+n).value});setBlockVisible('blockProgram','showProgram');setBlockVisible('blockVenue','showVenue');setBlockVisible('blockDress','showDress');setBlockVisible('blockWishes','showWishes');var cp=$('childrenPolicy')?$('childrenPolicy').value:'unspecified';if($('blockChildren'))$('blockChildren').classList.toggle('hidden',cp!=='adults_only');if($('childQuestion'))$('childQuestion').classList.toggle('hidden',cp!=='welcome');var publicMode=isPublicPath()&&currentPublicPlan!==null;var canUseRSVP=!publicMode||['pro','premium'].includes(currentPublicPlan);var rsvp=$('blockRSVP');if(rsvp)rsvp.classList.toggle('hidden',!canUseRSVP||!$('showRSVP').checked);applyTemplate();if(!publicMode)save()}
+window.route=function(){var a=$('address').value.trim();if(!a)return alert('Сначала укажите адрес мероприятия.');window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a),'_blank')}
+window.sendRSVP=async function(){if(!['pro','premium'].includes(String(currentPublicPlan||'').toLowerCase()))return alert('RSVP доступен только в тарифах Pro и Premium.');var name=$('guest').value.trim();if(!name)return alert('Пожалуйста, укажите имя и фамилию.');if(!currentInvitationSlug||location.pathname.indexOf('/i/')!==0)return alert('Ответ можно отправить только из опубликованного приглашения.');var r=await sb.rpc('submit_rsvp',{p_slug:currentInvitationSlug,p_guest_name:name,p_attendance:$('attendance').value,p_guest_count:Number($('guestCount').value)||1,p_comment:('Напитки: '+(Array.from(document.querySelectorAll('#alcoholChoices input:checked')).map(function(x){return x.value}).join(', ')||'Не указано')+(($('childrenPolicy')&&$('childrenPolicy').value==='welcome')?' | С ребёнком: '+(($('withChild')&&$('withChild').value==='yes')?'Да':'Нет'):'')+($('comment').value.trim()?' | Комментарий: '+$('comment').value.trim():''))});if(r.error)return alert('Не удалось отправить ответ. Попробуйте ещё раз.');$('rsvpOk').classList.remove('hidden');$('guest').value='';$('comment').value=''}
+window.addWishPreset=function(type){var texts={flowers:'Пожалуйста, не дарите нам цветы — после праздника мы не сможем насладиться ими в полной мере.',gifts:'Если захотите порадовать нас подарком, будем благодарны за вклад в осуществление нашей общей мечты.',taxi:'Пожалуйста, не переживайте о дороге домой — после праздника воспользуйтесь такси и берегите себя.'};if(!texts[type])return;var w=$('wishes');w.value=(w.value.trim()?w.value.trim()+'\n\n':'')+texts[type];render()}
+async function uploadCustomBackground(file){if(!file)return;if(currentEditorPlan!=='draft'&&!editorHas('premium')){if($('customBackgroundFile'))$('customBackgroundFile').value='';return alert('Загрузка собственного фона доступна только в Premium.');}var f=await compressImage(file),r=new FileReader();r.onload=function(){$('backgroundCustomUrl').value=r.result;$('backgroundStyle').value='custom';$('customBgPreview').style.backgroundImage='url("'+r.result+'")';$('customBgPreview').textContent='';applyInvitationBackground();save()};r.readAsDataURL(f);if(currentUser){var saved=await cloudSave();if(saved&&currentInvitationId){var path=currentUser.id+'/'+currentInvitationId+'/background-'+Date.now()+'.webp';var u=await sb.storage.from('invitation-media').upload(path,f,{upsert:true});if(!u.error){$('backgroundCustomPath').value=path;$('backgroundCustomUrl').value='';$('backgroundStyle').value='custom';await cloudSave()}}}}
+window.publishDemo=function(){if(!currentUser){openAuth();$('authMessage').textContent='Чтобы опубликовать приглашение, сначала войдите или зарегистрируйтесь.';return}history.pushState({view:'publish'},'','/create/publish');$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
+window.closePublish=function(){$('publishModal').classList.add('hidden');document.body.style.overflow='';if(location.pathname==='/create/publish')history.pushState({view:'editor'},'','/create/editor')}
+var appliedPromoCode='';
+function rub(v){return Number(v).toLocaleString('ru-RU')+' ₽'}
+function resetPromoPrices(){var base={basic:990,pro:1490,premium:2490};Object.keys(base).forEach(function(k){var p=$('price-'+k),b=$('pay-'+k);if(p)p.textContent=rub(base[k]);if(b)b.textContent='Оплатить '+rub(base[k]);});appliedPromoCode='';}
+window.applyPromoCode=async function(){
+  var input=$('promoCode'),m=$('promoMessage');
+  var code=(input&&input.value||'').trim().toUpperCase();
+  if(input)input.value=code;
+  resetPromoPrices();
+  if(!code){if(m){m.className='auth-message error';m.textContent='Введите промокод.';}return;}
+  if(m){m.className='auth-message';m.textContent='Проверяем промокод…';}
+  try{
+    var saved=await cloudSave();
+    if(!saved||!currentInvitationId)throw new Error('Не удалось сохранить приглашение. Попробуйте ещё раз.');
+    var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;
+    if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');
+    var base={basic:990,pro:1490,premium:2490};
+    var plans=['basic','pro','premium'];
+    var results=await Promise.all(plans.map(async function(plan){
+      var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:code,validatePromoOnly:true})});
+      var data={};try{data=await resp.json()}catch(e){}
+      return {plan:plan,ok:resp.ok&&data.validPromo===true,data:data};
+    }));
+    var valid=results.filter(function(x){return x.ok});
+    if(!valid.length){if(m){m.className='auth-message error';m.textContent='Неверный промокод';}return;}
+    appliedPromoCode=code;
+    valid.forEach(function(x){var k=x.plan,r=Math.round(Number(x.data.amountMinor||0)/100),p=$('price-'+k),b=$('pay-'+k);if(r>0){if(p)p.innerHTML='<span style="text-decoration:line-through;opacity:.45;font-size:.58em;margin-right:8px">'+rub(base[k])+'</span>'+rub(r);if(b)b.textContent='Оплатить '+rub(r);}});
+    var first=valid[0].data,label='';
+    if(first.discountType==='percent')label=' — скидка '+first.discountValue+'%';
+    else if(first.discountType==='fixed')label=' — скидка '+rub(Math.round(Number(first.discountValue||0)/100));
+    if(m){m.className='auth-message ok';m.textContent='Промокод применён'+label;}
+  }catch(e){if(m){m.className='auth-message error';m.textContent=e.message||'Не удалось проверить промокод';}}
+}
+if($('promoCode'))$('promoCode').addEventListener('input',function(){if(appliedPromoCode&&this.value.trim().toUpperCase()!==appliedPromoCode){resetPromoPrices();if($('promoMessage'))$('promoMessage').textContent='';}});
+window.selectPlan=async function(plan,price,btn){
+if(!currentUser)return openAuth();
+var saved=await cloudSave();
+if(!saved||!currentInvitationId)return alert('Не удалось сохранить приглашение. Попробуйте ещё раз.');
+if(btn){btn.disabled=true;btn.textContent='Переходим к оплате…'}
+try{
+var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:appliedPromoCode})});
+var data=await resp.json();
+if(!resp.ok||!data.confirmationUrl)throw new Error(data.error||'Не удалось создать платёж');
+safeSet('invella_pending_payment',JSON.stringify({paymentId:data.paymentId,plan:plan,invitationId:currentInvitationId}));
+location.href=data.confirmationUrl;
+}catch(e){
+alert((e.message||'Не удалось перейти к оплате.')+' Если проблема повторяется, напишите нам: hello.invella@bk.ru');
+if(btn){btn.disabled=false;btn.textContent='Оплатить '+price.toLocaleString('ru-RU')+' ₽'}
+}
+}
+window.makeGuestLinks=function(){
+if(currentEditorPlan!=='draft'&&!editorHas('pro'))return alert('Персональные ссылки доступны в Pro и Premium.');
+var box=$('guestLinksBox'),raw=$('guestNamesForLinks').value.trim();
+if(!raw){box.textContent='Добавьте хотя бы одно имя гостя.';return}
+if(!currentInvitationSlug){box.textContent='Сначала сохраните и опубликуйте приглашение, чтобы появилась ссылка.';return}
+var names=raw.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
+box.innerHTML=names.map(function(name){
+var url=location.origin+'/i/'+currentInvitationSlug+'?guest='+encodeURIComponent(name);
+return '<div style="padding:9px 0;border-top:1px solid var(--line)"><b>'+escapeHtml(name)+'</b><br><button type="button" class="ghost" style="margin-top:6px" data-link="'+escapeHtml(url)+'" onclick="copyGuestLink(this)">Скопировать ссылку</button></div>'
+}).join('');
+}

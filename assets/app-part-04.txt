@@ -1,0 +1,75 @@
+window.copyGuestLink=async function(btn){
+var url=btn.getAttribute('data-link');
+try{await navigator.clipboard.writeText(url);btn.textContent='Скопировано ✓';setTimeout(function(){btn.textContent='Скопировать ссылку'},1500)}
+catch(e){prompt('Скопируйте ссылку:',url)}
+}
+window.closePaymentSuccess=function(){$('paymentSuccessModal').classList.add('hidden');document.body.style.overflow=''}
+window.openPaidInvitation=function(){closePaymentSuccess();if(currentInvitationSlug)location.href='/i/'+currentInvitationSlug;else openDashboard()}
+async function maybeShowPaymentSuccess(){
+var q=new URLSearchParams(location.search);
+var raw=safeGet('invella_pending_payment'),p=null;
+try{p=raw?JSON.parse(raw):null}catch(e){}
+if(!p&&q.get('recoverPayment'))p={paymentId:q.get('recoverPayment')};
+if(q.get('payment')==='success'||q.get('paid')==='1')history.replaceState(null,'',location.pathname);
+if(!currentUser||!p||!p.paymentId)return;
+try{
+var sess=await sb.auth.getSession();
+var token=sess.data&&sess.data.session&&sess.data.session.access_token;
+if(!token)return;
+var resp=await fetch('/api/payment-status',{
+method:'POST',
+headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+body:JSON.stringify({paymentId:p.paymentId})
+});
+var data=await resp.json();
+if(!resp.ok||!data.paid)return;
+currentInvitationId=data.invitationId||p.invitationId||currentInvitationId;
+if(data.slug)currentInvitationSlug=data.slug;
+/* Webhook can arrive a moment after the browser returns from YooKassa. */
+if(!data.published){
+  for(var attempt=0;attempt<6&&!data.published;attempt++){
+    await new Promise(function(resolve){setTimeout(resolve,1200)});
+    var retry=await fetch('/api/payment-status',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentId:p.paymentId})});
+    if(retry.ok)data=await retry.json();
+    if(data.slug)currentInvitationSlug=data.slug;
+  }
+}
+var plan=data.plan||p.plan,labels={basic:'Базовый',pro:'Pro',extended:'Pro',premium:'Premium'};
+$('paymentSuccessText').textContent=data.published?'Тариф '+(labels[plan]||plan)+' успешно оплачен. Ваше приглашение опубликовано.':'Оплата прошла. Публикация приглашения завершается — оно появится в «Моих приглашениях» через несколько секунд.';
+if(window.ym){try{ym(112266204,'reachGoal','payment_success',{plan:plan||'',payment_id:p.paymentId||''});}catch(e){}}
+$('paymentSuccessModal').classList.remove('hidden');
+document.body.style.overflow='hidden';
+if(data.published){try{localStorage.removeItem('invella_pending_payment')}catch(e){}}
+}catch(e){console.error('Payment recovery:',e)}
+}
+function restoreRouteView(){
+var p=location.pathname;
+if(p==='/create/editor'||p==='/create/publish'){$('marketing').classList.add('hidden');$('app').classList.remove('hidden');}
+else if(p==='/create/design'){$('app').classList.add('hidden');$('marketing').classList.remove('hidden');setTimeout(function(){$('templates').scrollIntoView({block:'start'})},20);}
+else{$('app').classList.add('hidden');$('marketing').classList.remove('hidden');}
+}
+window.addEventListener('popstate',function(){if(isPublicPath())return;restoreRouteView();if(location.pathname==='/create/publish'&&currentUser){$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}else if($('publishModal')){$('publishModal').classList.add('hidden');document.body.style.overflow=''}});
+async function init(){
+currentInvitationId=null;
+currentInvitationSlug=null;
+if(isPublicPath()){
+if($('publicLoading'))$('publicLoading').classList.remove('hidden');
+await loadPublicInvitation();
+return;
+}
+restoreRouteView();
+load();
+fields.forEach(function(id){if($(id)){$(id).addEventListener('input',render);$(id).addEventListener('change',render)}});
+['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(id){if($(id))$(id).addEventListener('change',render)});
+$('photo').addEventListener('change',async function(e){var original=e.target.files[0];if(!original)return;var f=await compressImage(original);var r=new FileReader();r.onload=function(){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+r.result+'")';$('invHero').style.color='#fff'};r.readAsDataURL(f);var saved=await cloudSave();if(saved)await uploadCover(f)});
+if($('customBackgroundFile'))$('customBackgroundFile').addEventListener('change',function(e){uploadCustomBackground(e.target.files[0])});
+render();
+await initAuth();
+await restoreUserCloudState();
+cloudReady=true;
+if(location.pathname==='/create/publish'&&currentUser){$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
+await maybeShowPaymentSuccess();
+[$('authModal'),$('publishModal'),$('dashboardModal'),$('paymentSuccessModal'),$('resetPasswordModal')].forEach(function(m){if(m)m.addEventListener('click',function(e){if(e.target===m){m.classList.add('hidden');document.body.style.overflow=''}})});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
