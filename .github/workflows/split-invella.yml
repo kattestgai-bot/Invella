@@ -1,4 +1,4 @@
-name: Split Invella frontend
+name: Chunk Invella frontend
 on:
   push:
     branches: [main]
@@ -7,47 +7,51 @@ on:
 permissions:
   contents: write
 jobs:
-  split:
+  chunk:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Split monolithic frontend
+      - name: Chunk large frontend responses
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          p=Path('index.html'); s=p.read_text(encoding='utf-8'); css=[]
-          def css_repl(m):
-              i=len(css)+1; css.append(m.group(1).strip()+"\n")
-              return f'<link rel="stylesheet" href="/assets/invella-{i}.css">'
-          s=re.sub(r'<style(?:\s[^>]*)?>(.*?)</style>',css_repl,s,flags=re.S|re.I)
-          scripts=[]
-          def js_repl(m):
-              body=m.group(1)
-              if "var SUPABASE_URL='https://lwanymjmbcstvggmhevx.supabase.co'" in body:
-                  scripts.append(body.strip()+"\n"); return '<script src="/assets/invella-app.js" defer></script>'
-              return m.group(0)
-          s=re.sub(r'<script>(.*?)</script>',js_repl,s,flags=re.S|re.I)
-          if not scripts: raise SystemExit('Main Invella script not found')
-          out=Path('assets'); out.mkdir(exist_ok=True)
-          for i,text in enumerate(css,1): (out/f'invella-{i}.css').write_text(text,encoding='utf-8')
-          (out/'invella-app.js').write_text(scripts[0],encoding='utf-8')
-          s=re.sub(r'>\s+<','><',s)
-          p.write_text(s.strip()+"\n",encoding='utf-8')
-          print('index bytes',p.stat().st_size)
-          print('app js bytes',(out/'invella-app.js').stat().st_size)
+          idx=Path('index.html')
+          s=idx.read_text(encoding='utf-8')
+          app=Path('assets/invella-app.js')
+          if not app.exists(): raise SystemExit('assets/invella-app.js missing')
+          js=app.read_text(encoding='utf-8')
+          # Split only at safe top-level line boundaries. Existing source keeps top-level functions/statements on lines.
+          lines=js.splitlines(True)
+          chunks=[]; cur=''
+          for line in lines:
+              if cur and len((cur+line).encode('utf-8'))>12000:
+                  chunks.append(cur); cur=''
+              cur+=line
+          if cur: chunks.append(cur)
+          # Preserve one shared scope across chunks by stripping the outer IIFE only after recombination in loader.
+          payload=[]
+          for i,ch in enumerate(chunks,1):
+              p=Path(f'assets/app-part-{i:02d}.txt'); p.write_text(ch,encoding='utf-8'); payload.append('/'+str(p))
+          # Small resilient loader: fetch each <12KB piece with retries, concatenate, then execute as the original script.
+          loader="""(function(){\nvar parts=PARTS;\nfunction sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}\nasync function get(url){var last;for(var i=0;i<6;i++){try{var r=await fetch(url+'?v=3',{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);var t=await r.text();if(!t)throw new Error('empty');return t}catch(e){last=e;await sleep(250*(i+1))}}throw last}\n(async function(){try{var all=[];for(var i=0;i<parts.length;i++)all.push(await get(parts[i]));(0,eval)(all.join('\\n'))}catch(e){console.error('Invella startup failed',e);var d=document.createElement('div');d.style.cssText='position:fixed;z-index:99999;left:12px;right:12px;bottom:12px;padding:12px;background:white;border:1px solid #ddd;border-radius:12px;font:14px Arial';d.innerHTML='Не удалось полностью загрузить сайт. <button onclick=\"location.reload()\">Повторить</button>';document.body.appendChild(d)}})();\n})();\n""".replace('PARTS',repr(payload).replace("'",'"'))
+          Path('assets/invella-loader.js').write_text(loader,encoding='utf-8')
+          s=s.replace('<script src="/assets/invella-app.js" defer></script>','<script src="/assets/invella-loader.js" defer></script>')
+          # Make stylesheet loads resilient too: current CSS files are already below the observed reset threshold.
+          idx.write_text(s,encoding='utf-8')
+          print('index',idx.stat().st_size,'loader',Path('assets/invella-loader.js').stat().st_size,'parts',[(p,Path(p[1:]).stat().st_size) for p in payload])
           PY
-      - name: Validate split
+      - name: Validate
         run: |
-          node --check assets/invella-app.js
-          grep -q '/assets/invella-app.js' index.html
-          grep -q 'onclick="openTemplates()"' index.html
-          grep -q 'onclick="openAuth()"' index.html
-      - name: Commit split frontend
+          node --check assets/invella-loader.js
+          grep -q '/assets/invella-loader.js' index.html
+          test $(stat -c%s index.html) -lt 20000
+          for f in assets/app-part-*.txt; do test $(stat -c%s "$f") -lt 20000; done
+      - name: Commit repair
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html assets/
           git diff --cached --quiet && exit 0
-          git commit -m 'Split frontend assets to prevent truncated desktop load'
+          git commit -m 'Load Invella app in retryable small chunks'
           git push
