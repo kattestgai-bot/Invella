@@ -485,7 +485,8 @@ html.public-route .invitation{margin:0 auto!important}
 <div id="authMessage" class="auth-message"></div></div></div>
 
 <div id="resetPasswordModal" class="modal hidden"><div class="modal-card auth-card"><div class="modal-top"><div><div class="eyebrow">Безопасность</div><h2>Новый пароль</h2></div></div><p class="sub">Придумайте новый пароль для аккаунта Invella.</p><div class="field password-wrap"><label>Новый пароль</label><input id="newPassword" type="password" autocomplete="new-password" placeholder="Минимум 8 символов"><button type="button" class="password-eye" onclick="togglePassword('newPassword',this)">◉</button></div><div class="field password-wrap"><label>Повторите пароль</label><input id="newPasswordConfirm" type="password" autocomplete="new-password" placeholder="Повторите пароль"><button type="button" class="password-eye" onclick="togglePassword('newPasswordConfirm',this)">◉</button></div><button id="saveNewPasswordBtn" type="button" class="primary" style="width:100%" onclick="saveNewPassword()">Сохранить новый пароль</button><div id="resetPasswordMessage" class="auth-message"></div></div></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Локальная закреплённая копия Supabase: сайт не зависит от доступности внешнего CDN. -->
+<script src="/supabase.min.js"></script>
 <script>
 (function(){
 'use strict';
