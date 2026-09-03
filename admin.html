@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invella — управление</title>
+
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#f3eee6;
+  --paper:#fffdf9;
+  --ink:#191510;
+  --muted:#786e64;
+  --line:#ddd3c7;
+  --gold:#9a7951;
+  --red:#a04444;
+  --green:#4f7657;
+}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+
+.shell{
+  max-width:1100px;
+  margin:auto;
+  padding:22px;
+}
+
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:28px;
+}
+
+.logo{
+  font-family:Georgia,serif;
+  font-size:25px;
+  letter-spacing:.2em;
+}
+
+h1,h2,h3{
+  font-family:Georgia,serif;
+  font-weight:400;
+}
+
+h1{font-size:42px;margin:5px 0}
+h2{font-size:30px;margin:0 0 18px}
+
+.muted{
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:18px;
+}
+
+.hidden{display:none!important}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:20px;
+  overflow:auto;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 16px;
+  background:var(--ink);
+  color:#fff;
+}
+
+button.secondary{
+  background:#eee7de;
+  color:var(--ink);
+}
+
+button.danger{
+  background:var(--red);
+}
+
+button.green{
+  background:var(--green);
+}
+
+.tabs button.active{
+  background:var(--gold);
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+}
+
+.field{
+  margin:12px 0;
+}
+
+.field label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.search{
+  margin-bottom:18px;
+}
+
+.item{
+  border-top:1px solid var(--line);
+  padding:18px 0;
+}
+
+.item:first-child{
+  border-top:0;
+}
+
+.item-head{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+}
+
+.item-title{
+  font-family:Georgia,serif;
+  font-size:22px;
+}
+
+.meta{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+  margin-top:6px;
+  word-break:break-word;
+}
+
+.badge{
+  display:inline-block;
+  border-radius:999px;
+  padding:5px 9px;
+  background:#eee7de;
+  font-size:11px;
+  text-transform:uppercase;
+}
+
+.badge.published{
+  background:#e5f0e6;
+  color:#315b38;
+}
+
+.actions{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.actions button{
+  padding:9px 11px;
+  font-size:12px;
+}
+
+.message{
+  padding:13px;
+  border-radius:10px;
+  margin:12px 0;
+  line-height:1.4;
+}
+
+.message.ok{
+  background:#e7f1e7;
+  color:#315b38;
+}
+
+.message.error{
+  background:#f5e4e4;
+  color:#8a3434;
+}
+
+.promo-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  border-top:1px solid var(--line);
+  padding:15px 0;
+}
+
+.promo-row:first-child{border-top:0}
+
+.promo-code{
+  font-family:Georgia,serif;
+  font-size:22px;
+}
+
+.loading{
+  text-align:center;
+  padding:35px;
+  color:var(--muted);
+}
+
+@media(max-width:650px){
+  .shell{padding:15px}
+  h1{font-size:34px}
+  .grid{grid-template-columns:1fr}
+  .item-head,.promo-row{display:block}
+  .item-head .badge{margin-top:8px}
+  .promo-row button{margin-top:10px}
+}
+</style>
+</head>
+
+<body>
+
+<div class="shell">
+
+<header>
+  <div class="logo">INVELLA</div>
+  <button class="secondary" onclick="logout()">Выйти</button>
+</header>
+
+<div id="loading" class="card loading">
+  Проверяем доступ…
+</div>
+
+<div id="loginBox" class="card hidden">
+  <h1>Управление Invella</h1>
+  <p class="muted">
+    Войдите под администраторским аккаунтом.
+  </p>
+
+  <div class="field">
+    <label>Email</label>
+    <input id="email" type="email" autocomplete="email">
+  </div>
+
+  <div class="field">
+    <label>Пароль</label>
+    <input id="password" type="password" autocomplete="current-password">
+  </div>
+
+  <button onclick="login()">Войти</button>
+
+  <div id="loginMessage"></div>
+</div>
+
+<div id="admin" class="hidden">
+
+  <h1>Управление Invella</h1>
+  <p class="muted">
+    Приглашения, ручная активация тарифов и промокоды.
+  </p>
+
+  <div class="tabs">
+    <button id="tabInv"
+            class="active"
+            onclick="showTab('invitations')">
+      Приглашения
+    </button>
+
+    <button id="tabPromo"
+            onclick="showTab('promos')">
+      Промокоды
+    </button>
+  </div>
+
+  <section id="invitationsTab">
+
+    <div class="card">
+
+      <h2>Приглашения</h2>
+
+      <input
+        id="search"
+        class="search"
+        placeholder="Поиск по имени, email, ссылке…"
+        oninput="renderInvitations()"
+      >
+
+      <div id="invitationMessage"></div>
+
+      <div id="invitations"></div>
+
+    </div>
+
+  </section>
+
+  <section id="promosTab" class="hidden">
+
+    <div class="card">
+
+      <h2>Создать промокод</h2>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>Код</label>
+          <input
+            id="promoCode"
+            placeholder="Например WEDDING10"
+          >
+        </div>
+
+        <div class="field">
+          <label>Тип скидки</label>
+          <select id="discountType">
+            <option value="percent">Процент</option>
+            <option value="fixed">Фиксированная сумма</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Размер скидки</label>
+          <input
+            id="discountValue"
+            type="number"
+            min="1"
+            placeholder="10"
+          >
+        </div>
+
+        <div class="field">
+          <label>Тариф</label>
+          <select id="planKey">
+            <option value="">Все тарифы</option>
+            <option value="basic">Basic</option>
+            <option value="pro">Pro</option>
+            <option value="premium">Premium</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Количество использований</label>
+          <input
+            id="maxUses"
+            type="number"
+            min="1"
+            placeholder="Без ограничения"
+          >
+        </div>
+
+        <div class="field">
+          <label>Действует до</label>
+          <input
+            id="expiresAt"
+            type="datetime-local"
+          >
+        </div>
+
+      </div>
+
+      <button onclick="createPromo()">
+        Создать промокод
+      </button>
+
+      <div id="promoMessage"></div>
+
+    </div>
+
+    <div class="card">
+
+      <h2>Промокоды</h2>
+
+      <div id="promos"></div>
+
+    </div>
+
+  </section>
+
+</div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL =
+  "https://lwanymjmbcstvggmhevx.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J";
+
+const sb =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+let invitations = [];
+let promos = [];
+
+function esc(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function message(id,text,type="ok"){
+  const el=document.getElementById(id);
+
+  if(!text){
+    el.innerHTML="";
+    return;
+  }
+
+  el.innerHTML=
+    '<div class="message '+type+'">'+
+    esc(text)+
+    '</div>';
+}
+
+async function getToken(){
+
+  const {
+    data:{session}
+  }=await sb.auth.getSession();
+
+  return session?.access_token || "";
+}
+
+async function api(body){
+
+  const token=await getToken();
+
+  if(!token){
+    throw new Error("Необходимо войти");
+  }
+
+  const response=await fetch(
+    SUPABASE_URL+"/functions/v1/admin-panel",
+    {
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization":"Bearer "+token,
+        "apikey":SUPABASE_KEY
+      },
+
+      body:JSON.stringify(body)
+    }
+  );
+
+  let data={};
+
+  try{
+    data=await response.json();
+  }catch(e){}
+
+  if(!response.ok){
+    if(response.status===403){
+      throw new Error(
+        "У этого аккаунта нет прав администратора"
+      );
+    }
+
+    throw new Error(
+      data.error || "Ошибка сервера"
+    );
+  }
+
+  return data;
+}
+
+async function login(){
+
+  message("loginMessage","");
+
+  const email=
+    document.getElementById("email").value.trim();
+
+  const password=
+    document.getElementById("password").value;
+
+  if(!email || !password){
+    message(
+      "loginMessage",
+      "Введите email и пароль",
+      "error"
+    );
+    return;
+  }
+
+  const {error}=
+    await sb.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+    message(
+      "loginMessage",
+      "Неверный email или пароль",
+      "error"
+    );
+    return;
+  }
+
+  await start();
+}
+
+async function logout(){
+
+  await sb.auth.signOut();
+
+  location.reload();
+}
+
+async function start(){
+
+  document.getElementById("loading")
+    .classList.remove("hidden");
+
+  document.getElementById("loginBox")
+    .classList.add("hidden");
+
+  document.getElementById("admin")
+    .classList.add("hidden");
+
+  const {
+    data:{session}
+  }=await sb.auth.getSession();
+
+  if(!session){
+
+    document.getElementById("loading")
+      .classList.add("hidden");
+
+    document.getElementById("loginBox")
+      .classList.remove("hidden");
+
+    return;
+  }
+
+  try{
+
+    await loadData();
+
+    document.getElementById("loading")
+      .classList.add("hidden");
+
+    document.getElementById("admin")
+      .classList.remove("hidden");
+
+  }catch(e){
+
+    await sb.auth.signOut();
+
+    document.getElementById("loading")
+      .classList.add("hidden");
+
+    document.getElementById("loginBox")
+      .classList.remove("hidden");
+
+    message(
+      "loginMessage",
+      e.message,
+      "error"
+    );
+  }
+}
+
+async function loadData(){
+
+  const data=
+    await api({
+      action:"list"
+    });
+
+  invitations=data.invitations || [];
+  promos=data.promos || [];
+
+  renderInvitations();
+  renderPromos();
+}
+
+function showTab(tab){
+
+  const inv=
+    tab==="invitations";
+
+  document.getElementById("invitationsTab")
+    .classList.toggle("hidden",!inv);
+
+  document.getElementById("promosTab")
+    .classList.toggle("hidden",inv);
+
+  document.getElementById("tabInv")
+    .classList.toggle("active",inv);
+
+  document.getElementById("tabPromo")
+    .classList.toggle("active",!inv);
+}
+
+function renderInvitations(){
+
+  const root=
+    document.getElementById("invitations");
+
+  const q=
+    document.getElementById("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const list=invitations.filter(x=>{
+
+    const hay=[
+      x.title,
+      x.email,
+      x.display_name,
+      x.slug,
+      x.event_type,
+      x.plan,
+      x.status
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return !q || hay.includes(q);
+  });
+
+  if(!list.length){
+
+    root.innerHTML=
+      '<p class="muted">Ничего не найдено.</p>';
+
+    return;
+  }
+
+  root.innerHTML=list.map(x=>{
+
+    const url=
+      x.slug
+      ? location.origin+"/i/"+x.slug
+      : "";
+
+    return `
+      <div class="item">
+
+        <div class="item-head">
+
+          <div>
+
+            <div class="item-title">
+              ${esc(x.title || "Без названия")}
+            </div>
+
+            <div class="meta">
+
+              ${x.email
+                ? "Клиент: "+esc(x.email)+"<br>"
+                : ""
+              }
+
+              ${x.event_type
+                ? "Событие: "+esc(x.event_type)+"<br>"
+                : ""
+              }
+
+              ${url
+                ? "Ссылка: "+esc(url)
+                : ""
+              }
+
+            </div>
+
+          </div>
+
+          <div>
+
+            <span class="badge ${x.status==="published"?"published":""}">
+              ${esc(x.plan || "draft")}
+              ·
+              ${esc(x.status)}
+            </span>
+
+          </div>
+
+        </div>
+
+        <div class="actions">
+
+          <button
+            onclick="activateInvitation(
+              '${esc(x.id)}',
+              'basic'
+            )">
+            Выдать Basic
+          </button>
+
+          <button
+            onclick="activateInvitation(
+              '${esc(x.id)}',
+              'pro'
+            )">
+            Выдать Pro
+          </button>
+
+          <button
+            onclick="activateInvitation(
+              '${esc(x.id)}',
+              'premium'
+            )">
+            Выдать Premium
+          </button>
+
+          ${url ? `
+            <button
+              class="secondary"
+              onclick="window.open(
+                '${esc(url)}',
+                '_blank'
+              )">
+              Открыть
+            </button>
+          ` : ""}
+
+          <button
+            class="danger"
+            onclick="disableInvitation(
+              '${esc(x.id)}'
+            )">
+            Отключить
+          </button>
+
+        </div>
+
+      </div>
+    `;
+  }).join("");
+}
+
+async function activateInvitation(id,plan){
+
+  const names={
+    basic:"Basic",
+    pro:"Pro",
+    premium:"Premium"
+  };
+
+  if(!confirm(
+    "Выдать тариф "+names[plan]+
+    " и опубликовать приглашение?"
+  )){
+    return;
+  }
+
+  message("invitationMessage","");
+
+  try{
+
+    await api({
+      action:"activate",
+      invitationId:id,
+      plan
+    });
+
+    message(
+      "invitationMessage",
+      "Тариф "+names[plan]+
+      " успешно выдан."
+    );
+
+    await loadData();
+
+  }catch(e){
+
+    message(
+      "invitationMessage",
+      e.message,
+      "error"
+    );
+  }
+}
+
+async function disableInvitation(id){
+
+  if(!confirm(
+    "Отключить это приглашение?"
+  )){
+    return;
+  }
+
+  try{
+
+    await api({
+      action:"disable",
+      invitationId:id
+    });
+
+    message(
+      "invitationMessage",
+      "Приглашение отключено."
+    );
+
+    await loadData();
+
+  }catch(e){
+
+    message(
+      "invitationMessage",
+      e.message,
+      "error"
+    );
+  }
+}
+
+function renderPromos(){
+
+  const root=
+    document.getElementById("promos");
+
+  if(!promos.length){
+
+    root.innerHTML=
+      '<p class="muted">Промокодов пока нет.</p>';
+
+    return;
+  }
+
+  root.innerHTML=promos.map(p=>{
+
+    let discount="";
+
+    if(p.discount_type==="percent"){
+      discount=p.discount_value+"%";
+    }else{
+      discount=
+        (Number(p.discount_value)/100)+" ₽";
+    }
+
+    const plan=
+      p.plan_key
+      ? p.plan_key.toUpperCase()
+      : "Все тарифы";
+
+    const uses=
+      p.max_uses
+      ? p.uses_count+" / "+p.max_uses
+      : p.uses_count+" / ∞";
+
+    return `
+      <div class="promo-row">
+
+        <div>
+
+          <div class="promo-code">
+            ${esc(p.code)}
+          </div>
+
+          <div class="meta">
+
+            Скидка:
+            ${esc(discount)}
+            ·
+            ${esc(plan)}
+            <br>
+
+            Использовано:
+            ${esc(uses)}
+
+            ${p.expires_at
+              ? "<br>До: "+
+                esc(
+                  new Date(
+                    p.expires_at
+                  ).toLocaleString("ru-RU")
+                )
+              : ""
+            }
+
+          </div>
+
+        </div>
+
+        <button
+          class="${p.active ? "danger" : "green"}"
+          onclick="togglePromo(
+            '${esc(p.id)}',
+            ${!p.active}
+          )"
+        >
+
+          ${p.active
+            ? "Выключить"
+            : "Включить"
+          }
+
+        </button>
+
+      </div>
+    `;
+  }).join("");
+}
+
+async function createPromo(){
+
+  message("promoMessage","");
+
+  const code=
+    document.getElementById("promoCode")
+      .value
+      .trim()
+      .toUpperCase();
+
+  const discountType=
+    document.getElementById("discountType")
+      .value;
+
+  const discountValue=
+    Number(
+      document.getElementById("discountValue")
+        .value
+    );
+
+  const planKey=
+    document.getElementById("planKey")
+      .value || null;
+
+  const maxRaw=
+    document.getElementById("maxUses")
+      .value;
+
+  const maxUses=
+    maxRaw ? Number(maxRaw) : null;
+
+  const expiresRaw=
+    document.getElementById("expiresAt")
+      .value;
+
+  if(!code || !discountValue){
+
+    message(
+      "promoMessage",
+      "Введите код и размер скидки.",
+      "error"
+    );
+
+    return;
+  }
+
+  try{
+
+    await api({
+      action:"promo_create",
+      code,
+      discountType,
+      discountValue,
+      planKey,
+      maxUses,
+      expiresAt:expiresRaw || null
+    });
+
+    document.getElementById("promoCode").value="";
+    document.getElementById("discountValue").value="";
+    document.getElementById("maxUses").value="";
+    document.getElementById("expiresAt").value="";
+
+    message(
+      "promoMessage",
+      "Промокод создан."
+    );
+
+    await loadData();
+
+  }catch(e){
+
+    message(
+      "promoMessage",
+      e.message,
+      "error"
+    );
+  }
+}
+
+async function togglePromo(id,active){
+
+  try{
+
+    await api({
+      action:"promo_toggle",
+      id,
+      active
+    });
+
+    await loadData();
+
+  }catch(e){
+
+    message(
+      "promoMessage",
+      e.message,
+      "error"
+    );
+  }
+}
+
+start();
+</script>
+
+</body>
+  </html>
