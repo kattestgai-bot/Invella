@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/i/:slug", "destination": "/index.html" },
+    { "source": "/create/:path*", "destination": "/index.html" }
+  ]
+}
