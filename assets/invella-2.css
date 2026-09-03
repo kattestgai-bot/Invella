@@ -1,0 +1,144 @@
+/* INVELLA LUXURY REDESIGN */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@300;400;500;600&display=swap');
+
+:root{
+ --bg:#f3eee6;--paper:#fbf8f2;--ink:#17130f;--muted:#756b61;
+ --line:rgba(62,47,34,.16);--soft:#e9dfd1;--premium:#8c6b43;--lux:#b79768;
+}
+html{background:#17130f}
+body{
+ font-family:'Manrope',Arial,sans-serif;
+ background:
+ radial-gradient(circle at 78% 4%,rgba(184,151,104,.15),transparent 25rem),
+ linear-gradient(180deg,#f7f2ea 0,#efe7dc 100%);
+ color:var(--ink)
+}
+.shell{max-width:1280px;padding:0 42px}
+.logo,h1,h2,h3,.price,.plan-name,.template-info b,.category b{
+ font-family:'Cormorant Garamond',Georgia,serif
+}
+nav{
+ min-height:92px;border-bottom:1px solid rgba(50,38,28,.12);
+ position:relative;z-index:5
+}
+.logo{font-size:27px;letter-spacing:.32em}
+.nav-actions{gap:12px}
+.primary,.navbtn,.ghost{
+ min-height:48px;padding:13px 23px;border-radius:2px;
+ text-transform:uppercase;letter-spacing:.12em;font-size:11px;font-weight:600
+}
+.primary,.navbtn{
+ background:#191510;color:#fff;box-shadow:none;border:1px solid #191510
+}
+.primary:hover,.navbtn:hover{background:#a48358;border-color:#a48358}
+.ghost{background:transparent;border:1px solid rgba(45,35,27,.28)}
+.hero{
+ min-height:790px;grid-template-columns:1.08fr .92fr;gap:80px;padding:80px 0 110px;
+ position:relative
+}
+.hero:after{
+ content:"INVELLA";position:absolute;left:-10px;bottom:10px;
+ font-family:'Cormorant Garamond',serif;font-size:180px;letter-spacing:.05em;
+ color:rgba(95,72,50,.035);pointer-events:none
+}
+.eyebrow{font-size:10px;letter-spacing:.28em;color:#91795e}
+h1{
+ font-size:clamp(72px,8.4vw,128px);line-height:.79;letter-spacing:-.055em;
+ margin:28px 0 34px;font-weight:400
+}
+.hero p{font-size:17px;line-height:1.8;max-width:540px;color:#70665c;font-weight:300}
+.hero-actions{margin-top:35px}
+.phone{
+ width:min(390px,82vw);padding:0;border:0;border-radius:0;background:#d8c5ad;
+ box-shadow:0 45px 100px rgba(45,31,19,.22);position:relative
+}
+.phone:before{
+ content:"";position:absolute;inset:-18px;border:1px solid rgba(110,83,55,.3);z-index:-1
+}
+.phone-inner{
+ min-height:650px;border-radius:0;
+ background:
+ linear-gradient(rgba(31,24,18,.16),rgba(31,24,18,.2)),
+ radial-gradient(circle at 50% 15%,#f5eadb,#d2b99b 70%);
+ color:#fff;padding:45px
+}
+.phone-inner .eyebrow{color:#fff;opacity:.85}
+.phone-inner h3{font-size:64px;line-height:.85;font-weight:400}
+.phone-inner p{color:#fff;font-family:'Cormorant Garamond',serif;font-size:19px}
+.section{padding:105px 0}
+.section>h2{font-size:65px;line-height:.95;font-weight:400;margin-bottom:18px}
+.sub{font-size:14px;line-height:1.8}
+.categories,.templates,.pricing{gap:24px}
+.card{
+ background:rgba(255,252,247,.72);border:1px solid rgba(71,53,38,.14);
+ border-radius:0;padding:30px;box-shadow:none
+}
+.category{min-height:205px;padding:32px}
+.category span{font-size:31px;filter:grayscale(.35)}
+.category b{font-size:34px;font-weight:500}
+.category small{font-size:11px;letter-spacing:.06em}
+.template{background:#f9f4ec}
+.preview{height:390px;padding:34px}
+.preview:after{inset:20px;border-color:rgba(60,44,32,.19);border-radius:0}
+.preview h3{font-size:49px;line-height:.95}
+.template-info{padding:25px}
+.template-info b{font-size:27px;font-weight:500}
+.template-info p{font-size:13px;line-height:1.6}
+.t1{background:linear-gradient(145deg,#e7d9ca,#f5ede4)}
+.t2{background:#eee6da}
+.t3{background:linear-gradient(145deg,#12100e,#2c261f)}
+.t4{background:linear-gradient(145deg,#dce1d4,#f2eee4)}
+.t5{background:linear-gradient(145deg,#ead7d7,#f7efeb)}
+.t6{background:linear-gradient(145deg,#d9e0df,#eee9df)}
+.pricing{gap:0;border:1px solid rgba(71,53,38,.15)}
+.price-card{border:0;border-right:1px solid rgba(71,53,38,.15);padding:40px 34px;background:#f8f3eb}
+.price-card:last-child{border-right:0}
+.price-card.popular{
+ transform:none;background:#1b1713;color:#f8f2e9;box-shadow:none;border-color:#1b1713
+}
+.price-card.popular .plan-description,.price-card.popular .plan-name{color:#cbbba7}
+.price-card.popular .features li{border-color:rgba(255,255,255,.13)}
+.price-card.popular .primary{background:#f1e4d1;color:#1b1713;border-color:#f1e4d1}
+.popular-badge{
+ top:20px;right:20px;border-radius:0;background:#b28d5e;color:#fff;
+ text-transform:uppercase;letter-spacing:.14em;padding:8px 11px
+}
+.plan-name{font-size:19px;letter-spacing:.12em}
+.price{font-size:57px;font-weight:400;margin:16px 0}
+.features li{padding:13px 0;font-size:13px}
+.features li:before{content:"—";color:#a28058}
+.faq details{background:transparent;padding:23px 0}
+footer{border-top:1px solid rgba(71,53,38,.14)}
+/* Builder */
+.app{background:#eee7dd}
+.appbar{min-height:78px;background:#181410;color:#fff;border:0;padding:13px 28px}
+.appbar .ghost{border-color:rgba(255,255,255,.28);color:#fff}
+.controls{padding:38px;background:#faf7f1;border-color:rgba(70,50,35,.12)}
+.controls h2{font-size:43px}
+.field label{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.field input,.field textarea,.field select{
+ border-radius:0;border:0;border-bottom:1px solid #cfc3b5;background:transparent;padding:14px 3px
+}
+.feature-box{border-radius:0;background:#f5efe6;padding:22px}
+.invitation{box-shadow:0 35px 90px rgba(55,39,25,.17);background:#fffdf9}
+.inv-hero{min-height:500px}
+.inv-hero h2{font-size:65px}
+.block{padding:48px 34px}
+.block h3{font-size:39px}
+.modal{background:rgba(20,16,12,.78);backdrop-filter:blur(8px)}
+.modal-card{border-radius:0;background:#f5efe6;padding:35px}
+.close-btn{border-radius:0}
+@media(max-width:850px){
+ .shell{padding:0 22px}.hero{min-height:auto;gap:40px}.pricing{border:0;gap:16px}
+ .price-card{border:1px solid rgba(71,53,38,.15)}
+}
+@media(max-width:560px){
+ .shell{padding:0 18px}nav{min-height:76px}.logo{font-size:20px}
+ .hero{padding:60px 0 75px}.hero:after{display:none}
+ h1{font-size:64px;line-height:.83}.hero p{font-size:15px}
+ .section{padding:72px 0}.section>h2{font-size:48px}
+ .preview{height:340px}.category{min-height:170px}
+ .price-card{padding:30px 24px}.price{font-size:49px}
+ .controls{padding:24px 18px}.modal-card{padding:22px 18px}
+}
+.plan-locked,[disabled]{opacity:.48;cursor:not-allowed}

@@ -1,0 +1,10 @@
+html.public-route #marketing{display:none!important}
+html.public-route #app{display:block!important}
+html.public-route .appbar,html.public-route .controls{display:none!important}
+html.public-route .editor{grid-template-columns:1fr!important}
+html.public-route body{background:#e9e0d4}
+html.public-route .preview-area{min-height:100vh}
+.public-loading{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:linear-gradient(145deg,#e8ded0,#f6f0e7 45%,#d8ccbd);transition:opacity .22s ease}
+.public-loading.hidden{opacity:0;pointer-events:none;display:grid!important}
+.public-loading-card{width:min(390px,82vw);height:72vh;max-height:720px;border:1px solid rgba(92,70,50,.22);background:rgba(255,252,247,.72);box-shadow:0 30px 90px rgba(49,35,24,.12);display:grid;place-items:center;text-align:center;padding:30px}
+.public-loading-card:before{content:'INVELLA';font:400 19px 'Cormorant Garamond',Georgia,serif;letter-spacing:.34em;color:#7d6a57}

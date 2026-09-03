@@ -1,0 +1,127 @@
+/* INVELLA COUTURE COLLECTION — six independent art directions */
+#templates{padding-top:84px}
+#templates>h2{max-width:780px;font-size:clamp(46px,7vw,84px);line-height:.88;letter-spacing:-.045em;margin-bottom:20px}
+#templates>.sub{max-width:580px;font-size:15px;line-height:1.8;margin-bottom:44px}
+#templates .templates{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px}
+#templates .template{border:0;border-radius:0;background:#f8f3eb;box-shadow:0 22px 70px rgba(43,32,23,.08);overflow:hidden;transition:transform .35s ease,box-shadow .35s ease}
+#templates .template:hover{transform:translateY(-8px);box-shadow:0 34px 90px rgba(43,32,23,.14)}
+#templates .preview{height:520px;padding:0;overflow:hidden;isolation:isolate}
+#templates .preview:after{display:none}
+#templates .template-info{padding:27px 28px 30px;background:#fbf8f2;border-top:1px solid rgba(48,37,29,.09)}
+#templates .template-info b{display:block;font-size:30px;font-weight:400;letter-spacing:-.02em;margin-bottom:7px}
+#templates .template-info p{font-size:12px;letter-spacing:.02em;line-height:1.65;min-height:40px;margin:0 0 19px;color:#81776f}
+#templates .template-info button{border-radius:0;letter-spacing:.13em;text-transform:uppercase;font-size:10px;padding:15px 18px}
+
+/* 01 MAISON — ivory stationery, blind emboss, monogram */
+.t1{background:linear-gradient(145deg,#e9ddcf,#f7f0e6 56%,#ded0c0);color:#30251d}
+.t1:before{content:"";position:absolute;inset:27px;border:1px solid rgba(91,67,48,.28);box-shadow:inset 0 0 0 7px rgba(255,255,255,.18);z-index:-1}
+.t1 .art{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:55px 42px;position:relative}
+.t1 .art:before{content:"A  ·  M";display:grid;place-items:center;width:74px;height:74px;border:1px solid #8b715c;border-radius:50%;font-family:Georgia,serif;font-size:17px;letter-spacing:.12em;margin-bottom:54px}
+.t1 small{font-size:8px;letter-spacing:.48em;text-transform:uppercase;margin-bottom:18px}
+.t1 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:61px!important;font-weight:400;line-height:.82!important;margin:0 0 27px!important}
+.t1 span{font-family:Arial,sans-serif;font-size:9px;letter-spacing:.28em;text-transform:uppercase;border-top:1px solid #9e8b7b;padding-top:16px}
+
+/* 02 VOGUE EDITORIAL — typography as architecture */
+.t2{background:#e8e3da;color:#0d0d0c;text-align:left;align-items:stretch!important;justify-content:stretch!important}
+.t2 .art{height:100%;width:100%;position:relative;padding:28px 28px 34px;display:flex;flex-direction:column;align-items:flex-start}
+.t2 .issue{font:700 9px/1 Arial,sans-serif;letter-spacing:.2em;border:1px solid #111;padding:7px 8px}
+.t2 .number{position:absolute;right:22px;top:16px;font:800 112px/.8 Arial,sans-serif;letter-spacing:-.1em;color:rgba(0,0,0,.08)}
+.t2 h3{font-family:Arial,sans-serif!important;font-size:66px!important;line-height:.76!important;letter-spacing:-.085em!important;font-weight:800!important;text-transform:uppercase;margin:auto 0 24px!important;max-width:90%}
+.t2 .rule{width:100%;height:8px;background:#111;margin-bottom:18px}
+.t2 span{font:700 10px/1.4 Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;max-width:240px}
+
+/* 03 NOIR — black tie, champagne foil, cinematic */
+.t3{background:radial-gradient(circle at 50% 28%,#35302a 0,#171512 48%,#090908 100%);color:#f0e6d6}
+.t3:before{content:"";position:absolute;inset:19px;border:1px solid rgba(203,175,128,.35);z-index:-1}
+.t3:after{content:"";position:absolute;width:190px;height:190px;border:1px solid rgba(203,175,128,.14);border-radius:50%;top:70px;left:50%;transform:translateX(-50%);z-index:-1}
+.t3 .art{height:100%;width:100%;padding:48px 38px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t3 small{font-size:8px;letter-spacing:.55em;color:#c5aa7d;margin-bottom:72px}
+.t3 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:66px!important;line-height:.78!important;font-weight:300!important;margin:0 0 48px!important;color:#f6eee2}
+.t3 .diamond{width:7px;height:7px;background:#c5aa7d;transform:rotate(45deg);margin-bottom:22px}
+.t3 span{font-size:9px;letter-spacing:.32em;color:#cbbca7;text-transform:uppercase}
+
+/* 04 HERBARIUM — botanical atelier, illustrated leaves */
+.t4{background:#e9eadf;color:#2d3a2c}
+.t4 .art{height:100%;width:100%;padding:54px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.t4 .leaf{position:absolute;width:120px;height:230px;border-left:1px solid #6f8069;opacity:.7;transform-origin:bottom}
+.t4 .leaf:before,.t4 .leaf:after{content:"";position:absolute;width:58px;height:24px;border:1px solid #71826b;border-radius:100% 0 100% 0}
+.t4 .leaf:before{left:-58px;top:54px;transform:rotate(25deg)}.t4 .leaf:after{left:0;top:105px;transform:rotate(-25deg) scaleX(-1)}
+.t4 .l1{left:17px;bottom:-15px;transform:rotate(-15deg)}.t4 .l2{right:8px;top:-22px;transform:rotate(165deg)}
+.t4 small{font-size:8px;letter-spacing:.42em;margin-bottom:27px;z-index:1}
+.t4 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:69px!important;line-height:.82!important;font-style:italic;font-weight:400!important;margin:0 0 26px!important;z-index:1}
+.t4 span{font-size:9px;letter-spacing:.25em;text-transform:uppercase;z-index:1}
+.t4 .seal{margin-top:45px;width:36px;height:36px;border:1px solid #788873;border-radius:50%;display:grid;place-items:center;font-family:Georgia,serif;font-size:12px;z-index:1}
+
+/* 05 AMOUR — couture blush, silk ribbon, handwritten mood */
+.t5{background:linear-gradient(155deg,#f5e8e4 0,#ead5d2 52%,#f7eeea 100%);color:#57393b}
+.t5:before{content:"";position:absolute;width:160%;height:92px;background:rgba(255,255,255,.3);transform:rotate(-38deg);left:-45%;top:43%;box-shadow:0 10px 30px rgba(90,50,50,.08);z-index:-1}
+.t5 .art{height:100%;width:100%;padding:45px 36px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.t5 small{font-family:Arial,sans-serif;font-size:8px;letter-spacing:.5em;margin-bottom:38px}
+.t5 .amp{font-family:'Cormorant Garamond',Georgia,serif;font-size:34px;font-style:italic;color:#a06f72;margin:-8px 0}
+.t5 h3{font-family:'Cormorant Garamond',Georgia,serif!important;font-size:67px!important;line-height:.72!important;font-style:italic;font-weight:400!important;margin:0!important}
+.t5 span{font-size:9px;letter-spacing:.22em;text-transform:uppercase;margin-top:44px}
+.t5 .kiss{font-family:Georgia,serif;font-size:20px;margin-top:24px;color:#9b686c}
+
+/* 06 GALLERY — modern art-book, cobalt accent */
+.t6{background:#efede6;color:#111;text-align:left;align-items:stretch!important;justify-content:stretch!important}
+.t6 .art{height:100%;width:100%;padding:25px;position:relative;display:grid;grid-template-rows:auto 1fr auto}
+.t6 .top{display:flex;justify-content:space-between;font:700 8px/1 Arial,sans-serif;letter-spacing:.18em;text-transform:uppercase}
+.t6 .shape{position:absolute;width:58%;height:45%;right:-8%;top:22%;background:#293f85;border-radius:50% 0 0 50%;opacity:.96;z-index:-1}
+.t6 .shape:after{content:"";position:absolute;width:105px;height:105px;background:#d4c5a7;left:-62px;bottom:-55px;transform:rotate(45deg)}
+.t6 h3{align-self:center;font-family:Arial,sans-serif!important;font-size:74px!important;line-height:.78!important;letter-spacing:-.09em!important;font-weight:300!important;margin:0!important;max-width:250px}
+.t6 .bottom{display:grid;grid-template-columns:1fr 1fr;gap:20px;border-top:1px solid #111;padding-top:14px;font:700 9px/1.4 Arial,sans-serif;text-transform:uppercase;letter-spacing:.08em}
+
+/* Invitation canvas — shared premium frame */
+.preview-area{background:linear-gradient(145deg,#d9d0c4,#f0e9df 45%,#d7cec2);padding:44px}
+.invitation{position:relative;isolation:isolate;width:min(460px,100%);box-shadow:0 35px 110px rgba(34,26,20,.22);overflow:hidden}
+.invitation .eyebrow{font-size:8px;letter-spacing:.45em;text-transform:uppercase}
+.invitation .block{position:relative}
+
+/* MAISON invitation */
+.theme-classic{background:#fbf7ef;color:#2e241d;border:1px solid #d6c8b8}
+.theme-classic:before{content:"";position:absolute;inset:13px;border:1px solid rgba(109,82,60,.22);z-index:5;pointer-events:none}
+.theme-classic .inv-hero{min-height:570px!important;background:linear-gradient(145deg,#eee3d6,#f8f2e9)!important;padding:72px 44px!important}
+.theme-classic .inv-hero:before{content:"A  ·  M";display:grid;place-items:center;width:70px;height:70px;border:1px solid #9a8068;border-radius:50%;font:16px Georgia,serif;letter-spacing:.12em;margin:0 auto 52px}
+.theme-classic .inv-hero h2{font:400 64px/.8 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.03em;margin:10px 0 35px!important}
+.theme-classic .inv-date{font:10px Arial,sans-serif!important;letter-spacing:.22em;text-transform:uppercase;border-top:1px solid #ad9988;padding-top:18px}
+.theme-classic .block{padding:54px 42px!important;border-top:1px solid #dfd4c7!important;background:#fbf7ef}
+.theme-classic .block h3{font:400 37px/1 'Cormorant Garamond',Georgia,serif!important}
+
+/* EDITORIAL invitation */
+.theme-editorial{background:#f1eee8;color:#0d0d0d;text-align:left!important}
+.theme-editorial .inv-hero{min-height:570px!important;background:#e7e2d9!important;text-align:left!important;align-items:flex-start!important;justify-content:flex-end!important;padding:42px 34px!important;border-bottom:10px solid #111;position:relative}
+.theme-editorial .inv-hero:after{content:"02";position:absolute;right:22px;top:20px;font:800 120px/.8 Arial,sans-serif;color:rgba(0,0,0,.07);letter-spacing:-.1em}
+.theme-editorial .inv-hero h2{font:800 70px/.75 Arial,sans-serif!important;letter-spacing:-.09em!important;text-transform:uppercase;max-width:340px;margin:0 0 30px!important}
+.theme-editorial .inv-date{font:700 10px Arial,sans-serif!important;letter-spacing:.12em;text-transform:uppercase}
+.theme-editorial .block{text-align:left!important;padding:43px 34px!important;border-top:2px solid #111!important;background:#f1eee8}
+.theme-editorial .block h3{font:800 11px Arial,sans-serif!important;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid #111;padding-bottom:13px}
+.theme-editorial .timeline{margin-left:0!important;max-width:none!important}
+
+/* NOIR invitation */
+.theme-dark{background:#11100e;color:#eee5d7;border:1px solid #4e4438}
+.theme-dark .inv-hero{min-height:590px!important;background:radial-gradient(circle at 50% 30%,#3b342b,#151310 55%,#080807)!important;color:#f3eadc!important;border-bottom:1px solid #574c3e}
+.theme-dark .inv-hero:before{content:"BLACK TIE · PRIVATE CELEBRATION";font:8px Arial,sans-serif;letter-spacing:.35em;color:#c3a777;margin-bottom:70px}
+.theme-dark .inv-hero h2{font:300 68px/.78 'Cormorant Garamond',Georgia,serif!important;color:#f6eee2;margin:0 0 42px!important}
+.theme-dark .inv-date{font:9px Arial,sans-serif!important;letter-spacing:.27em;color:#cbbca7;text-transform:uppercase}
+.theme-dark .block{background:#11100e!important;border-top:1px solid #3c352d!important;padding:55px 40px!important}
+.theme-dark .block h3{font:300 38px 'Cormorant Garamond',Georgia,serif!important;color:#e8dcc9}.theme-dark .block p,.theme-dark .timeline{color:#aaa094}.theme-dark .timeline div{border-color:#38322c}.theme-dark button{color:#e8dcc9;border-color:#8b7557;background:transparent}
+
+/* HERBARIUM invitation */
+.theme-botanical{background:#f1f2e9;color:#2b382a}
+.theme-botanical .inv-hero{min-height:580px!important;background:linear-gradient(155deg,#dce2d5,#f0f1e8 55%,#ced8c9)!important;overflow:hidden;position:relative}
+.theme-botanical .inv-hero:before,.theme-botanical .inv-hero:after{content:"❧";position:absolute;font:150px Georgia,serif;color:#788972;opacity:.55}.theme-botanical .inv-hero:before{left:-30px;top:-5px;transform:rotate(-35deg)}.theme-botanical .inv-hero:after{right:-30px;bottom:-10px;transform:rotate(145deg)}
+.theme-botanical .inv-hero>*{position:relative;z-index:1}.theme-botanical .inv-hero h2{font:400 italic 67px/.78 'Cormorant Garamond',Georgia,serif!important;margin:15px 0 34px!important}.theme-botanical .inv-date{font:9px Arial,sans-serif!important;letter-spacing:.25em;text-transform:uppercase}
+.theme-botanical .block{padding:53px 40px!important;border:0!important;background:#f4f4ec}.theme-botanical .block:nth-of-type(even){background:#e7ebe1}.theme-botanical .block h3{font:400 italic 39px 'Cormorant Garamond',Georgia,serif!important}
+
+/* AMOUR invitation */
+.theme-romance{background:#fff8f5;color:#553638}
+.theme-romance .inv-hero{min-height:580px!important;background:linear-gradient(155deg,#f5e8e3,#e4cac9 55%,#f6ece8)!important;position:relative;overflow:hidden}
+.theme-romance .inv-hero:before{content:"";position:absolute;width:160%;height:100px;background:rgba(255,255,255,.3);transform:rotate(-37deg);box-shadow:0 10px 30px rgba(92,53,53,.08)}
+.theme-romance .inv-hero>*{position:relative;z-index:1}.theme-romance .inv-hero h2{font:400 italic 70px/.74 'Cormorant Garamond',Georgia,serif!important;margin:18px 0 38px!important}.theme-romance .inv-date{font:9px Arial,sans-serif!important;letter-spacing:.24em;text-transform:uppercase}.theme-romance .block{padding:56px 42px!important;border:0!important;background:#fff8f5}.theme-romance .block:after{content:"♡";display:block;font:17px Georgia,serif;color:#a8787a;margin-top:35px}.theme-romance .block h3{font:400 italic 40px 'Cormorant Garamond',Georgia,serif!important}
+
+/* GALLERY invitation */
+.theme-modern{background:#efede7;color:#111;text-align:left!important}
+.theme-modern .inv-hero{min-height:570px!important;background:linear-gradient(135deg,#ece9e2 0 62%,#d8cfbd 62%)!important;text-align:left!important;align-items:flex-start!important;padding:34px!important;justify-content:space-between!important;position:relative;overflow:hidden}
+.theme-modern .inv-hero:after{content:"";position:absolute;width:270px;height:270px;border-radius:50%;background:#293f85;right:-120px;top:115px;z-index:0}.theme-modern .inv-hero>*{position:relative;z-index:1}.theme-modern .inv-hero h2{font:300 65px/.78 Arial,sans-serif!important;letter-spacing:-.085em!important;max-width:270px;margin:auto 0 30px!important}.theme-modern .inv-date{font:700 9px Arial,sans-serif!important;letter-spacing:.08em;text-transform:uppercase}.theme-modern .block{text-align:left!important;padding:44px 34px!important;border-top:1px solid #aaa69d!important;background:#efede7}.theme-modern .block h3{font:400 29px Arial,sans-serif!important;letter-spacing:-.055em}.theme-modern .timeline{margin-left:0!important;max-width:none!important}.theme-modern .palette{justify-content:flex-start!important}
+
+@media(max-width:760px){#templates{padding-top:56px}#templates .templates{grid-template-columns:1fr;gap:26px}#templates .preview{height:470px}#templates .template-info{padding:23px 22px 26px}.preview-area{padding:0!important;background:#ddd4c8!important}.invitation{width:100%!important;box-shadow:none!important}.theme-classic .inv-hero,.theme-editorial .inv-hero,.theme-dark .inv-hero,.theme-botanical .inv-hero,.theme-romance .inv-hero,.theme-modern .inv-hero{min-height:520px!important}}
