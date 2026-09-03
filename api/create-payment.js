@@ -292,7 +292,7 @@ module.exports = async function handler(req, res) {
             type: "redirect",
 
             return_url:
-              "https://invella-xi.vercel.app/?payment=success"
+              "https://invella.ru/?payment=success"
           },
 
           description:
