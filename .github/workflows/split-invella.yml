@@ -1,0 +1,53 @@
+name: Split Invella frontend
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/split-invella.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Split monolithic frontend
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html'); s=p.read_text(encoding='utf-8'); css=[]
+          def css_repl(m):
+              i=len(css)+1; css.append(m.group(1).strip()+"\n")
+              return f'<link rel="stylesheet" href="/assets/invella-{i}.css">'
+          s=re.sub(r'<style(?:\s[^>]*)?>(.*?)</style>',css_repl,s,flags=re.S|re.I)
+          scripts=[]
+          def js_repl(m):
+              body=m.group(1)
+              if "var SUPABASE_URL='https://lwanymjmbcstvggmhevx.supabase.co'" in body:
+                  scripts.append(body.strip()+"\n"); return '<script src="/assets/invella-app.js" defer></script>'
+              return m.group(0)
+          s=re.sub(r'<script>(.*?)</script>',js_repl,s,flags=re.S|re.I)
+          if not scripts: raise SystemExit('Main Invella script not found')
+          out=Path('assets'); out.mkdir(exist_ok=True)
+          for i,text in enumerate(css,1): (out/f'invella-{i}.css').write_text(text,encoding='utf-8')
+          (out/'invella-app.js').write_text(scripts[0],encoding='utf-8')
+          s=re.sub(r'>\s+<','><',s)
+          p.write_text(s.strip()+"\n",encoding='utf-8')
+          print('index bytes',p.stat().st_size)
+          print('app js bytes',(out/'invella-app.js').stat().st_size)
+          PY
+      - name: Validate split
+        run: |
+          node --check assets/invella-app.js
+          grep -q '/assets/invella-app.js' index.html
+          grep -q 'onclick="openTemplates()"' index.html
+          grep -q 'onclick="openAuth()"' index.html
+      - name: Commit split frontend
+        run: |
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html assets/
+          git diff --cached --quiet && exit 0
+          git commit -m 'Split frontend assets to prevent truncated desktop load'
+          git push
