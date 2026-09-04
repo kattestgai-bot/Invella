@@ -11,19 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add editor UX and force fresh frontend assets
+      - name: Deploy contextual live preview
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
           premium=Path('assets/invella-premium-fix.js')
-          addon=Path('assets/editor-ux-v9.js').read_text(encoding='utf-8')
+          addon=Path('assets/editor-preview-v3.js').read_text(encoding='utf-8')
           s=premium.read_text(encoding='utf-8')
-          marker='/* editor-ux-v9 */'
+          marker='/* editor-preview-v3 */'
           if marker not in s:
               premium.write_text(s+'\n'+marker+'\n'+addon+'\n',encoding='utf-8')
           p=Path('index.html'); h=p.read_text(encoding='utf-8')
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260904-1325',{cache:'no-store'})",h)
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260904-1410',{cache:'no-store'})",h)
           p.write_text(h,encoding='utf-8')
           PY
       - name: Commit
@@ -31,5 +31,5 @@ jobs:
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Add live editor preview and font picker'
+          git diff --cached --quiet || git commit -m 'Deploy contextual live preview v3'
           git push
