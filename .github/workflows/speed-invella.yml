@@ -17,7 +17,7 @@ jobs:
           from pathlib import Path
           import re
           p=Path('index.html'); s=p.read_text(encoding='utf-8')
-          s=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260904-1225',{cache:'no-store'})",s)
+          s=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260904-1235',{cache:'no-store'})",s)
           p.write_text(s,encoding='utf-8')
           PY
       - name: Commit
@@ -25,5 +25,5 @@ jobs:
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html
-          git diff --cached --quiet || git commit -m 'Force fresh Invella frontend assets'
+          git diff --cached --quiet || git commit -m 'Force fresh Invella editor UX'
           git push
