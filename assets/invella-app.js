@@ -79,8 +79,8 @@ if(currentPublicPlan!=='premium'&&$('backgroundStyle')&&$('backgroundStyle').val
 var guestParam=new URLSearchParams(location.search).get('guest');
 if(guestParam&&['pro','premium'].includes(currentPublicPlan)){
 if($('guest'))$('guest').value=guestParam;
-if($('guestGreeting')){$('guestGreeting').textContent=guestParam+', приглашаем вас';$('guestGreeting').classList.remove('hidden')}
-if($('guestHeading'))$('guestHeading').textContent='Будем рады видеть вас на нашем событии';
+if($('guestGreeting')){$('guestGreeting').textContent='Для вас, '+guestParam;$('guestGreeting').classList.remove('hidden')}
+if($('guestHeading'))$('guestHeading').textContent='С особым теплом приглашаем разделить этот день с нами';
 }
 $('marketing').classList.add('hidden');
 $('app').classList.remove('hidden');
