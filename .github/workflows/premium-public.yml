@@ -1,0 +1,33 @@
+name: Premium public rendering
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-public.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add public Premium blocks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html');s=p.read_text()
+          anchor='<div class="block" id="rsvpBlock">'
+          blocks='<div class="block hidden" id="premiumTimerBlock"><h3>До события осталось</h3><p id="premiumTimerText"></p></div><div class="block hidden" id="premiumGalleryBlock"><h3>Фотогалерея</h3><div id="premiumGalleryView"></div></div><div class="block hidden" id="premiumMusicBlock"><audio id="premiumAudio" controls loop style="width:100%"></audio></div>'
+          if anchor not in s: raise SystemExit('anchor missing')
+          s=s.replace(anchor,blocks+anchor,1);p.write_text(s)
+          p=Path('assets/invella-app.js');s=p.read_text()
+          needle="var guestParam=new URLSearchParams(location.search).get('guest');"
+          add="if(currentPublicPlan==='premium'&&x.content){var pc=x.content;if(pc.premiumMusicUrl&&$('premiumAudio')){$('premiumAudio').src=pc.premiumMusicUrl;$('premiumMusicBlock').classList.remove('hidden')}var pg=Array.isArray(pc.premiumGallery)?pc.premiumGallery:[];if(pg.length&&$('premiumGalleryView')){$('premiumGalleryView').innerHTML=pg.map(function(u){return '<img src=\\\"'+escapeHtml(u)+'\\\" style=\\\"width:100%;max-width:220px;aspect-ratio:1/1;object-fit:cover;border-radius:12px;margin:4px\\\">'}).join('');$('premiumGalleryBlock').classList.remove('hidden')}if(pc.premiumTimer&&$('premiumTimerText')){var tt=new Date(x.event_date||0).getTime()-Date.now(),dd=Math.max(0,Math.floor(tt/86400000)),hh=Math.max(0,Math.floor(tt%86400000/3600000));$('premiumTimerText').textContent=dd+' дн. '+hh+' ч.';$('premiumTimerBlock').classList.remove('hidden')}}"
+          if needle not in s: raise SystemExit('public marker missing')
+          s=s.replace(needle,add+needle,1);p.write_text(s)
+          PY
+          cat assets/invella-{1..7}.css > assets/invella-bundle.css
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html assets/invella-app.js assets/invella-bundle.css
+          git commit -m 'Show Premium features in published invitation'
+          git push
