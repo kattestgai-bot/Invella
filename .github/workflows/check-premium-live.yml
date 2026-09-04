@@ -1,0 +1,15 @@
+name: Check Premium live code
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/check-premium-live.yml']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          grep -q 'id="premiumMusic"' index.html
+          grep -q 'id="premiumGallery"' index.html
+          grep -q 'id="premiumTimer"' index.html
+          grep -q 'function initPremium' assets/invella-app.js
