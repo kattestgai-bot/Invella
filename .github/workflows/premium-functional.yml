@@ -1,0 +1,39 @@
+name: Premium functional
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-functional.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add persistence and public rendering
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/invella-app.js'); s=p.read_text()
+          # Persist timer state in invitation content; media upload follows existing public storage pattern.
+          old="function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});return d}"
+          new="function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});d.premiumTimer=safeGet('premium_timer')==='1';d.premiumMusicUrl=safeGet('premium_music_url')||'';try{d.premiumGallery=JSON.parse(safeGet('premium_gallery_urls')||'[]')}catch(e){d.premiumGallery=[]}return d}"
+          if old not in s: raise SystemExit('collectData missing')
+          s=s.replace(old,new,1)
+          # Upgrade initPremium handlers to upload actual files.
+          start=s.index('function initPremium()')
+          end=s.index('function updateAuthUI()',start)
+          fn='''function initPremium(){var m=$("premiumMusic"),g=$("premiumGallery"),t=$("premiumTimer");[m,g,t].forEach(function(x){if(x)x.disabled=!editorHas("premium")});if(t){t.checked=safeGet("premium_timer")==="1";t.onchange=function(){safeSet("premium_timer",this.checked?"1":"0");scheduleCloudSave()}}if(m)m.onchange=async function(){if(!editorHas("premium"))return;var f=this.files&&this.files[0];if(!f)return;var u=await premiumUpload(f,"music");if(u){safeSet("premium_music_url",u);scheduleCloudSave();alert("Музыка добавлена")}};if(g)g.onchange=async function(){if(!editorHas("premium"))return;var fs=Array.from(this.files||[]).slice(0,12),a=[];for(var i=0;i<fs.length;i++){var f=await compressImage(fs[i]),u=await premiumUpload(f,"gallery");if(u)a.push(u)}safeSet("premium_gallery_urls",JSON.stringify(a));scheduleCloudSave();alert("Фотографии добавлены: "+a.length)}}
+async function premiumUpload(file,kind){if(!currentUser)return null;if(!currentInvitationId&&!(await cloudSave()))return null;var ext=(file.name.split('.').pop()||'bin'),path=currentUser.id+'/'+currentInvitationId+'/'+kind+'-'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;var r=await sb.storage.from('invitation-media').upload(path,file,{upsert:true});if(r.error){alert('Не удалось загрузить файл');return null}return sb.storage.from('invitation-media').getPublicUrl(path).data.publicUrl}
+'''
+          s=s[:start]+fn+s[end:]
+          # Restore premium values when editor opens from cloud.
+          needle="var d=r.data.content&&typeof r.data.content==='object'?r.data.content:{};"
+          s=s.replace(needle,needle+"if(d.premiumMusicUrl)safeSet('premium_music_url',d.premiumMusicUrl);safeSet('premium_gallery_urls',JSON.stringify(d.premiumGallery||[]));safeSet('premium_timer',d.premiumTimer?'1':'0');",1)
+          p.write_text(s)
+          PY
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets/invella-app.js
+          git commit -m 'Persist Premium music gallery and timer'
+          git push
