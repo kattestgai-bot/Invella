@@ -1,3 +1,17 @@
+public invitation:',e);showPublicNotFound();return true}
+}
+
+function resetPublicLayout(){var controls=document.querySelector('.controls'),bar=document.querySelector('.appbar'),editor=document.querySelector('.editor');if(controls)controls.classList.remove('hidden');if(bar)bar.classList.remove('hidden');if(editor)editor.style.gridTemplateColumns='';currentInvitationId=null;currentInvitationSlug=null;currentPublicPlan=null}
+
+window.openTemplates=function(){history.pushState({view:'design'},'','/create/design');resetPublicLayout();$('marketing').classList.remove('hidden');$('app').classList.add('hidden');setTimeout(function(){$('templates').scrollIntoView({behavior:'smooth',block:'start'})},20)}
+window.chooseTemplate=function(t){template=t;safeSet('invella_template',t);history.pushState({view:'editor'},'','/create/editor');$('marketing').classList.add('hidden');$('app').classList.remove('hidden');load();render();scrollTo(0,0)}
+window.goHome=function(){history.pushState({view:'home'},'','/');resetPublicLayout();$('app').classList.add('hidden');$('marketing').classList.remove('hidden');scrollTo(0,0)}
+function load(){template=safeGet('invella_template')||template;var raw=safeGet('invella_draft');if(!raw)return;try{var d=JSON.parse(raw);fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k)&&d[k]!=null)$(k).checked=!!d[k]})}catch(e){}}
+function save(){var d=collectData();safeSet('invella_draft',JSON.stringify(d));scheduleCloudSave()}
+function dateText(){var e=$('date');if(!e.value)return'Дата события';var p=e.value.split('-'),d=new Date(+p[0],+p[1]-1,+p[2],12),s=d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});return s+($('time').value?' · '+$('time').value:'')}
+function setText(id,v){if($(id))$(id).textContent=v}
+function automaticBackground(){var ev=($('eventType')&&$('eventType').value||'').toLowerCase();if(template==='dark')return'noir';if(template==='botanical')return'garden';if(template==='romance')return'blush';if(template==='editorial'||template==='modern')return'editorial';if(ev.includes('день рождения')||ev.includes('вечерин'))return'blush';if(ev.includes('корпоратив')||ev.includes('выпуск'))return'editorial';if(ev.includes('baby')||ev.includes('гендер'))return'silk';return'silk'}
+window.setInvitationBackground=function(v){if(currentEditorPlan!=='draft'&&v!=='auto'&&!editorHas('pro'))return alert('Выбор дизайнерского фона доступен в Pro и Premium.');if(v==='custom'&&currentEditorPlan!=='draft'&&!editorHas('premium'))return alert('Собственный фон доступен только в Premium.');if($('backgroundStyle'))$('backgroundStyle').value=v;applyInvitationBackground();if(!isPublicPath())save()}
 function applyInvitationBackground(){var chosen=$('backgroundStyle')?$('backgroundStyle').value:'auto',stage=$('invitationStage');if(!stage)return;var actual=chosen==='auto'?automaticBackground():chosen;stage.dataset.bg=actual==='custom'?'auto':actual;stage.style.backgroundImage='';if(actual==='custom'&&$('backgroundCustomUrl')&&$('backgroundCustomUrl').value){stage.style.backgroundImage='linear-gradient(rgba(20,16,12,.10),rgba(20,16,12,.10)),url("'+$('backgroundCustomUrl').value.replace(/"/g,'%22')+'")';stage.style.backgroundSize='cover';stage.style.backgroundPosition='center'}document.querySelectorAll('#bgPicker .bg-choice').forEach(function(b){b.classList.toggle('active',b.dataset.bg===chosen)})}
 function applyTemplate(){var h=$('invHero'),inv=document.querySelector('.invitation'),map={classic:['#e8ded4','#201d1b'],editorial:['#f4eee5','#201d1b'],dark:['#20201e','#fff'],botanical:['#e6eadf','#201d1b'],romance:['#eadce0','#201d1b'],modern:['#dce4e7','#201d1b']},x=map[template]||map.classic;h.style.backgroundImage='none';h.style.backgroundColor=x[0];h.style.color=x[1];if(inv){inv.className='invitation theme-'+template}applyInvitationBackground()}
 function toggleCustomEvent(){var other=$('eventType').value==='Другое событие';$('customEventWrap').classList.toggle('hidden',!other);if(!other)$('customEvent').value=''}
@@ -14,58 +28,4 @@ function rub(v){return Number(v).toLocaleString('ru-RU')+' ₽'}
 function resetPromoPrices(){var base={basic:990,pro:1490,premium:2490};Object.keys(base).forEach(function(k){var p=$('price-'+k),b=$('pay-'+k);if(p)p.textContent=rub(base[k]);if(b)b.textContent='Оплатить '+rub(base[k]);});appliedPromoCode='';}
 window.applyPromoCode=async function(){
   var input=$('promoCode'),m=$('promoMessage');
-  var code=(input&&input.value||'').trim().toUpperCase();
-  if(input)input.value=code;
-  resetPromoPrices();
-  if(!code){if(m){m.className='auth-message error';m.textContent='Введите промокод.';}return;}
-  if(m){m.className='auth-message';m.textContent='Проверяем промокод…';}
-  try{
-    var saved=await cloudSave();
-    if(!saved||!currentInvitationId)throw new Error('Не удалось сохранить приглашение. Попробуйте ещё раз.');
-    var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;
-    if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');
-    var base={basic:990,pro:1490,premium:2490};
-    var plans=['basic','pro','premium'];
-    var results=await Promise.all(plans.map(async function(plan){
-      var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:code,validatePromoOnly:true})});
-      var data={};try{data=await resp.json()}catch(e){}
-      return {plan:plan,ok:resp.ok&&data.validPromo===true,data:data};
-    }));
-    var valid=results.filter(function(x){return x.ok});
-    if(!valid.length){if(m){m.className='auth-message error';m.textContent='Неверный промокод';}return;}
-    appliedPromoCode=code;
-    valid.forEach(function(x){var k=x.plan,r=Math.round(Number(x.data.amountMinor||0)/100),p=$('price-'+k),b=$('pay-'+k);if(r>0){if(p)p.innerHTML='<span style="text-decoration:line-through;opacity:.45;font-size:.58em;margin-right:8px">'+rub(base[k])+'</span>'+rub(r);if(b)b.textContent='Оплатить '+rub(r);}});
-    var first=valid[0].data,label='';
-    if(first.discountType==='percent')label=' — скидка '+first.discountValue+'%';
-    else if(first.discountType==='fixed')label=' — скидка '+rub(Math.round(Number(first.discountValue||0)/100));
-    if(m){m.className='auth-message ok';m.textContent='Промокод применён'+label;}
-  }catch(e){if(m){m.className='auth-message error';m.textContent=e.message||'Не удалось проверить промокод';}}
-}
-if($('promoCode'))$('promoCode').addEventListener('input',function(){if(appliedPromoCode&&this.value.trim().toUpperCase()!==appliedPromoCode){resetPromoPrices();if($('promoMessage'))$('promoMessage').textContent='';}});
-window.selectPlan=async function(plan,price,btn){
-if(!currentUser)return openAuth();
-var saved=await cloudSave();
-if(!saved||!currentInvitationId)return alert('Не удалось сохранить приглашение. Попробуйте ещё раз.');
-if(btn){btn.disabled=true;btn.textContent='Переходим к оплате…'}
-try{
-var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:appliedPromoCode})});
-var data=await resp.json();
-if(!resp.ok||!data.confirmationUrl)throw new Error(data.error||'Не удалось создать платёж');
-safeSet('invella_pending_payment',JSON.stringify({paymentId:data.paymentId,plan:plan,invitationId:currentInvitationId}));
-location.href=data.confirmationUrl;
-}catch(e){
-alert((e.message||'Не удалось перейти к оплате.')+' Если проблема повторяется, напишите нам: hello.invella@bk.ru');
-if(btn){btn.disabled=false;btn.textContent='Оплатить '+price.toLocaleString('ru-RU')+' ₽'}
-}
-}
-window.makeGuestLinks=function(){
-if(currentEditorPlan!=='draft'&&!editorHas('pro'))return alert('Персональные ссылки доступны в Pro и Premium.');
-var box=$('guestLinksBox'),raw=$('guestNamesForLinks').value.trim();
-if(!raw){box.textContent='Добавьте хотя бы одно имя гостя.';return}
-if(!currentInvitationSlug){box.textContent='Сначала сохраните и опубликуйте приглашение, чтобы появилась ссылка.';return}
-var names=raw.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
-box.innerHTML=names.map(function(name){
-var url=location.origin+'/i/'+currentInvitationSlug+'?guest='+encodeURIComponent(name);
-return '<div style="padding:9px 0;border-top:1px solid var(--line)"><b>'+escapeHtml(name)+'</b><br><button type="button" class="ghost" style="margin-top:6px" data-link="'+escapeHtml(url)+'" onclick="copyGuestLink(this)">Скопировать ссылку</button></div>'
-}).join('');
-}
+  var code=(input&&input.value

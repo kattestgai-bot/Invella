@@ -1,0 +1,2 @@
+State==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();

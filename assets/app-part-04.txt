@@ -1,3 +1,58 @@
+||'').trim().toUpperCase();
+  if(input)input.value=code;
+  resetPromoPrices();
+  if(!code){if(m){m.className='auth-message error';m.textContent='Введите промокод.';}return;}
+  if(m){m.className='auth-message';m.textContent='Проверяем промокод…';}
+  try{
+    var saved=await cloudSave();
+    if(!saved||!currentInvitationId)throw new Error('Не удалось сохранить приглашение. Попробуйте ещё раз.');
+    var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;
+    if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');
+    var base={basic:990,pro:1490,premium:2490};
+    var plans=['basic','pro','premium'];
+    var results=await Promise.all(plans.map(async function(plan){
+      var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:code,validatePromoOnly:true})});
+      var data={};try{data=await resp.json()}catch(e){}
+      return {plan:plan,ok:resp.ok&&data.validPromo===true,data:data};
+    }));
+    var valid=results.filter(function(x){return x.ok});
+    if(!valid.length){if(m){m.className='auth-message error';m.textContent='Неверный промокод';}return;}
+    appliedPromoCode=code;
+    valid.forEach(function(x){var k=x.plan,r=Math.round(Number(x.data.amountMinor||0)/100),p=$('price-'+k),b=$('pay-'+k);if(r>0){if(p)p.innerHTML='<span style="text-decoration:line-through;opacity:.45;font-size:.58em;margin-right:8px">'+rub(base[k])+'</span>'+rub(r);if(b)b.textContent='Оплатить '+rub(r);}});
+    var first=valid[0].data,label='';
+    if(first.discountType==='percent')label=' — скидка '+first.discountValue+'%';
+    else if(first.discountType==='fixed')label=' — скидка '+rub(Math.round(Number(first.discountValue||0)/100));
+    if(m){m.className='auth-message ok';m.textContent='Промокод применён'+label;}
+  }catch(e){if(m){m.className='auth-message error';m.textContent=e.message||'Не удалось проверить промокод';}}
+}
+if($('promoCode'))$('promoCode').addEventListener('input',function(){if(appliedPromoCode&&this.value.trim().toUpperCase()!==appliedPromoCode){resetPromoPrices();if($('promoMessage'))$('promoMessage').textContent='';}});
+window.selectPlan=async function(plan,price,btn){
+if(!currentUser)return openAuth();
+var saved=await cloudSave();
+if(!saved||!currentInvitationId)return alert('Не удалось сохранить приглашение. Попробуйте ещё раз.');
+if(btn){btn.disabled=true;btn.textContent='Переходим к оплате…'}
+try{
+var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:appliedPromoCode})});
+var data=await resp.json();
+if(!resp.ok||!data.confirmationUrl)throw new Error(data.error||'Не удалось создать платёж');
+safeSet('invella_pending_payment',JSON.stringify({paymentId:data.paymentId,plan:plan,invitationId:currentInvitationId}));
+location.href=data.confirmationUrl;
+}catch(e){
+alert((e.message||'Не удалось перейти к оплате.')+' Если проблема повторяется, напишите нам: hello.invella@bk.ru');
+if(btn){btn.disabled=false;btn.textContent='Оплатить '+price.toLocaleString('ru-RU')+' ₽'}
+}
+}
+window.makeGuestLinks=function(){
+if(currentEditorPlan!=='draft'&&!editorHas('pro'))return alert('Персональные ссылки доступны в Pro и Premium.');
+var box=$('guestLinksBox'),raw=$('guestNamesForLinks').value.trim();
+if(!raw){box.textContent='Добавьте хотя бы одно имя гостя.';return}
+if(!currentInvitationSlug){box.textContent='Сначала сохраните и опубликуйте приглашение, чтобы появилась ссылка.';return}
+var names=raw.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
+box.innerHTML=names.map(function(name){
+var url=location.origin+'/i/'+currentInvitationSlug+'?guest='+encodeURIComponent(name);
+return '<div style="padding:9px 0;border-top:1px solid var(--line)"><b>'+escapeHtml(name)+'</b><br><button type="button" class="ghost" style="margin-top:6px" data-link="'+escapeHtml(url)+'" onclick="copyGuestLink(this)">Скопировать ссылку</button></div>'
+}).join('');
+}
 window.copyGuestLink=async function(btn){
 var url=btn.getAttribute('data-link');
 try{await navigator.clipboard.writeText(url);btn.textContent='Скопировано ✓';setTimeout(function(){btn.textContent='Скопировать ссылку'},1500)}
@@ -71,5 +126,4 @@ if(location.pathname==='/create/publish'&&currentUser){$('publishModal').classLi
 await maybeShowPaymentSuccess();
 [$('authModal'),$('publishModal'),$('dashboardModal'),$('paymentSuccessModal'),$('resetPasswordModal')].forEach(function(m){if(m)m.addEventListener('click',function(e){if(e.target===m){m.classList.add('hidden');document.body.style.overflow=''}})});
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-})();
+if(document.ready
