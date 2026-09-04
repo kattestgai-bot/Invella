@@ -1,0 +1,10 @@
+name: Trigger Premium build
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-run.yml']
+jobs:
+  note:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Premium workflows are triggered by their creation commits'
