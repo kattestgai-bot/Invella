@@ -1,0 +1,25 @@
+name: Apply Premium now
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-all.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html');s=p.read_text()
+          s=s.replace('В Premium можно будет добавить музыкальное сопровождение приглашения.','Загрузите музыку для приглашения.<br><input id="premiumMusic" type="file" accept="audio/*">')
+          s=s.replace('Отдельный блок для фотографий.','Добавьте фотографии в приглашение.<br><input id="premiumGallery" type="file" accept="image/*" multiple>')
+          s=s.replace('Обратный отсчёт до праздника.','<label><input id="premiumTimer" type="checkbox"> Показывать обратный отсчёт до события</label>')
+          p.write_text(s)
+          PY
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || (git commit -m 'Enable Premium controls' && git push)
