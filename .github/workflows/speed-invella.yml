@@ -11,22 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy editor cleanup v5
+      - name: Deploy published editing and Premium public media
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
           premium=Path('assets/invella-premium-fix.js')
-          addon=Path('assets/editor-cleanup-v4.js').read_text(encoding='utf-8')
+          addon=Path('assets/published-editor-v6.js').read_text(encoding='utf-8')
           s=premium.read_text(encoding='utf-8')
-          marker='/* editor-cleanup-v4 */'
-          if marker in s:
-              s=s.split(marker)[0].rstrip()+'\n'+marker+'\n'+addon+'\n'
-          else:
-              s=s+'\n'+marker+'\n'+addon+'\n'
-          premium.write_text(s,encoding='utf-8')
+          marker='/* published-editor-v6 */'
+          if marker in s:s=s.split(marker)[0].rstrip()
+          premium.write_text(s+'\n'+marker+'\n'+addon+'\n',encoding='utf-8')
           p=Path('index.html'); h=p.read_text(encoding='utf-8')
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260904-1515',{cache:'no-store'})",h)
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260904-1530',{cache:'no-store'})",h)
           p.write_text(h,encoding='utf-8')
           PY
       - name: Commit
@@ -34,5 +31,5 @@ jobs:
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Fix duplicate media, taxi and title font'
+          git diff --cached --quiet || git commit -m 'Enable published edits and Premium public media'
           git push
