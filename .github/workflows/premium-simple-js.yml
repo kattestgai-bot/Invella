@@ -1,0 +1,26 @@
+name: Wire Premium controls
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-simple-js.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/invella-app.js');s=p.read_text()
+          if 'function initPremium()' not in s:
+            m='function updateAuthUI()';f='function initPremium(){var a=$("premiumMusic"),b=$("premiumGallery"),c=$("premiumTimer");[a,b,c].forEach(function(x){if(x)x.disabled=!editorHas("premium")});}\n'
+            s=s.replace(m,f+m,1)
+            s=s.replace("if($('showRSVP'))$('showRSVP').disabled=paid&&!pro;}","if($('showRSVP'))$('showRSVP').disabled=paid&&!pro;initPremium();}",1)
+            p.write_text(s)
+          PY
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets/invella-app.js
+          git diff --cached --quiet || (git commit -m 'Wire Premium controls to plan' && git push)
