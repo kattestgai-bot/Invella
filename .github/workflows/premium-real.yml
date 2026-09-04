@@ -1,0 +1,36 @@
+name: Premium features
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-real.yml']
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html'); s=p.read_text()
+          s=s.replace('В Premium можно будет добавить музыкальное сопровождение приглашения.','Загрузите музыку для приглашения.<br><input id="premiumMusic" type="file" accept="audio/*">')
+          s=s.replace('Отдельный блок для фотографий.','Добавьте фотографии в приглашение.<br><input id="premiumGallery" type="file" accept="image/*" multiple>')
+          s=s.replace('Обратный отсчёт до праздника.','<label><input id="premiumTimer" type="checkbox"> Показывать обратный отсчёт до события</label>')
+          p.write_text(s)
+          p=Path('assets/invella-app.js'); s=p.read_text()
+          marker='function updateAuthUI()'
+          add='''function initPremium(){var m=$("premiumMusic"),g=$("premiumGallery"),t=$("premiumTimer");[m,g,t].forEach(function(x){if(x)x.disabled=!editorHas("premium")});if(t){t.checked=safeGet("premium_timer")==="1";t.onchange=function(){safeSet("premium_timer",this.checked?"1":"0")}}if(m)m.onchange=function(){var f=this.files&&this.files[0];if(f)safeSet("premium_music_name",f.name)};if(g)g.onchange=function(){safeSet("premium_gallery_count",String((this.files||[]).length))}}
+'''
+          if marker not in s: raise SystemExit('marker missing')
+          s=s.replace(marker,add+marker,1)
+          s=s.replace("if($('showRSVP'))$('showRSVP').disabled=paid&&!pro;}","if($('showRSVP'))$('showRSVP').disabled=paid&&!pro;initPremium();}",1)
+          p.write_text(s)
+          PY
+          cat assets/invella-{1..7}.css > assets/invella-bundle.css
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html assets/invella-app.js assets/invella-bundle.css
+          git commit -m 'Replace Premium placeholders with controls'
+          git push
