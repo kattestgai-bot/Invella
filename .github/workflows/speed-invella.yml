@@ -1,0 +1,45 @@
+name: Speed up Invella
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/speed-invella.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  speed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace many chunk requests with three parallel assets
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          idx=Path('index.html'); s=idx.read_text(encoding='utf-8')
+          # Combine CSS into one raw-GitHub asset. Keep JS full files: raw GitHub does not have the Vercel truncation issue.
+          css='\n'.join(Path(f'assets/invella-{i}.css').read_text(encoding='utf-8') for i in range(1,8) if Path(f'assets/invella-{i}.css').exists())
+          Path('assets/invella-bundle.css').write_text(css,encoding='utf-8')
+          boot="""<script>(function(){var B='https://raw.githubusercontent.com/kattestgai-bot/Invella/main/';async function t(p){var r=await fetch(B+p,{cache:'default'});if(!r.ok)throw Error(r.status);return r.text()}async function go(){try{var all=await Promise.all([t('assets/invella-bundle.css'),t('supabase.min.js'),t('assets/invella-app.js')]);var st=document.createElement('style');st.textContent=all[0];document.head.appendChild(st);(0,eval)(all[1]);(0,eval)(all[2])}catch(e){console.error('Invella bootstrap',e);var d=document.createElement('div');d.style.cssText='position:fixed;z-index:99999;left:12px;right:12px;bottom:12px;padding:12px;background:#fff;border:1px solid #ddd;border-radius:12px;font:14px Arial';d.innerHTML='Не удалось загрузить сайт. <button onclick=\"location.reload()\">Повторить</button>';document.body.appendChild(d)}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go,{once:true});else go()})();</script>"""
+          # Replace the current final raw-GitHub bootstrap, leaving all page markup/legal content untouched.
+          pat=r'<script>\(function\(\)\{var B=\'https://raw\.githubusercontent\.com/kattestgai-bot/Invella/main/\'.*?</script>(?=</body>)'
+          ns,n=re.subn(pat,boot,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('current bootstrap not found exactly once')
+          idx.write_text(ns,encoding='utf-8')
+          print('Reduced frontend bootstrap from ~26 asset requests to 3 parallel requests')
+          PY
+      - name: Validate
+        run: |
+          grep -q "assets/invella-bundle.css" index.html
+          grep -q "t('supabase.min.js')" index.html
+          grep -q "t('assets/invella-app.js')" index.html
+          ! grep -q "supabase-part-01.txt" index.html
+          ! grep -q "app-part-01.txt" index.html
+          test -s assets/invella-bundle.css
+      - name: Commit
+        run: |
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html assets/invella-bundle.css
+          git commit -m 'Speed up frontend asset loading'
+          git push
