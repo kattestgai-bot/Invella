@@ -1,0 +1,28 @@
+name: Enable Premium behavior
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-js-now.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/invella-app.js');s=p.read_text()
+          if 'function initPremium()' not in s:
+            marker='function updateAuthUI()'
+            fn='function initPremium(){var m=$("premiumMusic"),g=$("premiumGallery"),t=$("premiumTimer");[m,g,t].forEach(function(x){if(x)x.disabled=!editorHas("premium")});if(t)t.onchange=function(){safeSet("premium_timer",this.checked?"1":"0");scheduleCloudSave()};if(m)m.onchange=function(){if(this.files&&this.files[0])alert("Музыка выбрана: "+this.files[0].name)};if(g)g.onchange=function(){alert("Выбрано фотографий: "+(this.files||[]).length)}}\n'
+            if marker not in s: raise SystemExit('marker missing')
+            s=s.replace(marker,fn+marker,1)
+            s=s.replace("if($('showRSVP'))$('showRSVP').disabled=paid&&!pro;}","if($('showRSVP'))$('showRSVP').disabled=paid&&!pro;initPremium();}",1)
+            p.write_text(s)
+          PY
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets/invella-app.js
+          git diff --cached --quiet || (git commit -m 'Enable Premium editor behavior' && git push)
