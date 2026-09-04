@@ -1,0 +1,15 @@
+name: Check speed Premium
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/check-speed-premium.yml']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          grep -q 'invella-bundle.css' index.html
+          grep -q 'premiumMusic' index.html
+          grep -q 'premiumGallery' index.html
+          grep -q 'premiumTimer' index.html
