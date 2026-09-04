@@ -11,36 +11,54 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Chunk large frontend responses
+      - name: Build resilient external asset bootstrap
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
           idx=Path('index.html'); s=idx.read_text(encoding='utf-8')
-          app=Path('assets/invella-app.js'); js=app.read_text(encoding='utf-8')
-          lines=js.splitlines(True); chunks=[]; cur=''
-          for line in lines:
-              if cur and len((cur+line).encode('utf-8'))>12000: chunks.append(cur); cur=''
-              cur+=line
-          if cur: chunks.append(cur)
-          payload=[]
-          for i,ch in enumerate(chunks,1):
-              p=Path(f'assets/app-part-{i:02d}.txt'); p.write_text(ch,encoding='utf-8'); payload.append('/'+str(p))
-          loader="""(function(){\nvar parts=PARTS;\nfunction sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}\nasync function get(url){var last;for(var i=0;i<6;i++){try{var r=await fetch(url+'?v=4',{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);var t=await r.text();if(!t)throw new Error('empty');return t}catch(e){last=e;await sleep(250*(i+1))}}throw last}\n(async function(){try{var all=[];for(var i=0;i<parts.length;i++)all.push(await get(parts[i]));(0,eval)(all.join('\\n'))}catch(e){console.error('Invella startup failed',e);var d=document.createElement('div');d.style.cssText='position:fixed;z-index:99999;left:12px;right:12px;bottom:12px;padding:12px;background:white;border:1px solid #ddd;border-radius:12px;font:14px Arial';d.innerHTML='Не удалось полностью загрузить сайт. <button onclick=\"location.reload()\">Повторить</button>';document.body.appendChild(d)}})();\n})();\n""".replace('PARTS',repr(payload).replace("'",'"'))
-          Path('assets/invella-loader.js').write_text(loader,encoding='utf-8')
-          s=s.replace('<script src="/assets/invella-app.js" defer></script>','<script src="/assets/invella-loader.js" defer></script>')
+          app=Path('assets/invella-app.js').read_text(encoding='utf-8')
+          def split_text(text,prefix,limit=10000):
+              out=[]; cur=''
+              for line in text.splitlines(True):
+                  if cur and len((cur+line).encode())>limit: out.append(cur); cur=''
+                  if len(line.encode())>limit:
+                      if cur: out.append(cur); cur=''
+                      b=line.encode();
+                      for j in range(0,len(b),limit): out.append(b[j:j+limit].decode('utf-8','ignore'))
+                  else: cur+=line
+              if cur: out.append(cur)
+              paths=[]
+              for i,ch in enumerate(out,1):
+                  p=Path(f'assets/{prefix}-{i:02d}.txt'); p.write_text(ch,encoding='utf-8'); paths.append(str(p))
+              return paths
+          app_parts=split_text(app,'app-part')
+          sup=Path('supabase.min.js').read_text(encoding='utf-8')
+          sup_parts=split_text(sup,'supabase-part')
+          css=[f'assets/invella-{i}.css' for i in range(1,8) if Path(f'assets/invella-{i}.css').exists()]
+          # Remove Vercel-hosted CSS and JS. Main HTML remains the only static response required from Vercel.
+          s=re.sub(r'<link rel="stylesheet" href="/assets/invella-[1-9]\.css">','',s)
+          s=s.replace('<script src="/supabase.min.js"></script>','').replace('<script src="/assets/invella-loader.js" defer></script>','').replace('<script src="/assets/invella-app.js" defer></script>','')
+          base='https://raw.githubusercontent.com/kattestgai-bot/Invella/main/'
+          boot="""<script>(function(){var B='BASE',C=CSS,S=SUP,A=APP;function z(n){return new Promise(r=>setTimeout(r,n))}async function g(p){var e;for(var i=0;i<8;i++){try{var r=await fetch(B+p+'?x='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error(r.status);var t=await r.text();if(!t)throw Error('empty');return t}catch(x){e=x;await z(180*(i+1))}}throw e}async function all(a){var x=[];for(var i=0;i<a.length;i++)x.push(await g(a[i]));return x.join('\\n')}async function go(){try{var cs=await Promise.all(C.map(g));var st=document.createElement('style');st.textContent=cs.join('\\n');document.head.appendChild(st);(0,eval)(await all(S));(0,eval)(await all(A))}catch(e){console.error('Invella bootstrap',e);var d=document.createElement('div');d.style.cssText='position:fixed;z-index:99999;left:12px;right:12px;bottom:12px;padding:12px;background:#fff;border:1px solid #ddd;border-radius:12px;font:14px Arial';d.innerHTML='Не удалось загрузить сайт. <button onclick=\"location.reload()\">Повторить</button>';document.body.appendChild(d)}}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go()})();</script>"""
+          import json
+          boot=boot.replace('BASE',base).replace('CSS',json.dumps(css)).replace('SUP',json.dumps(sup_parts)).replace('APP',json.dumps(app_parts))
+          s=s.replace('</body>',boot+'</body>')
           idx.write_text(s,encoding='utf-8')
-          print('index',idx.stat().st_size,'loader',Path('assets/invella-loader.js').stat().st_size,'parts',[(p,Path(p[1:]).stat().st_size) for p in payload])
+          print('index bytes',idx.stat().st_size,'app parts',len(app_parts),'supabase parts',len(sup_parts))
           PY
       - name: Validate
         run: |
-          node --check assets/invella-loader.js
-          grep -q '/assets/invella-loader.js' index.html
-          for f in assets/app-part-*.txt; do test $(stat -c%s "$f") -lt 20000; done
+          grep -q 'raw.githubusercontent.com/kattestgai-bot/Invella/main' index.html
+          ! grep -q 'src="/supabase.min.js"' index.html
+          ! grep -q 'href="/assets/invella-' index.html
+          test $(stat -c%s index.html) -lt 20500
+          for f in assets/app-part-*.txt assets/supabase-part-*.txt; do test $(stat -c%s "$f") -lt 15000; done
       - name: Commit repair
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html assets/
           git diff --cached --quiet && exit 0
-          git commit -m 'Load Invella app in retryable small chunks'
+          git commit -m 'Bypass Vercel resets for frontend assets'
           git push
