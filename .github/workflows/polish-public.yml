@@ -1,0 +1,50 @@
+name: Polish public invitation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/polish-public.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply public invitation polish
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          old1="if($('guestGreeting')){$('guestGreeting').textContent=guestParam+', приглашаем вас';$('guestGreeting').classList.remove('hidden')}"
+          old2="if($('guestHeading'))$('guestHeading').textContent='Будем рады видеть вас на нашем событии';"
+          new1="if($('guestGreeting')){$('guestGreeting').textContent='Для вас, '+guestParam;$('guestGreeting').classList.remove('hidden')}"
+          new2="if($('guestHeading'))$('guestHeading').textContent='С особым теплом приглашаем разделить этот день с нами';"
+          for name in ['assets/invella-app.js','assets/app-part-02.txt']:
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              s=s.replace(old1,new1).replace(old2,new2)
+              p.write_text(s,encoding='utf-8')
+
+          css=Path('assets/invella-7.css')
+          s=css.read_text(encoding='utf-8')
+          marker='/* public-polish-2026-09-04 */'
+          if marker not in s:
+              s += '''\n/* public-polish-2026-09-04 */\n.public-route .legal-links,.public-route .legal-doc{display:none!important}\n.public-route .invitation{font-family:Georgia,"Times New Roman",serif}\n.public-route .invitation p,.public-route .invitation .timeline,.public-route .invitation button,.public-route .invitation input,.public-route .invitation select,.public-route .invitation textarea{font-family:Arial,sans-serif}\n.public-route .invitation h2,.public-route .invitation h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-spacing:-.025em}\n.public-route .guest-greeting{font-family:Georgia,"Times New Roman",serif;font-size:22px;font-style:italic;letter-spacing:.01em;margin-bottom:14px}\n.public-route #guestHeading{max-width:760px;margin-left:auto;margin-right:auto;line-height:1.08}\n'''
+              css.write_text(s,encoding='utf-8')
+
+          idx=Path('index.html')
+          s=idx.read_text(encoding='utf-8')
+          old='<h2>6. Возврат денежных средств</h2><p>Если оплаченная услуга не была предоставлена по технической причине на стороне Invella, пользователь вправе обратиться по адресу hello.invella@bk.ru. Обращение рассматривается с учётом фактически оказанной части услуги и требований законодательства Российской Федерации.</p>'
+          new='<h2>6. Отказ от услуги и возврат денежных средств</h2><p>Пользователь вправе отказаться от услуги в порядке, предусмотренном законодательством Российской Федерации. Для обращения необходимо написать на hello.invella@bk.ru с адреса электронной почты, указанного в аккаунте, указав дату и сумму оплаты, выбранный тариф и причину обращения.</p><p>Если доступ к оплаченным функциям не был предоставлен либо публикация приглашения невозможна вследствие подтверждённой технической ошибки на стороне Invella, денежные средства возвращаются полностью.</p><p>Если пользователь уже получил доступ к функциям тарифа, опубликовал приглашение или иным образом начал пользоваться оплаченной услугой, при определении суммы возврата могут учитываться фактически оказанные услуги и фактически понесённые Исполнителем расходы в пределах, допускаемых законодательством Российской Федерации.</p><p>Возврат при наличии оснований производится тем же способом, которым была совершена оплата, если иной способ не согласован сторонами. Срок фактического зачисления денежных средств после оформления возврата зависит также от банка и платёжной системы пользователя.</p><p>Настоящий раздел не ограничивает права потребителя, предоставленные ему законодательством Российской Федерации.</p>'
+          if old in s:s=s.replace(old,new)
+          idx.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html assets/invella-app.js assets/app-part-02.txt assets/invella-7.css
+          git diff --cached --quiet && exit 0
+          git commit -m 'Polish guest personalization and public invitation'
+          git push
