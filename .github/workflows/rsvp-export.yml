@@ -1,0 +1,44 @@
+name: Add RSVP export
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/rsvp-export.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add CSV export to guest responses
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/invella-app.js')
+          s=p.read_text(encoding='utf-8')
+          old="var answersBtn=(x.status==='published'||x.preview_published)?`<button class=\"ghost\" style=\"margin-left:6px;margin-top:8px\" onclick=\"showResponses('${x.id}')\">Ответы гостей</button>`:'';"
+          new="var answersBtn=(x.status==='published'||x.preview_published)?`<button class=\"ghost\" style=\"margin-left:6px;margin-top:8px\" onclick=\"showResponses('${x.id}')\">Ответы гостей</button><button class=\"ghost\" style=\"margin-left:6px;margin-top:8px\" onclick=\"downloadResponses('${x.id}')\">Скачать ответы</button>`:'';"
+          if old not in s: raise SystemExit('dashboard button marker not found')
+          s=s.replace(old,new)
+          marker="window.showResponses=async function(id){"
+          fn="""window.downloadResponses=async function(id){var r=await sb.from('rsvp_responses').select('guest_name,attendance,guest_count,comment,created_at').eq('invitation_id',id).order('created_at',{ascending:false});if(r.error)return alert('Не удалось скачать ответы.');if(!r.data.length)return alert('Ответов гостей пока нет.');var labels={yes:'Будет',no:'Не будет',maybe:'Пока не знает'};function cell(v){v=String(v==null?'':v).replace(/\"/g,'\"\"');return '\"'+v+'\"'}var rows=[['Имя гостя','Ответ','Количество гостей','Напитки / ребёнок / комментарий','Дата ответа']].concat(r.data.map(function(a){return [a.guest_name,labels[a.attendance]||a.attendance,Number(a.guest_count)||1,a.comment||'',a.created_at?new Date(a.created_at).toLocaleString('ru-RU'):'']}));var csv='\\ufeff'+rows.map(function(row){return row.map(cell).join(';')}).join('\\r\\n');var blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='invella-otvety-gostey.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)}\n"""
+          s=s.replace(marker,fn+marker)
+          p.write_text(s,encoding='utf-8')
+          # Rebuild app chunks exactly as the live bootstrap expects.
+          b=s.encode('utf-8'); parts=[]; limit=10000
+          while b:
+              cut=min(limit,len(b))
+              while cut and cut<len(b) and (b[cut]&0xC0)==0x80: cut-=1
+              parts.append(b[:cut].decode('utf-8')); b=b[cut:]
+          for oldp in Path('assets').glob('app-part-*.txt'): oldp.unlink()
+          for i,ch in enumerate(parts,1): Path(f'assets/app-part-{i:02d}.txt').write_text(ch,encoding='utf-8')
+          print('app parts',len(parts))
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets/invella-app.js assets/app-part-*.txt
+          git commit -m 'Add downloadable RSVP responses'
+          git push
