@@ -1,0 +1,44 @@
+name: Fix editor and Premium v3
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/fix-editor-premium-v3.yml']
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch app
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('assets/invella-app.js');s=p.read_text()
+          # Persist Premium data in invitation content.
+          old="function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});return d}"
+          new="function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});d.premiumTimer=safeGet('premium_timer')==='1';d.premiumMusicUrl=safeGet('premium_music_url')||'';d.premiumMusicStart=Number(safeGet('premium_music_start')||0);d.premiumMusicEnd=Number(safeGet('premium_music_end')||0);try{d.premiumGallery=JSON.parse(safeGet('premium_gallery_urls')||'[]')}catch(e){d.premiumGallery=[]}return d}"
+          if old in s:s=s.replace(old,new,1)
+          # Keep a stable editor URL so browser refresh restores the editor.
+          s=s.replace("window.editCloudInvitation=async function(id){","window.editCloudInvitation=async function(id){history.replaceState({editor:true,id:id},'', '/create/editor?id='+encodeURIComponent(id));",1)
+          # Restore premium values from cloud whenever invitation is loaded.
+          needle="var d=r.data.content&&typeof r.data.content==='object'?r.data.content:{};"
+          extra="if(d.premiumMusicUrl)safeSet('premium_music_url',d.premiumMusicUrl);safeSet('premium_music_start',String(d.premiumMusicStart||0));safeSet('premium_music_end',String(d.premiumMusicEnd||0));safeSet('premium_gallery_urls',JSON.stringify(d.premiumGallery||[]));safeSet('premium_timer',d.premiumTimer?'1':'0');"
+          if needle in s and extra not in s:s=s.replace(needle,needle+extra,1)
+          # Upgrade Premium editor: upload media + fragment selectors.
+          a=s.find('function initPremium()');b=s.find('function updateAuthUI()',a)
+          if a>=0 and b>a:
+            fn='''function initPremium(){var m=$("premiumMusic"),g=$("premiumGallery"),t=$("premiumTimer");[m,g,t].forEach(function(x){if(x)x.disabled=!editorHas("premium")});if(t){t.checked=safeGet("premium_timer")==="1";t.onchange=function(){safeSet("premium_timer",this.checked?"1":"0");scheduleCloudSave()}}if(m)m.onchange=async function(){if(!editorHas("premium")||!this.files||!this.files[0])return;var u=await premiumUpload(this.files[0],"music");if(u){safeSet("premium_music_url",u);showMusicFragmentEditor(u);scheduleCloudSave()}};if(g)g.onchange=async function(){if(!editorHas("premium"))return;var fs=Array.from(this.files||[]).slice(0,12),urls=[];for(var i=0;i<fs.length;i++){var f=await compressImage(fs[i]),u=await premiumUpload(f,"gallery");if(u)urls.push(u)}safeSet("premium_gallery_urls",JSON.stringify(urls));scheduleCloudSave();alert("Фотографии сохранены: "+urls.length)};var u=safeGet("premium_music_url");if(u)showMusicFragmentEditor(u)}
+async function premiumUpload(file,kind){if(!currentUser)return null;if(!currentInvitationId&&!(await cloudSave()))return null;var ext=(file.name.split('.').pop()||'bin'),path=currentUser.id+'/'+currentInvitationId+'/'+kind+'-'+Date.now()+'.'+ext,r=await sb.storage.from('invitation-media').upload(path,file,{upsert:true});if(r.error){alert('Не удалось загрузить файл');return null}return sb.storage.from('invitation-media').getPublicUrl(path).data.publicUrl}
+function showMusicFragmentEditor(url){var input=$("premiumMusic");if(!input||$("premiumMusicFragment"))return;var d=document.createElement('div');d.id='premiumMusicFragment';d.innerHTML='<audio id="premiumMusicPreview" controls style="width:100%;margin-top:10px"></audio><div class="row"><div class="field"><label>Начало фрагмента, сек.</label><input id="premiumMusicStart" type="number" min="0" step="1"></div><div class="field"><label>Конец фрагмента, сек.</label><input id="premiumMusicEnd" type="number" min="1" step="1"></div></div><button type="button" class="ghost" id="premiumMusicListen">Прослушать выбранный фрагмент</button>';input.parentElement.appendChild(d);var a=$("premiumMusicPreview"),st=$("premiumMusicStart"),en=$("premiumMusicEnd");a.src=url;st.value=safeGet('premium_music_start')||0;en.value=safeGet('premium_music_end')||'';function save(){safeSet('premium_music_start',st.value||'0');safeSet('premium_music_end',en.value||'0');scheduleCloudSave()}st.onchange=save;en.onchange=save;$("premiumMusicListen").onclick=function(){var start=Number(st.value||0),end=Number(en.value||0);a.currentTime=start;a.play();var stop=function(){if(end>start&&a.currentTime>=end){a.pause();a.removeEventListener('timeupdate',stop)}};a.addEventListener('timeupdate',stop)}}
+'''
+            s=s[:a]+fn+s[b:]
+          p.write_text(s)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets/invella-app.js
+          git commit -m 'Fix editor URL and Premium media persistence'
+          git push
