@@ -1,0 +1,20 @@
+name: Validate Premium implementation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-final-check.yml']
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          grep -q 'id="premiumMusic"' index.html
+          grep -q 'id="premiumGallery"' index.html
+          grep -q 'id="premiumTimer"' index.html
+          grep -q 'premiumUpload' assets/invella-app.js
+          grep -q 'premiumMusicUrl' assets/invella-app.js
+          grep -q 'premiumGalleryBlock' assets/invella-app.js
+          grep -q 'premiumTimerBlock' assets/invella-app.js
+          grep -q 'assets/invella-app.js' index.html
+          echo 'Premium implementation validated'
