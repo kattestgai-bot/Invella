@@ -1,0 +1,24 @@
+name: Premium controls final
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/premium-one.yml']
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html');s=p.read_text()
+          replacements={'В Premium можно будет добавить музыкальное сопровождение приглашения.':'Загрузите музыку для приглашения.<br><input id="premiumMusic" type="file" accept="audio/*">','Отдельный блок для фотографий.':'Добавьте фотографии в приглашение.<br><input id="premiumGallery" type="file" accept="image/*" multiple>','Обратный отсчёт до праздника.':'<label><input id="premiumTimer" type="checkbox"> Показывать обратный отсчёт до события</label>'}
+          for a,b in replacements.items():s=s.replace(a,b)
+          p.write_text(s)
+          PY
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet || (git commit -m 'Activate Premium editor controls' && git push)
