@@ -1,2 +1,20 @@
-State==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+);
+await loadPublicInvitation();
+return;
+}
+restoreRouteView();
+load();
+fields.forEach(function(id){if($(id)){$(id).addEventListener('input',render);$(id).addEventListener('change',render)}});
+['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(id){if($(id))$(id).addEventListener('change',render)});
+$('photo').addEventListener('change',async function(e){var original=e.target.files[0];if(!original)return;var f=await compressImage(original);var r=new FileReader();r.onload=function(){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+r.result+'")';$('invHero').style.color='#fff'};r.readAsDataURL(f);var saved=await cloudSave();if(saved)await uploadCover(f)});
+if($('customBackgroundFile'))$('customBackgroundFile').addEventListener('change',function(e){uploadCustomBackground(e.target.files[0])});
+render();
+await initAuth();
+await restoreUserCloudState();
+cloudReady=true;
+if(location.pathname==='/create/publish'&&currentUser){$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
+await maybeShowPaymentSuccess();
+[$('authModal'),$('publishModal'),$('dashboardModal'),$('paymentSuccessModal'),$('resetPasswordModal')].forEach(function(m){if(m)m.addEventListener('click',function(e){if(e.target===m){m.classList.add('hidden');document.body.style.overflow=''}})});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();

@@ -1,4 +1,23 @@
-public invitation:',e);showPublicNotFound();return true}
+ase();
+if(currentPublicPlan==='basic'&&$('backgroundStyle'))$('backgroundStyle').value='auto';
+if(currentPublicPlan!=='premium'&&$('backgroundStyle')&&$('backgroundStyle').value==='custom')$('backgroundStyle').value=currentPublicPlan==='pro'?'silk':'auto';
+var guestParam=new URLSearchParams(location.search).get('guest');
+if(guestParam&&['pro','premium'].includes(currentPublicPlan)){
+if($('guest'))$('guest').value=guestParam;
+if($('guestGreeting')){$('guestGreeting').textContent='Для вас, '+guestParam;$('guestGreeting').classList.remove('hidden')}
+if($('guestHeading'))$('guestHeading').textContent='С особым теплом приглашаем разделить этот день с нами';
+}
+$('marketing').classList.add('hidden');
+$('app').classList.remove('hidden');
+var controls=document.querySelector('.controls'),bar=document.querySelector('.appbar'),editor=document.querySelector('.editor');
+if(controls)controls.classList.add('hidden');
+if(bar)bar.classList.add('hidden');
+if(editor)editor.style.gridTemplateColumns='1fr';
+render();
+if($('publicLoading'))setTimeout(function(){$('publicLoading').classList.add('hidden')},40);
+if(x.cover_url){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+String(x.cover_url).replace(/"/g,'%22')+'")';$('invHero').style.color='#fff'}
+return true;
+}catch(e){console.error('Invella public invitation:',e);showPublicNotFound();return true}
 }
 
 function resetPublicLayout(){var controls=document.querySelector('.controls'),bar=document.querySelector('.appbar'),editor=document.querySelector('.editor');if(controls)controls.classList.remove('hidden');if(bar)bar.classList.remove('hidden');if(editor)editor.style.gridTemplateColumns='';currentInvitationId=null;currentInvitationSlug=null;currentPublicPlan=null}
@@ -20,12 +39,4 @@ function render(){enforceEditorPlan();toggleCustomEvent();var eventLabel=$('even
 window.route=function(){var a=$('address').value.trim();if(!a)return alert('Сначала укажите адрес мероприятия.');window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a),'_blank')}
 window.sendRSVP=async function(){if(!['pro','premium'].includes(String(currentPublicPlan||'').toLowerCase()))return alert('RSVP доступен только в тарифах Pro и Premium.');var name=$('guest').value.trim();if(!name)return alert('Пожалуйста, укажите имя и фамилию.');if(!currentInvitationSlug||location.pathname.indexOf('/i/')!==0)return alert('Ответ можно отправить только из опубликованного приглашения.');var r=await sb.rpc('submit_rsvp',{p_slug:currentInvitationSlug,p_guest_name:name,p_attendance:$('attendance').value,p_guest_count:Number($('guestCount').value)||1,p_comment:('Напитки: '+(Array.from(document.querySelectorAll('#alcoholChoices input:checked')).map(function(x){return x.value}).join(', ')||'Не указано')+(($('childrenPolicy')&&$('childrenPolicy').value==='welcome')?' | С ребёнком: '+(($('withChild')&&$('withChild').value==='yes')?'Да':'Нет'):'')+($('comment').value.trim()?' | Комментарий: '+$('comment').value.trim():''))});if(r.error)return alert('Не удалось отправить ответ. Попробуйте ещё раз.');$('rsvpOk').classList.remove('hidden');$('guest').value='';$('comment').value=''}
 window.addWishPreset=function(type){var texts={flowers:'Пожалуйста, не дарите нам цветы — после праздника мы не сможем насладиться ими в полной мере.',gifts:'Если захотите порадовать нас подарком, будем благодарны за вклад в осуществление нашей общей мечты.',taxi:'Пожалуйста, не переживайте о дороге домой — после праздника воспользуйтесь такси и берегите себя.'};if(!texts[type])return;var w=$('wishes');w.value=(w.value.trim()?w.value.trim()+'\n\n':'')+texts[type];render()}
-async function uploadCustomBackground(file){if(!file)return;if(currentEditorPlan!=='draft'&&!editorHas('premium')){if($('customBackgroundFile'))$('customBackgroundFile').value='';return alert('Загрузка собственного фона доступна только в Premium.');}var f=await compressImage(file),r=new FileReader();r.onload=function(){$('backgroundCustomUrl').value=r.result;$('backgroundStyle').value='custom';$('customBgPreview').style.backgroundImage='url("'+r.result+'")';$('customBgPreview').textContent='';applyInvitationBackground();save()};r.readAsDataURL(f);if(currentUser){var saved=await cloudSave();if(saved&&currentInvitationId){var path=currentUser.id+'/'+currentInvitationId+'/background-'+Date.now()+'.webp';var u=await sb.storage.from('invitation-media').upload(path,f,{upsert:true});if(!u.error){$('backgroundCustomPath').value=path;$('backgroundCustomUrl').value='';$('backgroundStyle').value='custom';await cloudSave()}}}}
-window.publishDemo=function(){if(!currentUser){openAuth();$('authMessage').textContent='Чтобы опубликовать приглашение, сначала войдите или зарегистрируйтесь.';return}history.pushState({view:'publish'},'','/create/publish');$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
-window.closePublish=function(){$('publishModal').classList.add('hidden');document.body.style.overflow='';if(location.pathname==='/create/publish')history.pushState({view:'editor'},'','/create/editor')}
-var appliedPromoCode='';
-function rub(v){return Number(v).toLocaleString('ru-RU')+' ₽'}
-function resetPromoPrices(){var base={basic:990,pro:1490,premium:2490};Object.keys(base).forEach(function(k){var p=$('price-'+k),b=$('pay-'+k);if(p)p.textContent=rub(base[k]);if(b)b.textContent='Оплатить '+rub(base[k]);});appliedPromoCode='';}
-window.applyPromoCode=async function(){
-  var input=$('promoCode'),m=$('promoMessage');
-  var code=(input&&input.value
+async function uploadCustomBackground(file){if(!file)return;if(currentEditorPlan!=='draft'&&!editorHas('premium')){if($('customBackgroundFile'))$('customBackgroundFile').value='';return alert('Загрузка собственного фона доступна только в Premium.');}var f=await compressImage(file),r=new FileReader();r.onload=function(){$('backgroundCustomUrl').value=r.result;$('backgroundStyle').value='custom';$('customBgPreview').style.backgroundImage='url("'+r.result+'")';$('customBgPreview').textContent='';applyInvitationBackground();save()};r.readAsDataURL(f);if(currentUser){var s

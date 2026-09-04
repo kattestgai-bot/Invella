@@ -1,4 +1,12 @@
-||'').trim().toUpperCase();
+aved=await cloudSave();if(saved&&currentInvitationId){var path=currentUser.id+'/'+currentInvitationId+'/background-'+Date.now()+'.webp';var u=await sb.storage.from('invitation-media').upload(path,f,{upsert:true});if(!u.error){$('backgroundCustomPath').value=path;$('backgroundCustomUrl').value='';$('backgroundStyle').value='custom';await cloudSave()}}}}
+window.publishDemo=function(){if(!currentUser){openAuth();$('authMessage').textContent='Чтобы опубликовать приглашение, сначала войдите или зарегистрируйтесь.';return}history.pushState({view:'publish'},'','/create/publish');$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
+window.closePublish=function(){$('publishModal').classList.add('hidden');document.body.style.overflow='';if(location.pathname==='/create/publish')history.pushState({view:'editor'},'','/create/editor')}
+var appliedPromoCode='';
+function rub(v){return Number(v).toLocaleString('ru-RU')+' ₽'}
+function resetPromoPrices(){var base={basic:990,pro:1490,premium:2490};Object.keys(base).forEach(function(k){var p=$('price-'+k),b=$('pay-'+k);if(p)p.textContent=rub(base[k]);if(b)b.textContent='Оплатить '+rub(base[k]);});appliedPromoCode='';}
+window.applyPromoCode=async function(){
+  var input=$('promoCode'),m=$('promoMessage');
+  var code=(input&&input.value||'').trim().toUpperCase();
   if(input)input.value=code;
   resetPromoPrices();
   if(!code){if(m){m.className='auth-message error';m.textContent='Введите промокод.';}return;}
@@ -108,22 +116,4 @@ async function init(){
 currentInvitationId=null;
 currentInvitationSlug=null;
 if(isPublicPath()){
-if($('publicLoading'))$('publicLoading').classList.remove('hidden');
-await loadPublicInvitation();
-return;
-}
-restoreRouteView();
-load();
-fields.forEach(function(id){if($(id)){$(id).addEventListener('input',render);$(id).addEventListener('change',render)}});
-['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(id){if($(id))$(id).addEventListener('change',render)});
-$('photo').addEventListener('change',async function(e){var original=e.target.files[0];if(!original)return;var f=await compressImage(original);var r=new FileReader();r.onload=function(){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+r.result+'")';$('invHero').style.color='#fff'};r.readAsDataURL(f);var saved=await cloudSave();if(saved)await uploadCover(f)});
-if($('customBackgroundFile'))$('customBackgroundFile').addEventListener('change',function(e){uploadCustomBackground(e.target.files[0])});
-render();
-await initAuth();
-await restoreUserCloudState();
-cloudReady=true;
-if(location.pathname==='/create/publish'&&currentUser){$('publishModal').classList.remove('hidden');document.body.style.overflow='hidden'}
-await maybeShowPaymentSuccess();
-[$('authModal'),$('publishModal'),$('dashboardModal'),$('paymentSuccessModal'),$('resetPasswordModal')].forEach(function(m){if(m)m.addEventListener('click',function(e){if(e.target===m){m.classList.add('hidden');document.body.style.overflow=''}})});
-}
-if(document.ready
+if($('publicLoading'))$('publicLoading').classList.remove('hidden'
