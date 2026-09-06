@@ -11,25 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy stable published editor v7
+      - name: Apply core published editor fixes
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          premium=Path('assets/invella-premium-fix.js')
-          addon=Path('assets/published-editor-v7.js').read_text(encoding='utf-8')
-          s=premium.read_text(encoding='utf-8')
-          marker='/* published-editor-v7 */'
-          if marker in s:s=s.split(marker)[0].rstrip()
-          premium.write_text(s+'\n'+marker+'\n'+addon+'\n',encoding='utf-8')
-          p=Path('index.html'); h=p.read_text(encoding='utf-8')
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260906-1002',{cache:'no-store'})",h)
-          p.write_text(h,encoding='utf-8')
+          idx=Path('index.html'); h=idx.read_text(encoding='utf-8')
+          h=h.replace('<button type="button" class="ghost" onclick="addWishPreset(\'taxi\')">Такси</button>','')
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260906-1710',{cache:'no-store'})",h)
+          idx.write_text(h,encoding='utf-8')
+          app=Path('assets/invella-app.js'); s=app.read_text(encoding='utf-8')
+          s=s.replace(",taxi:'Пожалуйста, не переживайте о дороге домой — после праздника воспользуйтесь такси и берегите себя.'",'')
+          old="window.editCloudInvitation=async function(id){var r=await sb.from('invitations').select('*').eq('id',id).single();if(r.error||!r.data)return;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;currentEditorPlan=String(r.data.plan||'draft').toLowerCase();template=r.data.template_key||'classic';var d=r.data.content||{};fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});closeDashboard();$('marketing').classList.add('hidden');$('app').classList.remove('hidden');render();scrollTo(0,0)}"
+          new="window.editCloudInvitation=async function(id){var r=await sb.from('invitations').select('*').eq('id',id).single();if(r.error||!r.data)return;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;currentEditorPlan=String(r.data.plan||'draft').toLowerCase();template=r.data.template_key||'classic';var d=r.data.content||{};fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k)&&d[k]!=null)$(k).checked=Boolean(d[k])});closeDashboard();$('marketing').classList.add('hidden');$('app').classList.remove('hidden');render();var pb=document.querySelector('.appbar .toolbar .primary');if(pb&&r.data.status==='published'){pb.textContent='Сохранить изменения';pb.onclick=function(){window.invellaSavePublished(id)}}scrollTo(0,0)};window.invellaSavePublished=async function(id){var ok=await cloudSave();if(!ok)return alert('Не удалось сохранить изменения.');alert('Изменения сохранены. Опубликованное приглашение обновлено.')}"
+          if old in s:s=s.replace(old,new)
+          app.write_text(s,encoding='utf-8')
+          premium=Path('assets/invella-premium-fix.js'); p=premium.read_text(encoding='utf-8'); addon=Path('assets/published-editor-v8.js').read_text(encoding='utf-8'); marker='/* published-editor-v8 */'; p=p.split(marker)[0].rstrip()+'\n'+marker+'\n'+addon+'\n'; premium.write_text(p,encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Deploy stable published editor v7'
+          git add index.html assets/invella-app.js assets/invella-premium-fix.js
+          git diff --cached --quiet || git commit -m 'Fix published editing in core'
           git push
