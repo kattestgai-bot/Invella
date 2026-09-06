@@ -11,25 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy editor repair v9
+      - name: Refresh frontend cache
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          premium=Path('assets/invella-premium-fix.js')
-          s=premium.read_text(encoding='utf-8')
-          addon=Path('assets/editor-repair-v9.js').read_text(encoding='utf-8')
-          marker='/* editor-repair-v9 */'
-          if marker in s:s=s.split(marker)[0].rstrip()
-          premium.write_text(s+'\n'+marker+'\n'+addon+'\n',encoding='utf-8')
           p=Path('index.html');h=p.read_text(encoding='utf-8')
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260906-1735',{cache:'no-store'})",h)
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260906-1805',{cache:'no-store'})",h)
           p.write_text(h,encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Restore editor live updates and event presets'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'Deploy stable editor bundle'
           git push
