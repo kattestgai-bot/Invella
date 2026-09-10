@@ -11,30 +11,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Remove legacy duplicate controls
+      - name: Add persistent app routes
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          p=Path('index.html'); h=p.read_text(encoding='utf-8')
-          # Legacy static Pro/Premium blocks are replaced by the single unified v10 UI.
-          patterns=[
-            r'<div class="field"><label>Персональные ссылки для гостей.*?</div></div>',
-            r'<div class="field"><label>Музыка.*?</div>',
-            r'<div class="field"><label>Фотогалерея.*?</div>',
-            r'<div class="field"><label>Таймер до события.*?</div>'
-          ]
-          for pat in patterns:
-              h=re.sub(pat,'',h,flags=re.S)
-          # Remove any remaining legacy Premium controls by their known ids.
-          h=re.sub(r'<[^>]*id="(?:premiumMusic|premiumGallery|premiumTimer|guestNamesForLinks)"[^>]*>.*?</[^>]+>','',h,flags=re.S)
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1240',{cache:'no-store'})",h)
-          p.write_text(h,encoding='utf-8')
+          p=Path('assets/invella-premium-fix.js'); s=p.read_text(encoding='utf-8')
+          marker='/* persistent-routes-v11 */'
+          if marker in s:s=s.split(marker)[0].rstrip()
+          addon=r'''
+/* persistent-routes-v11 */
+(function(){'use strict';
+function route(q,replace){var u=new URL(location.href);u.pathname='/';u.search=q||'';if(replace)history.replaceState(null,'',u.pathname+u.search);else history.pushState(null,'',u.pathname+u.search)}
+function idFrom(){return new URLSearchParams(location.search).get('id')||''}
+function bind(){
+ document.querySelectorAll('.logo').forEach(function(x){x.style.cursor='pointer';x.onclick=function(){location.href='/'}});
+ var oldDash=window.openDashboard;if(oldDash&&!oldDash.__route){window.openDashboard=async function(){route('?view=invites');return oldDash.apply(this,arguments)};window.openDashboard.__route=1}
+ var oldEdit=window.editCloudInvitation;if(oldEdit&&!oldEdit.__route){window.editCloudInvitation=async function(id){route('?view=edit&id='+encodeURIComponent(id));return oldEdit.apply(this,arguments)};window.editCloudInvitation.__route=1}
+ var oldResp=window.showResponses;if(oldResp&&!oldResp.__route){window.showResponses=async function(id){route('?view=responses&id='+encodeURIComponent(id));return oldResp.apply(this,arguments)};window.showResponses.__route=1}
+ var oldDown=window.downloadResponses;if(oldDown&&!oldDown.__route){window.downloadResponses=async function(id){route('?view=responses&id='+encodeURIComponent(id)+'&download=1');return oldDown.apply(this,arguments)};window.downloadResponses.__route=1}
+}
+async function restore(){var p=new URLSearchParams(location.search),v=p.get('view'),id=p.get('id');if(!v)return;if(v==='invites'&&window.openDashboard){setTimeout(function(){window.openDashboard()},350);return}if(v==='edit'&&id&&window.editCloudInvitation){setTimeout(function(){window.editCloudInvitation(id)},450);return}if(v==='responses'&&id&&window.openDashboard){setTimeout(async function(){await window.openDashboard();setTimeout(function(){if(window.showResponses)window.showResponses(id);if(p.get('download')==='1'&&window.downloadResponses)window.downloadResponses(id)},450)},350)}}
+function quick(){var box=document.getElementById('invUnifiedLinks');if(!box)return;var lab=box.querySelector('label');if(lab)lab.firstChild.nodeValue='Быстрые персональные ссылки ';}
+setInterval(function(){bind();quick()},400);window.addEventListener('popstate',function(){location.reload()});document.addEventListener('DOMContentLoaded',function(){bind();setTimeout(restore,900)});})();
+'''
+          p.write_text(s+'\n'+addon,encoding='utf-8')
+          h=Path('index.html').read_text(encoding='utf-8')
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1305',{cache:'no-store'})",h)
+          Path('index.html').write_text(h,encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add index.html
-          git diff --cached --quiet || git commit -m 'Remove legacy duplicate editor controls'
+          git add index.html assets/invella-premium-fix.js
+          git diff --cached --quiet || git commit -m 'Add persistent Invella routes and quick links'
           git push
