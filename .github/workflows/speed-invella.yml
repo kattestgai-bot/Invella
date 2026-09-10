@@ -11,23 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy unified editor
+      - name: Remove legacy duplicate controls
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          Path('assets/invella-premium-fix.js').write_text(Path('assets/invella-stable-v10.js').read_text(encoding='utf-8'),encoding='utf-8')
-          p=Path('index.html');h=p.read_text(encoding='utf-8')
-          if 'rel="icon"' not in h:
-              icon='<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231d1b19%22/><text x=%2232%22 y=%2241%22 text-anchor=%22middle%22 font-family=%22Georgia%22 font-size=%2226%22 fill=%22white%22>IV</text></svg>">'
-              h=h.replace('<title>',icon+'<title>',1)
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1225',{cache:'no-store'})",h)
+          p=Path('index.html'); h=p.read_text(encoding='utf-8')
+          # Legacy static Pro/Premium blocks are replaced by the single unified v10 UI.
+          patterns=[
+            r'<div class="field"><label>Персональные ссылки для гостей.*?</div></div>',
+            r'<div class="field"><label>Музыка.*?</div>',
+            r'<div class="field"><label>Фотогалерея.*?</div>',
+            r'<div class="field"><label>Таймер до события.*?</div>'
+          ]
+          for pat in patterns:
+              h=re.sub(pat,'',h,flags=re.S)
+          # Remove any remaining legacy Premium controls by their known ids.
+          h=re.sub(r'<[^>]*id="(?:premiumMusic|premiumGallery|premiumTimer|guestNamesForLinks)"[^>]*>.*?</[^>]+>','',h,flags=re.S)
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1240',{cache:'no-store'})",h)
           p.write_text(h,encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Deploy unified Invella editor v10'
+          git add index.html
+          git diff --cached --quiet || git commit -m 'Remove legacy duplicate editor controls'
           git push
