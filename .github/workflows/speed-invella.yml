@@ -11,33 +11,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Add persistent app routes
+      - name: Finalize launch fixes
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
+          # Personal links are Premium everywhere in the editor.
           p=Path('assets/invella-premium-fix.js'); s=p.read_text(encoding='utf-8')
-          marker='/* persistent-routes-v11 */'
+          s=s.replace('Персональные ссылки для гостей <span class="tag">PRO</span>','Персональные ссылки для гостей <span class="tag">PREMIUM</span>')
+          # Do not delete the unified blocks on every boot; only remove legacy duplicates.
+          s=s.replace("['quickLinksStable','premiumStablePanel','premiumEditorPreview','liveMediaPreviewV3','invUnifiedLinks','invUnifiedMedia']","['quickLinksStable','premiumStablePanel','premiumEditorPreview','liveMediaPreviewV3']")
+          # Enforce Premium when generating guest links.
+          s=s.replace("function links(){var ns=", "function links(){if(plan!=='premium'){alert('Персональные ссылки доступны только в Premium.');return}var ns=")
+          # Persistent internal URLs, restored after refresh.
+          marker='/* routes-v12 */'
           if marker in s:s=s.split(marker)[0].rstrip()
-          addon=r'''
-/* persistent-routes-v11 */
-(function(){'use strict';
-function route(q,replace){var u=new URL(location.href);u.pathname='/';u.search=q||'';if(replace)history.replaceState(null,'',u.pathname+u.search);else history.pushState(null,'',u.pathname+u.search)}
-function idFrom(){return new URLSearchParams(location.search).get('id')||''}
-function bind(){
- document.querySelectorAll('.logo').forEach(function(x){x.style.cursor='pointer';x.onclick=function(){location.href='/'}});
- var oldDash=window.openDashboard;if(oldDash&&!oldDash.__route){window.openDashboard=async function(){route('?view=invites');return oldDash.apply(this,arguments)};window.openDashboard.__route=1}
- var oldEdit=window.editCloudInvitation;if(oldEdit&&!oldEdit.__route){window.editCloudInvitation=async function(id){route('?view=edit&id='+encodeURIComponent(id));return oldEdit.apply(this,arguments)};window.editCloudInvitation.__route=1}
- var oldResp=window.showResponses;if(oldResp&&!oldResp.__route){window.showResponses=async function(id){route('?view=responses&id='+encodeURIComponent(id));return oldResp.apply(this,arguments)};window.showResponses.__route=1}
- var oldDown=window.downloadResponses;if(oldDown&&!oldDown.__route){window.downloadResponses=async function(id){route('?view=responses&id='+encodeURIComponent(id)+'&download=1');return oldDown.apply(this,arguments)};window.downloadResponses.__route=1}
-}
-async function restore(){var p=new URLSearchParams(location.search),v=p.get('view'),id=p.get('id');if(!v)return;if(v==='invites'&&window.openDashboard){setTimeout(function(){window.openDashboard()},350);return}if(v==='edit'&&id&&window.editCloudInvitation){setTimeout(function(){window.editCloudInvitation(id)},450);return}if(v==='responses'&&id&&window.openDashboard){setTimeout(async function(){await window.openDashboard();setTimeout(function(){if(window.showResponses)window.showResponses(id);if(p.get('download')==='1'&&window.downloadResponses)window.downloadResponses(id)},450)},350)}}
-function quick(){var box=document.getElementById('invUnifiedLinks');if(!box)return;var lab=box.querySelector('label');if(lab)lab.firstChild.nodeValue='Быстрые персональные ссылки ';}
-setInterval(function(){bind();quick()},400);window.addEventListener('popstate',function(){location.reload()});document.addEventListener('DOMContentLoaded',function(){bind();setTimeout(restore,900)});})();
-'''
+          addon="""
+/* routes-v12 */
+(function(){function wrap(){document.querySelectorAll('.logo').forEach(function(x){x.style.cursor='pointer';x.onclick=function(){location.href='/'}});var a=window.openDashboard;if(a&&!a.__r12){window.openDashboard=async function(){if(new URLSearchParams(location.search).get('view')!=='invites')history.pushState(null,'','/?view=invites');return a.apply(this,arguments)};window.openDashboard.__r12=1}var b=window.editCloudInvitation;if(b&&!b.__r12){window.editCloudInvitation=async function(id){var q=new URLSearchParams(location.search);if(q.get('view')!=='edit'||q.get('id')!==String(id))history.pushState(null,'','/?view=edit&id='+encodeURIComponent(id));return b.apply(this,arguments)};window.editCloudInvitation.__r12=1}var c=window.showResponses;if(c&&!c.__r12){window.showResponses=async function(id){history.pushState(null,'','/?view=responses&id='+encodeURIComponent(id));return c.apply(this,arguments)};window.showResponses.__r12=1}var d=window.downloadResponses;if(d&&!d.__r12){window.downloadResponses=async function(id){history.replaceState(null,'','/?view=responses&id='+encodeURIComponent(id));return d.apply(this,arguments)};window.downloadResponses.__r12=1}}
+function restore(){var q=new URLSearchParams(location.search),v=q.get('view'),id=q.get('id');if(v==='invites'&&window.openDashboard)window.openDashboard();else if(v==='edit'&&id&&window.editCloudInvitation)window.editCloudInvitation(id);else if(v==='responses'&&id&&window.openDashboard){window.openDashboard().then(function(){setTimeout(function(){if(window.showResponses)window.showResponses(id)},300)})}}
+setInterval(wrap,500);document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){wrap();restore()},1000)});})();
+"""
           p.write_text(s+'\n'+addon,encoding='utf-8')
+          # Marketing tariff cards: remove personal links from Pro, add to Premium.
           h=Path('index.html').read_text(encoding='utf-8')
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1305',{cache:'no-store'})",h)
+          pro='<li>Персональные ссылки для гостей</li>'
+          h=h.replace(pro,'',1)
+          premium_anchor='<li>Всё из Pro</li>'
+          pos=h.find(premium_anchor,h.find('<div class="plan-name">Premium</div>'))
+          if pos!=-1:
+              pos+=len(premium_anchor)
+              h=h[:pos]+'<li>Персональные ссылки для гостей</li>'+h[pos:]
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1355',{cache:'no-store'})",h)
           Path('index.html').write_text(h,encoding='utf-8')
           PY
       - name: Commit
@@ -45,5 +50,5 @@ setInterval(function(){bind();quick()},400);window.addEventListener('popstate',f
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Add persistent Invella routes and quick links'
+          git diff --cached --quiet || git commit -m 'Finalize Premium links and persistent routes'
           git push
