@@ -215,12 +215,12 @@ if(!currentInvitationSlug){box.textContent='Сначала сохраните и
 var names=raw.split(/\n+/).map(function(x){return x.trim()}).filter(Boolean);
 box.innerHTML=names.map(function(name){
 var url=location.origin+'/i/'+currentInvitationSlug+'?guest='+encodeURIComponent(name);
-return '<div style="padding:9px 0;border-top:1px solid var(--line)"><b>'+escapeHtml(name)+'</b><br><button type="button" class="ghost" style="margin-top:6px" data-link="'+escapeHtml(url)+'" onclick="copyGuestLink(this)">Скопировать ссылку</button></div>'
+return '<div style="padding:9px 0;border-top:1px solid var(--line)"><b>'+escapeHtml(name)+'</b><br><button type="button" class="ghost" style="margin-top:6px" data-link="'+escapeHtml(url)+'" onclick="copyGuestLink(this)">Скопировать</button></div>'
 }).join('');
 }
 window.copyGuestLink=async function(btn){
 var url=btn.getAttribute('data-link');
-try{await navigator.clipboard.writeText(url);btn.textContent='Скопировано ✓';setTimeout(function(){btn.textContent='Скопировать ссылку'},1500)}
+try{await navigator.clipboard.writeText(url);btn.textContent='Скопировано ✓';setTimeout(function(){btn.textContent='Скопировать'},1500)}
 catch(e){prompt('Скопируйте ссылку:',url)}
 }
 window.closePaymentSuccess=function(){$('paymentSuccessModal').classList.add('hidden');document.body.style.overflow=''}
