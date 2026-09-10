@@ -1,71 +1,18 @@
-name: Refresh Invella frontend
+name: Validate Invella frontend
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/speed-invella.yml
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
-  refresh:
+  validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Consolidate editor and navigation
+      - name: Validate current frontend
         run: |
-          python - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('assets/invella-premium-fix.js')
-          s=p.read_text(encoding='utf-8')
-          marker='/* editor-navigation-v13 */'
-          if marker in s: s=s.split(marker)[0].rstrip()
-          addon=r'''
-/* editor-navigation-v13 */
-(function(){'use strict';
-function $(id){return document.getElementById(id)}
-function text(el){return (el&&el.textContent||'').trim().toLowerCase()}
-function canonicalPremium(){
- var controls=document.querySelector('#app .controls'); if(!controls)return;
- var all=Array.from(controls.querySelectorAll('.field,.feature-box,.premium-row'));
- var groups={links:[],music:[],gallery:[],timer:[]};
- all.forEach(function(x){var t=text(x);if(t.indexOf('персональные ссылки')>=0)groups.links.push(x);else if(/^музыка/.test(t))groups.music.push(x);else if(/^фотогалерея/.test(t))groups.gallery.push(x);else if(/^таймер до события/.test(t))groups.timer.push(x)});
- Object.keys(groups).forEach(function(k){var a=groups[k];if(a.length<2)return;var keep=a.find(function(x){return x.id==='invUnifiedLinks'||x.id==='invUnifiedMedia'})||a[a.length-1];a.forEach(function(x){if(x!==keep)x.remove()})});
-}
-function sections(){
- var c=document.querySelector('#app .controls');if(!c||$('invEditorNav'))return;
- var nav=document.createElement('div');nav.id='invEditorNav';nav.style.cssText='position:sticky;top:74px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:10px 0 12px;background:var(--paper,#f7f3eb);margin-bottom:8px';
- var defs=[['main','Основное'],['design','Оформление'],['program','Программа'],['guests','Гости'],['premium','Premium']];
- defs.forEach(function(d){var b=document.createElement('button');b.type='button';b.className='ghost';b.dataset.section=d[0];b.textContent=d[1];b.onclick=function(){show(d[0],true)};nav.appendChild(b)});
- c.insertBefore(nav,c.firstChild);
- classify(c);var wanted=new URLSearchParams(location.search).get('section')||'main';show(wanted,false)
-}
-function classify(c){
- Array.from(c.children).forEach(function(x){if(x.id==='invEditorNav')return;var t=text(x),sec='main';if(/дресс-код|фон|облож|цвет|шрифт/.test(t))sec='design';else if(/программа мероприятия|сбор гостей|церемони/.test(t))sec='program';else if(/rsvp|гост|дети на празднике|пожелания/.test(t))sec='guests';else if(/premium|персональные ссылки|музыка|фотогалерея|таймер/.test(t))sec='premium';x.dataset.invSection=sec})
-}
-function show(sec,push){
- var c=document.querySelector('#app .controls');if(!c)return;classify(c);Array.from(c.children).forEach(function(x){if(x.id!=='invEditorNav'&&x.dataset.invSection)x.style.display=x.dataset.invSection===sec?'':'none'});document.querySelectorAll('#invEditorNav button').forEach(function(b){b.classList.toggle('primary',b.dataset.section===sec);b.classList.toggle('ghost',b.dataset.section!==sec)});var u=new URL(location.href);u.searchParams.set('view','edit');var id=u.searchParams.get('id')||sessionStorage.getItem('invella_edit_id');if(id)u.searchParams.set('id',id);u.searchParams.set('section',sec);history[push?'pushState':'replaceState']({view:'edit',section:sec},'',u.pathname+u.search)
-}
-function wrapRoutes(){
- if(window.editCloudInvitation&&!window.editCloudInvitation.__v13){var old=window.editCloudInvitation;window.editCloudInvitation=async function(id){sessionStorage.setItem('invella_edit_id',id);var u=new URL(location.href);u.pathname='/';u.search='';u.searchParams.set('view','edit');u.searchParams.set('id',id);u.searchParams.set('section',new URLSearchParams(location.search).get('section')||'main');history.pushState({view:'edit'},'',u.pathname+u.search);var r=await old.apply(this,arguments);setTimeout(function(){canonicalPremium();sections()},100);return r};window.editCloudInvitation.__v13=1}
- if(window.openDashboard&&!window.openDashboard.__v13){var od=window.openDashboard;window.openDashboard=async function(){var r=await od.apply(this,arguments);var u=new URL(location.href);u.pathname='/';u.search='?view=invites';history.replaceState({view:'invites'},'',u.pathname+u.search);return r};window.openDashboard.__v13=1}
- if(window.showResponses&&!window.showResponses.__v13){var or=window.showResponses;window.showResponses=async function(id){var r=await or.apply(this,arguments);var u=new URL(location.href);u.pathname='/';u.search='?view=responses&id='+encodeURIComponent(id);history.pushState({view:'responses'},'',u.pathname+u.search);return r};window.showResponses.__v13=1}
-}
-function restore(){var q=new URLSearchParams(location.search),v=q.get('view'),id=q.get('id');if(v==='invites'&&window.openDashboard)return window.openDashboard();if(v==='edit'&&id&&window.editCloudInvitation)return window.editCloudInvitation(id);if(v==='responses'&&id&&window.openDashboard)setTimeout(async function(){await window.openDashboard();setTimeout(function(){if(window.showResponses)window.showResponses(id)},300)},300)}
-function boot(){canonicalPremium();wrapRoutes();if(!document.querySelector('#app.hidden'))sections()}
-setInterval(boot,700);window.addEventListener('popstate',function(){location.reload()});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){setTimeout(restore,1100)});else setTimeout(restore,1100);
-})();
-'''
-          p.write_text(s+'\n'+addon,encoding='utf-8')
-          h=Path('index.html').read_text(encoding='utf-8')
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1615',{cache:'no-store'})",h)
-          Path('index.html').write_text(h,encoding='utf-8')
-          PY
-      - name: Commit
-        run: |
-          git config user.name 'Invella Fix Bot'
-          git config user.email 'actions@users.noreply.github.com'
-          git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Consolidate editor UI and add persistent navigation'
-          git push
+          test -s index.html
+          test -s assets/invella-app.js
+          test -s assets/invella-premium-fix.js
+          grep -q "guestPreviewBtn" index.html
+          grep -q "invEnd" assets/invella-premium-fix.js
+          echo "Current frontend preserved"
