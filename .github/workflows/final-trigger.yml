@@ -10,28 +10,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply editor navigation
+      - name: Restore original editor layout
         shell: bash
         run: |
-          cat > assets/editor-navigation-v13.js <<'JS'
-          (function(){'use strict';
-          function $(x){return document.getElementById(x)}
-          function txt(x){return (x&&x.textContent||'').trim().toLowerCase()}
-          function clean(){var c=document.querySelector('#app .controls');if(!c)return;var g={links:[],music:[],gallery:[],timer:[]};Array.from(c.querySelectorAll('.field,.feature-box,.premium-row')).forEach(function(x){var t=txt(x);if(t.indexOf('персональные ссылки')>=0)g.links.push(x);else if(/^музыка/.test(t))g.music.push(x);else if(/^фотогалерея/.test(t))g.gallery.push(x);else if(/^таймер до события/.test(t))g.timer.push(x)});Object.keys(g).forEach(function(k){var a=g[k];if(a.length>1)a.slice(0,-1).forEach(function(x){x.remove()})})}
-          function classify(c){Array.from(c.children).forEach(function(x){if(x.id==='invEditorNav')return;var t=txt(x),s='main';if(/дресс-код|фон|облож|цвет|шрифт/.test(t))s='design';else if(/программа мероприятия/.test(t))s='program';else if(/rsvp|гост|дети на празднике|пожелания/.test(t))s='guests';else if(/premium|персональные ссылки|музыка|фотогалерея|таймер/.test(t))s='premium';x.dataset.invSection=s})}
-          function show(s,push){var c=document.querySelector('#app .controls');if(!c)return;classify(c);Array.from(c.children).forEach(function(x){if(x.id!=='invEditorNav'&&x.dataset.invSection)x.style.display=x.dataset.invSection===s?'':'none'});document.querySelectorAll('#invEditorNav button').forEach(function(b){b.className=b.dataset.section===s?'primary':'ghost'});var u=new URL(location.href);u.searchParams.set('view','edit');var id=u.searchParams.get('id')||sessionStorage.getItem('invella_edit_id');if(id)u.searchParams.set('id',id);u.searchParams.set('section',s);history[push?'pushState':'replaceState']({},'',u.pathname+u.search)}
-          function nav(){var c=document.querySelector('#app .controls');if(!c||$('invEditorNav'))return;var n=document.createElement('div');n.id='invEditorNav';n.style.cssText='position:sticky;top:72px;z-index:20;display:flex;gap:7px;overflow-x:auto;padding:10px 0 12px;background:#f7f3eb;margin-bottom:8px';[['main','Основное'],['design','Оформление'],['program','Программа'],['guests','Гости'],['premium','Premium']].forEach(function(d){var b=document.createElement('button');b.type='button';b.dataset.section=d[0];b.textContent=d[1];b.onclick=function(){show(d[0],true)};n.appendChild(b)});c.insertBefore(n,c.firstChild);show(new URLSearchParams(location.search).get('section')||'main',false)}
-          function wrap(){if(window.editCloudInvitation&&!window.editCloudInvitation.__nav){var f=window.editCloudInvitation;window.editCloudInvitation=async function(id){sessionStorage.setItem('invella_edit_id',id);var u=new URL(location.href);u.pathname='/';u.search='?view=edit&id='+encodeURIComponent(id)+'&section=main';history.pushState({},'',u.pathname+u.search);var r=await f.apply(this,arguments);setTimeout(function(){clean();nav()},150);return r};window.editCloudInvitation.__nav=1}if(window.openDashboard&&!window.openDashboard.__nav){var d=window.openDashboard;window.openDashboard=async function(){var r=await d.apply(this,arguments);history.replaceState({},'','/?view=invites');return r};window.openDashboard.__nav=1}}
-          function restore(){var q=new URLSearchParams(location.search),v=q.get('view'),id=q.get('id');if(v==='invites'&&window.openDashboard)window.openDashboard();else if(v==='edit'&&id&&window.editCloudInvitation)window.editCloudInvitation(id)}
-          setInterval(function(){clean();wrap();if(!$('app').classList.contains('hidden'))nav()},700);window.addEventListener('popstate',function(){location.reload()});setTimeout(restore,1200);
-          })();
-          JS
-          python3 -c "from pathlib import Path; p=Path('assets/invella-premium-fix.js'); s=p.read_text(); m='/* editor-navigation-v13-loader */'; s=s.split(m)[0].rstrip() if m in s else s; s+='\n'+m+'\n'+Path('assets/editor-navigation-v13.js').read_text()+'\n'; p.write_text(s); h=Path('index.html'); z=h.read_text(); z=z.replace('?v=20260910-1515','?v=20260910-1630').replace('?v=20260910-1505','?v=20260910-1630'); h.write_text(z)"
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('assets/invella-premium-fix.js')
+          s=p.read_text()
+          m='/* editor-navigation-v13-loader */'
+          if m in s:s=s.split(m)[0].rstrip()+'\n'
+          addon=r'''
+/* persistent-editor-url-v14 */
+(function(){'use strict';
+function restoreLayout(){var n=document.getElementById('invEditorNav');if(n)n.remove();document.querySelectorAll('#app .controls > [data-inv-section]').forEach(function(x){x.style.display='';x.removeAttribute('data-inv-section')})}
+function wrap(){restoreLayout();if(window.editCloudInvitation&&!window.editCloudInvitation.__url14){var f=window.editCloudInvitation;window.editCloudInvitation=async function(id){sessionStorage.setItem('invella_edit_id',id);var u=new URL(location.href);u.pathname='/';u.search='?view=edit&id='+encodeURIComponent(id);history.replaceState({},'',u.pathname+u.search);var r=await f.apply(this,arguments);restoreLayout();return r};window.editCloudInvitation.__url14=1}if(window.openDashboard&&!window.openDashboard.__url14){var d=window.openDashboard;window.openDashboard=async function(){var r=await d.apply(this,arguments);history.replaceState({},'','/?view=invites');return r};window.openDashboard.__url14=1}}
+function restore(){restoreLayout();var q=new URLSearchParams(location.search),v=q.get('view'),id=q.get('id');if(v==='invites'&&window.openDashboard)window.openDashboard();else if(v==='edit'&&id&&window.editCloudInvitation)window.editCloudInvitation(id)}
+setInterval(wrap,600);setTimeout(restore,1200);})();
+'''
+          if '/* persistent-editor-url-v14 */' in s:s=s.split('/* persistent-editor-url-v14 */')[0].rstrip()
+          p.write_text(s+'\n'+addon+'\n')
+          h=Path('index.html');z=h.read_text();z=re.sub(r'\?v=20260910-[0-9]+','?v=20260910-1700',z);h.write_text(z)
+          PY
       - name: Commit
         shell: bash
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
-          git add index.html assets/invella-premium-fix.js assets/editor-navigation-v13.js
-          git diff --cached --quiet || git commit -m 'Add persistent editor sections and routes'
+          git add index.html assets/invella-premium-fix.js
+          git diff --cached --quiet || git commit -m 'Restore original single-page editor layout'
           git push
