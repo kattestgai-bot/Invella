@@ -12,33 +12,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply launch fixes
+      - name: Polish tariffs and guest preview
         run: |
           python - <<'PY'
           from pathlib import Path
           import re
-          p=Path('assets/invella-premium-fix.js')
-          s=p.read_text(encoding='utf-8')
-          s=s.replace('Персональные ссылки для гостей <span class="tag">PRO</span>','Персональные ссылки для гостей <span class="tag">PREMIUM</span>')
-          s=s.replace("['quickLinksStable','premiumStablePanel','premiumEditorPreview','liveMediaPreviewV3','invUnifiedLinks','invUnifiedMedia']","['quickLinksStable','premiumStablePanel','premiumEditorPreview','liveMediaPreviewV3']")
-          s=s.replace('function links(){var ns=',"function links(){if(plan!=='premium'){alert('Персональные ссылки доступны только в Premium.');return}var ns=")
-          p.write_text(s,encoding='utf-8')
           h=Path('index.html').read_text(encoding='utf-8')
-          premium_start=h.find('<div class="plan-name">Premium</div>')
-          pro_link='<li>Персональные ссылки для гостей</li>'
-          before=h[:premium_start]
-          after=h[premium_start:]
-          before=before.replace(pro_link,'')
-          if pro_link not in after:
-              after=after.replace('<li>Всё из Pro</li>','<li>Всё из Pro</li>'+pro_link,1)
-          h=before+after
-          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1415',{cache:'no-store'})",h)
+          h=h.replace('<li>Premium-блоки</li>','').replace('<li>Персональная ссылка</li>','')
+          h=h.replace('<li>Персональные ссылки для гостей</li>','<li>Персональные ссылки для каждого гостя — с обращением по имени</li>')
+          h=h.replace('<div class="toolbar"><button class="ghost" onclick="goHome()">← Шаблоны</button><button class="primary" onclick="publishDemo()">Опубликовать</button></div>','<div class="toolbar"><button class="ghost" onclick="goHome()">← Шаблоны</button><button id="guestPreviewBtn" class="ghost" type="button">Предпросмотр для гостя</button><button class="primary" onclick="publishDemo()">Опубликовать</button></div>')
+          h=re.sub(r"fetch\(B\+p(?:\+'\?v=[^']*')?\,\{cache:'no-store'\}\)","fetch(B+p+'?v=20260910-1500',{cache:'no-store'})",h)
           Path('index.html').write_text(h,encoding='utf-8')
+          p=Path('assets/invella-premium-fix.js'); s=p.read_text(encoding='utf-8')
+          addon=r'''
+/* guest-preview-v12 */
+(function(){'use strict';
+function $(x){return document.getElementById(x)}
+function close(){var x=$('invGuestPreview');if(x)x.remove();document.body.style.overflow=''}
+function open(){var src=document.querySelector('.invitation');if(!src)return;var m=document.createElement('div');m.id='invGuestPreview';m.style.cssText='position:fixed;inset:0;z-index:99999;background:#f6f3ee;overflow:auto;padding:18px';var bar=document.createElement('div');bar.style.cssText='position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:760px;margin:0 auto 16px;padding:10px 12px;background:rgba(255,255,255,.96);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.08)';bar.innerHTML='<b>Так приглашение увидят гости</b><button type="button" class="ghost" id="invClosePreview">Закрыть</button>';var page=src.cloneNode(true);page.removeAttribute('id');page.style.cssText+=';max-width:760px;margin:0 auto;min-height:100vh';m.append(bar,page);document.body.appendChild(m);document.body.style.overflow='hidden';$('invClosePreview').onclick=close;m.addEventListener('click',function(e){if(e.target===m)close()})}
+function bind(){var b=$('guestPreviewBtn');if(b&&!b.__gp){b.__gp=1;b.onclick=open;b.title='Открыть приглашение так, как его увидит гость'}}
+setInterval(bind,500);document.addEventListener('DOMContentLoaded',bind);})();
+'''
+          if '/* guest-preview-v12 */' in s:s=s.split('/* guest-preview-v12 */')[0].rstrip()
+          p.write_text(s+'\n'+addon,encoding='utf-8')
           PY
       - name: Commit
         run: |
           git config user.name 'Invella Fix Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add index.html assets/invella-premium-fix.js
-          git diff --cached --quiet || git commit -m 'Make personal links Premium only'
+          git diff --cached --quiet || git commit -m 'Polish tariffs and add guest preview'
           git push
