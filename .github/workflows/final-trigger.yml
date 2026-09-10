@@ -3,9 +3,26 @@ on:
   push:
     branches: [main]
     paths: ['.github/workflows/final-trigger.yml']
+permissions:
+  contents: write
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo ready
+      - name: Apply fixes
+        shell: bash
+        run: |
+          python3 -c "from pathlib import Path; p=Path('index.html'); s=p.read_text(); s=s.replace('<li>Premium-блоки</li>','').replace('<li>Персональная ссылка</li>','').replace('<li>Персональные ссылки для гостей</li>','<li>Персональные ссылки для каждого гостя — с обращением по имени</li>'); old='<div class=\"toolbar\"><button class=\"ghost\" onclick=\"goHome()\">← Шаблоны</button><button class=\"primary\" onclick=\"publishDemo()\">Опубликовать</button></div>'; new='<div class=\"toolbar\"><button class=\"ghost\" onclick=\"goHome()\">← Шаблоны</button><button id=\"guestPreviewBtn\" class=\"ghost\" type=\"button\">Предпросмотр для гостя</button><button class=\"primary\" onclick=\"publishDemo()\">Опубликовать</button></div>'; s=s.replace(old,new).replace('?v=20260910-1415','?v=20260910-1515'); p.write_text(s)"
+          cat > assets/guest-preview-v12.js <<'JS'
+          (function(){function $(x){return document.getElementById(x)}function close(){var x=$('invGuestPreview');if(x)x.remove();document.body.style.overflow=''}function open(){var src=document.querySelector('.invitation');if(!src)return;var m=document.createElement('div');m.id='invGuestPreview';m.style.cssText='position:fixed;inset:0;z-index:99999;background:#f6f3ee;overflow:auto;padding:18px';var bar=document.createElement('div');bar.style.cssText='position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;align-items:center;gap:12px;max-width:760px;margin:0 auto 16px;padding:10px 12px;background:white;border-radius:16px';bar.innerHTML='<b>Так приглашение увидят гости</b><button type="button" class="ghost" id="invClosePreview">Закрыть</button>';var page=src.cloneNode(true);page.removeAttribute('id');page.style.cssText+=';max-width:760px;margin:0 auto;min-height:100vh';m.append(bar,page);document.body.appendChild(m);document.body.style.overflow='hidden';$('invClosePreview').onclick=close}function bind(){var b=$('guestPreviewBtn');if(b&&!b.dataset.preview){b.dataset.preview='1';b.onclick=open}}setInterval(bind,500);})();
+          JS
+          python3 -c "from pathlib import Path; p=Path('assets/invella-premium-fix.js'); s=p.read_text(); marker='/* guest-preview-v12-loader */'; s=s.split(marker)[0].rstrip() if marker in s else s; s+='\n'+marker+'\n'+Path('assets/guest-preview-v12.js').read_text()+'\n'; p.write_text(s)"
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name 'Invella Fix Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html assets/invella-premium-fix.js assets/guest-preview-v12.js
+          git diff --cached --quiet || git commit -m 'Polish tariffs and add guest preview'
+          git push
