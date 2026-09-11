@@ -1,0 +1,58 @@
+name: Invella production fix
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch save architecture
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          app = Path('assets/invella-app.js')
+          s = app.read_text()
+
+          old = "function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});return d}"
+          new = "function collectData(){var d={};fields.forEach(function(k){if($(k))d[k]=$(k).value});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k))d[k]=$(k).checked});try{if(window.__invellaPremiumSnapshot){var p=window.__invellaPremiumSnapshot();if(p&&typeof p==='object')Object.assign(d,p)}}catch(e){console.warn('[Invella Save] premium snapshot failed',e)}return d}"
+          if old not in s: raise SystemExit('collectData pattern not found')
+          s=s.replace(old,new,1)
+
+          old2 = "async function cloudSave(){if(!currentUser)return false;var data=collectData(),payload={owner_id:currentUser.id,title:$(\'names\').value||\'Новое приглашение\',event_date:eventISO(),venue_name:$(\'venue\').value,venue_address:$(\'address\').value,template_key:template,content:data,design:{colors:[data.c1,data.c2,data.c3,data.c4]}};try{if(currentInvitationId){var u=await sb.from(\'invitations\').update(payload).eq(\'id\',currentInvitationId).eq(\'owner_id\',currentUser.id).select(\'id,slug\').maybeSingle();if(u.error)throw u.error;if(u.data){currentInvitationSlug=u.data.slug;return true}currentInvitationId=null;currentInvitationSlug=null}payload.slug=makeSlug();var r=await sb.from(\'invitations\').insert(payload).select(\'id,slug\').single();if(r.error)throw r.error;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;safeSet(\'invella_cloud_id_\'+currentUser.id,r.data.id);safeSet(\'invella_cloud_slug_\'+currentUser.id,r.data.slug);return true}catch(e){console.error(\'Invella save:\',e);return false}}"
+          new2 = "async function cloudSave(){if(!currentUser)return false;try{if(window.__invellaPremiumBeforeSave){var p=await window.__invellaPremiumBeforeSave();if(p===false)return false}var data=collectData(),payload={owner_id:currentUser.id,title:$(\'names\').value||\'Новое приглашение\',event_date:eventISO(),venue_name:$(\'venue\').value,venue_address:$(\'address\').value,template_key:template,content:data,design:{colors:[data.c1,data.c2,data.c3,data.c4]}};if(currentInvitationId){var existing=await sb.from(\'invitations\').select(\'content,slug\').eq(\'id\',currentInvitationId).eq(\'owner_id\',currentUser.id).maybeSingle();if(existing.error)throw existing.error;var merged=existing.data&&existing.data.content&&typeof existing.data.content===\'object\'?Object.assign({},existing.data.content,data):data;payload.content=merged;var u=await sb.from(\'invitations\').update(payload).eq(\'id\',currentInvitationId).eq(\'owner_id\',currentUser.id).select(\'id,slug\').maybeSingle();if(u.error)throw u.error;if(u.data){currentInvitationSlug=u.data.slug;if(window.__invellaPremiumAfterSave)await window.__invellaPremiumAfterSave(currentInvitationId,currentInvitationSlug);return true}currentInvitationId=null;currentInvitationSlug=null}payload.slug=makeSlug();var r=await sb.from(\'invitations\').insert(payload).select(\'id,slug\').single();if(r.error)throw r.error;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;safeSet(\'invella_cloud_id_\'+currentUser.id,r.data.id);safeSet(\'invella_cloud_slug_\'+currentUser.id,r.data.slug);if(window.__invellaPremiumAfterSave)await window.__invellaPremiumAfterSave(currentInvitationId,currentInvitationSlug);return true}catch(e){console.error(\'[Invella Save]\',e);return false}}"
+          if old2 not in s: raise SystemExit('cloudSave pattern not found')
+          s=s.replace(old2,new2,1)
+          app.write_text(s)
+
+          pf = Path('assets/invella-premium-fix.js')
+          p = pf.read_text()
+          marker = "async function saveExtra(){"
+          i=p.find(marker)
+          if i<0: raise SystemExit('saveExtra not found')
+          j=p.find("\nfunction queuePremiumPersist",i)
+          if j<0: raise SystemExit('queue boundary not found')
+          replacement = r'''async function saveExtra(){if(!editId||saveBusy)return false;saveBusy=true;try{var flushed=await flushPendingMedia();if(!flushed)return false;var r=await db.from('invitations').select('content').eq('id',editId).single();if(r.error)return false;var c=r.data.content&&typeof r.data.content==='object'?Object.assign({},r.data.content):{};var snap=window.__invellaPremiumSnapshot?window.__invellaPremiumSnapshot():{};Object.assign(c,snap);var u=await db.from('invitations').update({content:c,cover_url:cover&&!/^blob:/.test(String(cover))?cover:null}).eq('id',editId);if(u.error){console.error('[Invella Premium save]',u.error);return false}return true}finally{saveBusy=false}}
+function premiumSnapshot(){return {premiumMusicUrl:music&&!/^blob:/.test(String(music))?music:'',premiumMusicStart:Number(start)||0,premiumMusicEnd:Number(end)||0,premiumGallery:photos.filter(function(x){return !/^blob:/.test(String(x))}).slice(0,8),premiumGalleryText:galleryText(),premiumCoverUrl:cover&&!/^blob:/.test(String(cover))?cover:'',showPremiumTimer:!!($('invTimer')&&$('invTimer').checked)}}
+window.__invellaPremiumSnapshot=premiumSnapshot;
+window.__invellaPremiumBeforeSave=async function(){if(!editId)return true;return await flushPendingMedia()};
+window.__invellaPremiumAfterSave=async function(id,newSlug){editId=id||editId;if(newSlug!=null)slug=newSlug;return await saveExtra()};
+'''
+          p=p[:i]+replacement+p[j:]
+          p=p.replace("function queuePremiumPersist(){clearTimeout(persistTimer);if(!editId)return;persistTimer=setTimeout(function(){saveExtra()},1500)}", "function queuePremiumPersist(){return false}")
+          p=p.replace("function preserveAfterSave(){queuePremiumPersist();setTimeout(function(){saveExtra()},1800)}", "function preserveAfterSave(){}");
+          p=p.replace("function wrapSave(){if(window.invellaSavePublished&&!window.invellaSavePublished.__p25){var f=window.invellaSavePublished;window.invellaSavePublished=async function(id){editId=id||editId;var r=await f.apply(this,arguments);var ok=await saveExtra();if(!ok)console.warn('Invella Premium media was not fully persisted');preserveAfterSave();return r};window.invellaSavePublished.__p25=1}}", "function wrapSave(){}");
+          pf.write_text(p)
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/invella-app.js assets/invella-premium-fix.js
+          git diff --cached --quiet || git commit -m 'fix: unify Invella Premium save pipeline'
+          git push
