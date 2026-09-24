@@ -12,5 +12,12 @@
       "source": "/create/:path*",
       "destination": "/index.html"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/i/anna-maksim-umj8s",
+      "destination": "/i/katya-nastya-umj8s",
+      "permanent": true
+    }
   ]
 }

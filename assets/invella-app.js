@@ -60,16 +60,16 @@ function escapeHtml(v){return String(v).replace(/[&<>"']/g,function(c){return {'
 window.editCloudInvitation=async function(id){var r=await sb.from('invitations').select('*').eq('id',id).single();if(r.error||!r.data)return;currentInvitationId=r.data.id;currentInvitationSlug=r.data.slug;currentEditorPlan=String(r.data.plan||'draft').toLowerCase();template=r.data.template_key||'classic';var d=r.data.content||{};fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});['showProgram','showVenue','showDress','showWishes','showRSVP'].forEach(function(k){if($(k)&&d[k]!=null)$(k).checked=Boolean(d[k])});closeDashboard();$('marketing').classList.add('hidden');$('app').classList.remove('hidden');render();var pb=document.querySelector('.appbar .toolbar .primary');if(pb&&r.data.status==='published'){pb.textContent='Сохранить изменения';pb.onclick=function(){window.invellaSavePublished(id)}}scrollTo(0,0)};window.invellaSavePublished=async function(id){var ok=await cloudSave();if(!ok)return alert('Не удалось сохранить изменения.');alert('Изменения сохранены. Опубликованное приглашение обновлено.')}
 function isPublicPath(){return /^\/i\/[a-z0-9-]+\/?$/.test(location.pathname)}
 function showPublicNotFound(){document.body.innerHTML='<main class="shell section" style="min-height:100vh;display:grid;place-content:center;text-align:center"><div><div class="eyebrow">INVELLA</div><h2>Приглашение не найдено</h2><p class="sub">Ссылка неверна или приглашение больше не опубликовано.</p><a class="primary" href="/" style="display:inline-block;text-decoration:none">На главную</a></div></main>'}
+function showPublicLoadError(){document.body.innerHTML='<main class="shell section" style="min-height:100vh;display:grid;place-content:center;text-align:center"><div><div class="eyebrow">INVELLA</div><h2>Не удалось загрузить приглашение</h2><p class="sub">Проверьте соединение и попробуйте ещё раз.</p><button class="primary" onclick="location.reload()">Повторить</button></div></main>'}
 async function loadPublicInvitation(){
 var m=location.pathname.match(/^\/i\/([a-z0-9-]+)\/?$/);
 if(!m)return false;
 try{
-var resp=await fetch(SUPABASE_URL+'/functions/v1/public-invitation',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({slug:m[1]})});
-var payload=null;
-try{payload=await resp.json()}catch(e){}
-if(!resp.ok||!payload){showPublicNotFound();return true}
+var resp,payload=null,lastError;
+for(var attempt=0;attempt<2;attempt++){try{resp=await fetch(SUPABASE_URL+'/functions/v1/public-invitation',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({slug:m[1]}),cache:'no-store'});if(resp.status===404){showPublicNotFound();return true}if(!resp.ok)throw new Error('HTTP '+resp.status);payload=await resp.json();break}catch(err){lastError=err;if(attempt===0)await new Promise(function(resolve){setTimeout(resolve,500)})}}
+if(!payload)throw lastError||new Error('No invitation response');
 var x=payload.invitation||payload.data||payload;
-if(!x||!x.id||!x.slug||x.slug!==m[1]){showPublicNotFound();return true}
+if(!x||!x.id||!x.slug||x.slug!==m[1])throw new Error('Invalid invitation response')
 var d=x.content&&typeof x.content==='object'?x.content:{};
 template=x.template_key||'classic';
 fields.forEach(function(k){if($(k)&&d[k]!=null)$(k).value=d[k]});
@@ -92,10 +92,11 @@ if(controls)controls.classList.add('hidden');
 if(bar)bar.classList.add('hidden');
 if(editor)editor.style.gridTemplateColumns='1fr';
 render();
+if(typeof window.invellaRenderPublicMedia==='function')window.invellaRenderPublicMedia(x);
 if($('publicLoading'))setTimeout(function(){$('publicLoading').classList.add('hidden')},40);
-if(x.cover_url){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+String(x.cover_url).replace(/"/g,'%22')+'")';$('invHero').style.color='#fff'}
+if(x.cover_url){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+String(x.cover_url).replace('https://lwanymjmbcstvggmhevx.supabase.co/','https://invella.ru/sb/').replace(/"/g,'%22')+'")';$('invHero').style.color='#fff'}
 return true;
-}catch(e){console.error('Invella public invitation:',e);showPublicNotFound();return true}
+}catch(e){console.error('Invella public invitation:',e);showPublicLoadError();return true}
 }
 
 function resetPublicLayout(){var controls=document.querySelector('.controls'),bar=document.querySelector('.appbar'),editor=document.querySelector('.editor');if(controls)controls.classList.remove('hidden');if(bar)bar.classList.remove('hidden');if(editor)editor.style.gridTemplateColumns='';currentInvitationId=null;currentInvitationSlug=null;currentPublicPlan=null}
