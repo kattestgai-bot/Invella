@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-var U='https://lwanymjmbcstvggmhevx.supabase.co',K='sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J',db=window.supabase.createClient(U,K);
+var U=window.location.origin+'/sb',K='sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J',db=window.supabase.createClient(U,K);
 var editId=null,slug='',plan='draft',music='',photos=[],start=0,end=0,cover='';
 var pendingMusic=null,pendingGallery=[],pendingCover=null,saveBusy=false,persistTimer=null;
 function $(x){return document.getElementById(x)}

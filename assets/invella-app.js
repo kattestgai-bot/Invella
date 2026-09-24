@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-var SUPABASE_URL='https://lwanymjmbcstvggmhevx.supabase.co';
+var SUPABASE_URL=window.location.origin+'/sb';
 var SUPABASE_KEY='sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J';
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 var currentUser=null,authMode='login',template='classic',currentInvitationId=null,currentInvitationSlug=null,cloudTimer=null,cloudReady=false,currentPublicPlan=null,currentEditorPlan='draft';

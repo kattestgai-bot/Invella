@@ -1,6 +1,16 @@
 {
   "rewrites": [
-    { "source": "/i/:slug", "destination": "/index.html" },
-    { "source": "/create/:path*", "destination": "/index.html" }
+    {
+      "source": "/sb/:path*",
+      "destination": "https://lwanymjmbcstvggmhevx.supabase.co/:path*"
+    },
+    {
+      "source": "/i/:slug",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/create/:path*",
+      "destination": "/index.html"
+    }
   ]
 }
