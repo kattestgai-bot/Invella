@@ -51,7 +51,7 @@ h1{font-size:clamp(58px,8vw,100px);line-height:.88;margin:20px 0 26px}.hero p{fo
  --bg:#f3eee6;--paper:#fbf8f2;--ink:#17130f;--muted:#756b61;
  --line:rgba(62,47,34,.16);--soft:#e9dfd1;--premium:#8c6b43;--lux:#b79768;
 }
-html{background:#17130f}
+html{background:#f7f2ea}
 body{
  font-family:'Manrope',Arial,sans-serif;
  background:
