@@ -16,7 +16,12 @@
   "redirects": [
     {
       "source": "/i/anna-maksim-umj8s",
-      "destination": "/i/katya-nastya-umj8s",
+      "destination": "/i/katya-nastya",
+      "permanent": true
+    },
+    {
+      "source": "/i/katya-nastya-umj8s",
+      "destination": "/i/katya-nastya",
       "permanent": true
     }
   ]
