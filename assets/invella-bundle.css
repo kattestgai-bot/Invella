@@ -286,7 +286,7 @@ footer{border-top:1px solid rgba(71,53,38,.14)}
 
 /* EDITORIAL invitation */
 .theme-editorial{background:#f1eee8;color:#0d0d0d;text-align:left!important}
-.theme-editorial .inv-hero{min-height:570px!important;background:#e7e2d9!important;text-align:left!important;align-items:flex-start!important;justify-content:flex-end!important;padding:42px 34px!important;border-bottom:10px solid #111;position:relative}
+.theme-editorial .inv-hero{min-height:570px!important;background:#e7e2d9;text-align:left!important;align-items:flex-start!important;justify-content:flex-end!important;padding:42px 34px!important;border-bottom:10px solid #111;position:relative}
 .theme-editorial .inv-hero:after{content:"02";position:absolute;right:22px;top:20px;font:800 120px/.8 Arial,sans-serif;color:rgba(0,0,0,.07);letter-spacing:-.1em}
 .theme-editorial .inv-hero h2{font:800 70px/.75 Arial,sans-serif!important;letter-spacing:-.09em!important;text-transform:uppercase;max-width:340px;margin:0 0 30px!important}
 .theme-editorial .inv-date{font:700 10px Arial,sans-serif!important;letter-spacing:.12em;text-transform:uppercase}
@@ -375,3 +375,6 @@ html.public-route .invitation{margin:0 auto!important}
 .legal-inner{max-width:760px;margin:0 auto;padding:12px 0 60px}
 .legal-inner h1{font-size:38px;margin:18px 0}.legal-inner h2{font-size:22px;margin-top:28px}
 .legal-inner p{line-height:1.6}.legal-back{display:inline-block;margin-bottom:12px;text-decoration:none}
+
+/* Published editorial media */
+.public-route .theme-editorial .inv-hero:after{content:none!important}
