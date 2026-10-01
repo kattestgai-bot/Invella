@@ -93,7 +93,7 @@ module.exports = async function handler(req, res) {
         invitationId
       )}&owner_id=eq.${encodeURIComponent(
         user.id
-      )}&select=id,owner_id`,
+      )}&select=id,owner_id,status`,
       {
         headers: {
           apikey: serviceKey,
@@ -111,6 +111,12 @@ module.exports = async function handler(req, res) {
     ) {
       return res.status(403).json({
         error: "Приглашение не найдено"
+      });
+    }
+
+    if (invitations[0].status === "published" && validatePromoOnly !== true) {
+      return res.status(409).json({
+        error: "Приглашение уже опубликовано. Повторная оплата не требуется."
       });
     }
 

@@ -167,10 +167,10 @@ window.applyPromoCode=async function(){
 if($('promoCode'))$('promoCode').addEventListener('input',function(){if(appliedPromoCode&&this.value.trim().toUpperCase()!==appliedPromoCode){resetPromoPrices();if($('promoMessage'))$('promoMessage').textContent='';}});
 window.selectPlan=async function(plan,price,btn){
 if(!currentUser)return openAuth();
-var saved=await cloudSave();
-if(!saved||!currentInvitationId)return alert('Не удалось сохранить приглашение. Попробуйте ещё раз.');
-if(btn){btn.disabled=true;btn.textContent='Переходим к оплате…'}
+if(btn){if(btn.disabled)return;btn.disabled=true;btn.textContent='Переходим к оплате…'}
 try{
+var saved=await cloudSave();
+if(!saved||!currentInvitationId)throw new Error('Не удалось сохранить приглашение. Попробуйте ещё раз.');
 var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:appliedPromoCode})});
 var data=await resp.json();
 if(!resp.ok||!data.confirmationUrl)throw new Error(data.error||'Не удалось создать платёж');
