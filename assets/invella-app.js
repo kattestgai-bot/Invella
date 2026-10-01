@@ -104,7 +104,7 @@ if(bar)bar.classList.add('hidden');
 if(editor)editor.style.gridTemplateColumns='1fr';
 render();
 renderPublicMedia(x);
-if($('publicLoading'))setTimeout(function(){$('publicLoading').classList.add('hidden')},40);
+if($('publicLoading'))setTimeout(function(){document.documentElement.classList.remove('public-pending');$('publicLoading').classList.add('hidden')},40);
 if(x.cover_url){$('invHero').style.backgroundImage='linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),url("'+String(x.cover_url).replace('https://lwanymjmbcstvggmhevx.supabase.co/','https://invella.ru/sb/').replace(/"/g,'%22')+'")';$('invHero').style.color='#fff'}
 return true;
 }catch(e){console.error('Invella public invitation:',e);showPublicLoadError();return true}
