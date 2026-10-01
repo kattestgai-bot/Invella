@@ -395,11 +395,11 @@ input,select{
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/supabase.min.js?v=20261001-stable-1"></script>
 
 <script>
-const SUPABASE_URL =
-  "https://lwanymjmbcstvggmhevx.supabase.co";
+if(!window.supabase){document.getElementById('loading').textContent='Не удалось загрузить вход. Обновите страницу.';throw new Error('Supabase SDK unavailable')}
+const SUPABASE_URL = location.origin+"/sb";
 
 const SUPABASE_KEY =
   "sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J";
@@ -407,7 +407,12 @@ const SUPABASE_KEY =
 const sb =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_KEY,
+    {global:{fetch:(input,options)=>{
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),20000);
+      return fetch(input,{...options,signal:controller.signal}).finally(()=>clearTimeout(timer));
+    }}}
   );
 
 let invitations = [];
@@ -464,7 +469,8 @@ async function api(body){
         "apikey":SUPABASE_KEY
       },
 
-      body:JSON.stringify(body)
+      body:JSON.stringify(body),
+      signal:AbortSignal.timeout(20000)
     }
   );
 
@@ -508,11 +514,13 @@ async function login(){
     return;
   }
 
-  const {error}=
-    await sb.auth.signInWithPassword({
-      email,
-      password
-    });
+  let error;
+  try{
+    ({error}=await sb.auth.signInWithPassword({email,password}));
+  }catch(e){
+    message("loginMessage","Сервер долго не отвечает. Попробуйте ещё раз.","error");
+    return;
+  }
 
   if(error){
     message(
@@ -544,9 +552,15 @@ async function start(){
   document.getElementById("admin")
     .classList.add("hidden");
 
-  const {
-    data:{session}
-  }=await sb.auth.getSession();
+  let session;
+  try{
+    ({data:{session}}=await sb.auth.getSession());
+  }catch(e){
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+    message("loginMessage","Сервер долго не отвечает. Попробуйте ещё раз.","error");
+    return;
+  }
 
   if(!session){
 
@@ -570,8 +584,6 @@ async function start(){
       .classList.remove("hidden");
 
   }catch(e){
-
-    await sb.auth.signOut();
 
     document.getElementById("loading")
       .classList.add("hidden");
