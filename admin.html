@@ -404,15 +404,35 @@ const SUPABASE_URL = location.origin+"/sb";
 const SUPABASE_KEY =
   "sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J";
 
+function adminFetch(input,options){
+  const url=String(input?.url||input);
+  const login=/\/auth\/v1\/token\?grant_type=password(?:&|$)/.test(url);
+  const upstream=options?.signal;
+  function attempt(target,ms){
+    const controller=new AbortController();
+    const cancel=()=>controller.abort();
+    if(upstream){if(upstream.aborted)controller.abort();else upstream.addEventListener('abort',cancel,{once:true})}
+    const timer=setTimeout(cancel,ms);
+    return fetch(target,{...options,signal:controller.signal}).finally(()=>{
+      clearTimeout(timer);
+      if(upstream)upstream.removeEventListener('abort',cancel);
+    });
+  }
+  if(login&&url.startsWith(SUPABASE_URL+'/auth/')){
+    return attempt(input,12000).catch(error=>{
+      if(upstream?.aborted)throw error;
+      const direct=url.replace(SUPABASE_URL,'https://lwanymjmbcstvggmhevx.supabase.co');
+      return attempt(input instanceof Request?new Request(direct,input):direct,18000);
+    });
+  }
+  return attempt(input,20000);
+}
+
 const sb =
   window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY,
-    {global:{fetch:(input,options)=>{
-      const controller=new AbortController();
-      const timer=setTimeout(()=>controller.abort(),20000);
-      return fetch(input,{...options,signal:controller.signal}).finally(()=>clearTimeout(timer));
-    }}}
+    {global:{fetch:adminFetch}}
   );
 
 let invitations = [];

@@ -3,11 +3,22 @@
 var SUPABASE_URL=window.location.origin+'/sb';
 var SUPABASE_KEY='sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J';
 function timedFetch(input,options){
-  var controller=new AbortController(),upstream=options&&options.signal;
-  var timeout=/\/storage\/v1\//.test(String(input&&input.url||input))?90000:20000;
-  if(upstream){if(upstream.aborted)controller.abort();else upstream.addEventListener('abort',function(){controller.abort()},{once:true})}
-  var timer=setTimeout(function(){controller.abort()},timeout);
-  return fetch(input,Object.assign({},options,{signal:controller.signal})).finally(function(){clearTimeout(timer)});
+  var url=String(input&&input.url||input),upstream=options&&options.signal;
+  var isPasswordLogin=/\/auth\/v1\/token\?grant_type=password(?:&|$)/.test(url);
+  function attempt(target,timeout){
+    var controller=new AbortController(),abortedByUpstream=function(){controller.abort()};
+    if(upstream){if(upstream.aborted)controller.abort();else upstream.addEventListener('abort',abortedByUpstream,{once:true})}
+    var timer=setTimeout(function(){controller.abort()},timeout);
+    return fetch(target,Object.assign({},options,{signal:controller.signal})).finally(function(){clearTimeout(timer);if(upstream)upstream.removeEventListener('abort',abortedByUpstream)});
+  }
+  if(isPasswordLogin&&url.indexOf(SUPABASE_URL+'/auth/')===0){
+    return attempt(input,12000).catch(function(error){
+      if(upstream&&upstream.aborted)throw error;
+      var direct=url.replace(SUPABASE_URL,'https://lwanymjmbcstvggmhevx.supabase.co');
+      return attempt(input instanceof Request?new Request(direct,input):direct,18000);
+    });
+  }
+  return attempt(input,/\/storage\/v1\//.test(url)?90000:20000);
 }
 var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:timedFetch}});
 window.invellaSupabase=sb;
