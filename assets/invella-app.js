@@ -12,10 +12,11 @@ function timedFetch(input,options){
     return fetch(target,Object.assign({},options,{signal:controller.signal})).finally(function(){clearTimeout(timer);if(upstream)upstream.removeEventListener('abort',abortedByUpstream)});
   }
   if(isPasswordLogin&&url.indexOf(SUPABASE_URL+'/auth/')===0){
+    var direct=url.replace(SUPABASE_URL,'https://lwanymjmbcstvggmhevx.supabase.co');
+    var directInput=input instanceof Request?new Request(direct,input.clone()):direct;
     return attempt(input,12000).catch(function(error){
       if(upstream&&upstream.aborted)throw error;
-      var direct=url.replace(SUPABASE_URL,'https://lwanymjmbcstvggmhevx.supabase.co');
-      return attempt(input instanceof Request?new Request(direct,input):direct,18000);
+      return attempt(directInput,18000);
     });
   }
   return attempt(input,/\/storage\/v1\//.test(url)?90000:20000);

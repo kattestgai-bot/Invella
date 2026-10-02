@@ -419,10 +419,11 @@ function adminFetch(input,options){
     });
   }
   if(login&&url.startsWith(SUPABASE_URL+'/auth/')){
+    const direct=url.replace(SUPABASE_URL,'https://lwanymjmbcstvggmhevx.supabase.co');
+    const directInput=input instanceof Request?new Request(direct,input.clone()):direct;
     return attempt(input,12000).catch(error=>{
       if(upstream?.aborted)throw error;
-      const direct=url.replace(SUPABASE_URL,'https://lwanymjmbcstvggmhevx.supabase.co');
-      return attempt(input instanceof Request?new Request(direct,input):direct,18000);
+      return attempt(directInput,18000);
     });
   }
   return attempt(input,20000);
