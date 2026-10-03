@@ -286,6 +286,7 @@ input,select{
             onclick="showTab('promos')">
       Промокоды
     </button>
+    <button id="tabPayments" onclick="showTab('payments')">Оплаты</button>
   </div>
 
   <section id="invitationsTab">
@@ -307,6 +308,20 @@ input,select{
 
     </div>
 
+  </section>
+
+  <section id="paymentsTab" class="hidden">
+    <div class="card">
+      <h2>Сверка оплат</h2>
+      <p class="muted">Проверка операций напрямую в ЮKassa.</p>
+      <div class="grid">
+        <div class="field"><label>С даты</label><input id="paymentsFrom" type="date" value="2026-09-01"></div>
+        <div class="field"><label>По дату включительно</label><input id="paymentsTo" type="date" value="2026-09-02"></div>
+        <div class="field"><label>Сумма, ₽</label><input id="paymentsAmount" type="number" min="0" value="990"></div>
+      </div>
+      <button type="button" onclick="loadPayments()">Найти оплаты</button>
+      <div id="paymentsResult" aria-live="polite"></div>
+    </div>
   </section>
 
   <section id="promosTab" class="hidden">
@@ -643,13 +658,43 @@ function showTab(tab){
     .classList.toggle("hidden",!inv);
 
   document.getElementById("promosTab")
-    .classList.toggle("hidden",inv);
+    .classList.toggle("hidden",tab!=="promos");
+
+  document.getElementById("paymentsTab")
+    .classList.toggle("hidden",tab!=="payments");
 
   document.getElementById("tabInv")
     .classList.toggle("active",inv);
 
   document.getElementById("tabPromo")
-    .classList.toggle("active",!inv);
+    .classList.toggle("active",tab==="promos");
+
+  document.getElementById("tabPayments")
+    .classList.toggle("active",tab==="payments");
+}
+
+async function loadPayments(){
+  const result=document.getElementById('paymentsResult');
+  const from=document.getElementById('paymentsFrom').value;
+  const to=document.getElementById('paymentsTo').value;
+  const amount=document.getElementById('paymentsAmount').value;
+  if(!from||!to){message('paymentsResult','Укажите обе даты','error');return}
+  const button=document.querySelector('#paymentsTab button');
+  button.disabled=true;
+  result.textContent='Проверяем…';
+  try{
+    const token=await getToken();
+    if(!token)throw new Error('Сессия истекла');
+    const q=new URLSearchParams({from:from+'T00:00:00+03:00',to:to+'T23:59:59+03:00',amount});
+    const response=await fetch('/api/admin-payments?'+q,{headers:{Authorization:'Bearer '+token},signal:AbortSignal.timeout(30000)});
+    const data=await response.json();
+    if(!response.ok)throw new Error(data.error||'Не удалось проверить оплаты');
+    result.innerHTML=data.items.length?data.items.map(p=>
+      `<div class="card"><b>${esc(p.amount)} ₽ · ${esc(p.status)}</b><p>${esc(new Date(p.createdAt).toLocaleString('ru-RU',{timeZone:'Europe/Moscow'}))} · ID ${esc(p.id)}</p><p>Приглашение: ${esc(p.invitationId||'не указано')} · тариф: ${esc(p.plan||'не указан')}</p></div>`
+    ).join(''):'<p class="muted">Операций на эту сумму за выбранные даты в подключённом магазине не найдено.</p>';
+    if(data.truncated)result.insertAdjacentHTML('beforeend','<p>Найдено слишком много операций. Уменьшите период.</p>');
+  }catch(e){message('paymentsResult',e.message||'Ошибка проверки','error')}
+  finally{button.disabled=false}
 }
 
 function renderInvitations(){
