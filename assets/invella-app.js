@@ -229,6 +229,7 @@ catch(e){prompt('Скопируйте ссылку:',url)}
 }
 window.closePaymentSuccess=function(){$('paymentSuccessModal').classList.add('hidden');document.body.style.overflow=''}
 window.openPaidInvitation=function(){closePaymentSuccess();if(currentInvitationSlug)location.href='/i/'+currentInvitationSlug;else openDashboard()}
+window.editPaidInvitation=async function(){if(!currentInvitationId){closePaymentSuccess();return openDashboard()}try{await editCloudInvitation(currentInvitationId);closePaymentSuccess()}catch(e){alert(e.message||'Не удалось открыть редактор. Попробуйте через «Мои приглашения».')}}
 async function maybeShowPaymentSuccess(){
 var q=new URLSearchParams(location.search);
 var raw=safeGet('invella_pending_payment'),p=null;
