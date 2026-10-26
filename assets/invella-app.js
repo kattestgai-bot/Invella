@@ -89,10 +89,11 @@ if(!saved)throw new Error('Не удалось сохранить изменен
 var response=await fetch(SUPABASE_URL+'/functions/v1/public-invitation',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({slug:currentInvitationSlug}),cache:'no-store',signal:AbortSignal.timeout(15000)});
 if(!response.ok)throw new Error('Изменения записаны, но гостевая ссылка пока не подтвердилась. Проверьте её через несколько секунд.');
 var body=await response.json(),inv=body.invitation||body.data||body,content=inv.content||{},expected=collectData();
-var matches=Object.keys(expected).every(function(key){return String(content[key])===String(expected[key])});
+var hiddenForPlan=String(inv.plan||'').toLowerCase()==='premium'?[]:['backgroundCustomUrl','backgroundCustomPath','premiumMusicUrl','premiumGallery','premiumTimer','showPremiumTimer'];
+var matches=Object.keys(expected).every(function(key){return hiddenForPlan.indexOf(key)!==-1||String(content[key])===String(expected[key])});
 if(typeof window.invellaBeforeCloudSave==='function'){
 var extra=await window.invellaBeforeCloudSave({id:id,slug:currentInvitationSlug}),premium=extra.content||extra;
-matches=matches&&Object.keys(premium).every(function(key){return JSON.stringify(content[key]===undefined?null:content[key])===JSON.stringify(premium[key]===undefined?null:premium[key])});
+matches=matches&&Object.keys(premium).every(function(key){return hiddenForPlan.indexOf(key)!==-1||JSON.stringify(content[key]===undefined?null:content[key])===JSON.stringify(premium[key]===undefined?null:premium[key])});
 }
 if(!matches)throw new Error('Изменения записаны, но гостевая версия ещё не обновилась. Проверьте ссылку через несколько секунд.');
 alert('Изменения сохранены и проверены по гостевой ссылке.');
