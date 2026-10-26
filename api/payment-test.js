@@ -66,8 +66,8 @@ module.exports = async function handler(req, res) {
       if (!login.ok || !login.data?.user?.id || login.data.user.app_metadata?.payment_qa_run !== cfg.qaRun) throw new Error('QA sign-in failed: ' + login.status);
       const owner = login.data.user.id;
       const fixture = { owner_id: owner, title: 'Проверка оплаты Invella', slug: 'qa-payment-' + cfg.qaRun, template_key: 'classic', status: 'draft', plan: 'draft', content: { names: 'Проверка & Оплата', date: '2026-11-26', time: '15:00', message: 'Тестовое приглашение. Проверяем оплату и сохранение.', qa_run: cfg.qaRun } };
-      const saved = await json(SB + '/rest/v1/invitations?on_conflict=slug', { method: 'POST', headers: { ...adminHeaders, Prefer: 'resolution=ignore-duplicates,return=representation' }, body: JSON.stringify(fixture) });
-      if (!saved.ok) throw new Error('QA invitation creation failed: ' + saved.status);
+      const saved = await json(SB + '/rest/v1/invitations?on_conflict=slug', { method: 'POST', headers: { apikey: PUBLIC_KEY, Authorization: 'Bearer ' + login.data.access_token, 'Content-Type': 'application/json', Prefer: 'resolution=ignore-duplicates,return=representation' }, body: JSON.stringify(fixture) });
+      if (!saved.ok) throw new Error('QA invitation creation failed: ' + saved.status + ' ' + (saved.data?.message || ''));
       return res.status(200).json({ session: { access_token: login.data.access_token, refresh_token: login.data.refresh_token }, invitationId: saved.data?.[0]?.id || null, ownerId: owner, slug: fixture.slug });
     }
     const user = await qaUser();
