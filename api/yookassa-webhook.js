@@ -6,7 +6,8 @@ const NORMAL_PRICES = {
   premium: 249000
 };
 
-module.exports = async function handler(req, res) {
+function withConfig(config = {}) {
+return async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -25,8 +26,8 @@ module.exports = async function handler(req, res) {
 
     const paymentId = event.object.id;
 
-    const shopId = process.env.YOOKASSA_SHOP_ID;
-    const secretKey = process.env.YOOKASSA_SECRET_KEY;
+    const shopId = config.shopId || process.env.YOOKASSA_SHOP_ID;
+    const secretKey = config.secretKey || process.env.YOOKASSA_SECRET_KEY;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!paymentId || !shopId || !secretKey || !serviceKey) {
@@ -58,6 +59,11 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({
         error: "Payment verification failed"
       });
+    }
+
+    if ((payment.test === true) !== (config.testMode === true) ||
+        (config.qaRun && payment.metadata?.qa_run !== config.qaRun)) {
+      return res.status(400).json({ error: "Неверный режим платежа" });
     }
 
     const plan = payment.metadata?.plan;
@@ -289,3 +295,6 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+}
+module.exports = withConfig();
+module.exports.withConfig = withConfig;

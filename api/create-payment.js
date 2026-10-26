@@ -15,7 +15,8 @@ const PLANS = {
   }
 };
 
-module.exports = async function handler(req, res) {
+function withConfig(config = {}) {
+return async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed"
@@ -38,8 +39,8 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    const shopId = process.env.YOOKASSA_SHOP_ID;
-    const secretKey = process.env.YOOKASSA_SECRET_KEY;
+    const shopId = config.shopId || process.env.YOOKASSA_SHOP_ID;
+    const secretKey = config.secretKey || process.env.YOOKASSA_SECRET_KEY;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!serviceKey) {
@@ -298,13 +299,14 @@ module.exports = async function handler(req, res) {
             type: "redirect",
 
             return_url:
-              "https://invella.ru/?payment=success"
+              config.returnUrl || "https://invella.ru/?payment=success"
           },
 
           description:
             selected.description,
 
           metadata: {
+            ...(config.qaRun ? { qa_run: config.qaRun } : {}),
             plan,
 
             invitationId,
@@ -327,6 +329,10 @@ module.exports = async function handler(req, res) {
 
     const payment =
       await paymentResponse.json();
+
+    if (paymentResponse.ok && (payment.test === true) !== (config.testMode === true)) {
+      return res.status(502).json({ error: "Неверный режим платёжного магазина" });
+    }
 
     if (!paymentResponse.ok) {
       console.error(
@@ -381,3 +387,6 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+}
+module.exports = withConfig();
+module.exports.withConfig = withConfig;

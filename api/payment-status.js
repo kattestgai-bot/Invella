@@ -1,7 +1,8 @@
 const SUPABASE_URL = "https://lwanymjmbcstvggmhevx.supabase.co";
 const NORMAL_PRICES = { basic: 99000, pro: 149000, premium: 249000 };
 
-module.exports = async function handler(req, res) {
+function withConfig(config = {}) {
+return async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -13,8 +14,8 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Не указан ID платежа" });
     }
 
-    const shopId = process.env.YOOKASSA_SHOP_ID;
-    const secretKey = process.env.YOOKASSA_SECRET_KEY;
+    const shopId = config.shopId || process.env.YOOKASSA_SHOP_ID;
+    const secretKey = config.secretKey || process.env.YOOKASSA_SECRET_KEY;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!shopId || !secretKey || !serviceKey) {
@@ -64,6 +65,11 @@ module.exports = async function handler(req, res) {
       return res.status(response.status).json({
         error: "Не удалось проверить платёж"
       });
+    }
+
+    if ((payment.test === true) !== (config.testMode === true) ||
+        (config.qaRun && payment.metadata?.qa_run !== config.qaRun)) {
+      return res.status(400).json({ error: "Неверный режим платежа" });
     }
 
     const invitationId = payment.metadata?.invitationId || null;
@@ -155,3 +161,6 @@ module.exports = async function handler(req, res) {
     });
   }
 };
+}
+module.exports = withConfig();
+module.exports.withConfig = withConfig;
