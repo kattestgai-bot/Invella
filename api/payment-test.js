@@ -61,7 +61,7 @@ module.exports = async function handler(req, res) {
       const email = 'invella-payment-qa-' + cfg.qaRun + '@example.invalid';
       const password = crypto.createHash('sha256').update(gate + ':qa-password').digest('base64url');
       const created = await json(SB + '/auth/v1/admin/users', { method: 'POST', headers: adminHeaders, body: JSON.stringify({ email, password, email_confirm: true, app_metadata: { payment_qa_run: cfg.qaRun } }) });
-      if (!created.ok && created.data?.code !== 'email_exists') throw new Error('QA user creation failed: ' + created.status);
+      if (!created.ok && created.status !== 422) throw new Error('QA user creation failed: ' + created.status);
       const login = await json(SB + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { apikey: PUBLIC_KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
       if (!login.ok || !login.data?.user?.id || login.data.user.app_metadata?.payment_qa_run !== cfg.qaRun) throw new Error('QA sign-in failed: ' + login.status);
       const owner = login.data.user.id;
