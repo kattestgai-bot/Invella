@@ -278,7 +278,7 @@ footer{border-top:1px solid rgba(71,53,38,.14)}
 .theme-classic{background:#fbf7ef;color:#2e241d;border:1px solid #d6c8b8}
 .theme-classic:before{content:"";position:absolute;inset:13px;border:1px solid rgba(109,82,60,.22);z-index:5;pointer-events:none}
 .theme-classic .inv-hero{min-height:570px!important;background:linear-gradient(145deg,#eee3d6,#f8f2e9)!important;padding:72px 44px!important}
-.theme-classic .inv-hero:before{content:"A  ·  M";display:grid;place-items:center;width:70px;height:70px;border:1px solid #9a8068;border-radius:50%;font:16px Georgia,serif;letter-spacing:.12em;margin:0 auto 52px}
+.theme-classic .inv-hero:before{content:attr(data-initials);display:grid;place-items:center;width:70px;height:70px;border:1px solid #9a8068;border-radius:50%;font:16px Georgia,serif;letter-spacing:.12em;margin:0 auto 52px}
 .theme-classic .inv-hero h2{font:400 64px/.8 'Cormorant Garamond',Georgia,serif!important;letter-spacing:-.03em;margin:10px 0 35px!important}
 .theme-classic .inv-date{font:10px Arial,sans-serif!important;letter-spacing:.22em;text-transform:uppercase;border-top:1px solid #ad9988;padding-top:18px}
 .theme-classic .block{padding:54px 42px!important;border-top:1px solid #dfd4c7!important;background:#fbf7ef}
@@ -378,3 +378,7 @@ html.public-route .invitation{margin:0 auto!important}
 
 /* Published editorial media */
 .public-route .theme-editorial .inv-hero:after{content:none!important}
+
+/* Uploaded covers must override each theme's default background. */
+.invitation .inv-hero.has-cover{background-image:var(--inv-cover)!important;background-size:cover!important;background-position:center!important;color:#fff!important}
+.invitation .inv-hero.has-cover h2,.invitation .inv-hero.has-cover .inv-date{color:#fff!important}
