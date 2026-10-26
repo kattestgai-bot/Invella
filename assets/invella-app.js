@@ -2,7 +2,6 @@
 'use strict';
 var SUPABASE_URL=window.location.origin+'/sb';
 var SUPABASE_KEY='sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J';
-function paymentApi(action){return currentUser&&currentUser.app_metadata&&currentUser.app_metadata.payment_qa_run&&safeGet('invella_payment_qa')==='1'?'/api/payment-test?action='+action:'/api/'+action}
 function timedFetch(input,options){
   var url=String(input&&input.url||input),upstream=options&&options.signal;
   var isPasswordLogin=/\/auth\/v1\/token\?grant_type=password(?:&|$)/.test(url);
@@ -182,7 +181,7 @@ window.applyPromoCode=async function(){
     var base={basic:990,pro:1490,premium:2490};
     var plans=['basic','pro','premium'];
     var results=await Promise.all(plans.map(async function(plan){
-      var resp=await fetch(paymentApi('create-payment'),{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:code,validatePromoOnly:true})});
+      var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:code,validatePromoOnly:true})});
       var data={};try{data=await resp.json()}catch(e){}
       return {plan:plan,ok:resp.ok&&data.validPromo===true,data:data};
     }));
@@ -203,7 +202,7 @@ if(btn){if(btn.disabled)return;btn.disabled=true;btn.textContent='Переход
 try{
 var saved=await cloudSave();
 if(!saved||!currentInvitationId)throw new Error('Не удалось сохранить приглашение. Попробуйте ещё раз.');
-var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');var resp=await fetch(paymentApi('create-payment'),{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:appliedPromoCode})});
+var sess=await sb.auth.getSession(),token=sess.data&&sess.data.session&&sess.data.session.access_token;if(!token)throw new Error('Сессия истекла. Войдите в аккаунт ещё раз.');var resp=await fetch('/api/create-payment',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({plan:plan,invitationId:currentInvitationId,promoCode:appliedPromoCode})});
 var data=await resp.json();
 if(!resp.ok||!data.confirmationUrl)throw new Error(data.error||'Не удалось создать платёж');
 safeSet('invella_pending_payment',JSON.stringify({paymentId:data.paymentId,plan:plan,invitationId:currentInvitationId}));
@@ -243,7 +242,7 @@ try{
 var sess=await sb.auth.getSession();
 var token=sess.data&&sess.data.session&&sess.data.session.access_token;
 if(!token)return;
-var resp=await fetch(paymentApi('payment-status'),{
+var resp=await fetch('/api/payment-status',{
 method:'POST',
 headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
 body:JSON.stringify({paymentId:p.paymentId})
@@ -256,13 +255,14 @@ if(data.slug)currentInvitationSlug=data.slug;
 if(!data.published){
   for(var attempt=0;attempt<6&&!data.published;attempt++){
     await new Promise(function(resolve){setTimeout(resolve,1200)});
-    var retry=await fetch(paymentApi('payment-status'),{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentId:p.paymentId})});
+    var retry=await fetch('/api/payment-status',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({paymentId:p.paymentId})});
     if(retry.ok)data=await retry.json();
     if(data.slug)currentInvitationSlug=data.slug;
   }
 }
 var plan=data.plan||p.plan,labels={basic:'Базовый',pro:'Pro',extended:'Pro',premium:'Premium'};
 $('paymentSuccessText').textContent=data.published?'Тариф '+(labels[plan]||plan)+' успешно оплачен. Ваше приглашение опубликовано.':'Оплата прошла. Публикация приглашения завершается — оно появится в «Моих приглашениях» через несколько секунд.';
+if($('paymentRsvpHint'))$('paymentRsvpHint').classList.toggle('hidden',!['pro','premium'].includes(String(plan||'').toLowerCase()));
 if(window.ym){try{ym(112266204,'reachGoal','payment_success',{plan:plan||'',payment_id:p.paymentId||''});}catch(e){}}
 $('paymentSuccessModal').classList.remove('hidden');
 document.body.style.overflow='hidden';
