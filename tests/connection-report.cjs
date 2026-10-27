@@ -14,7 +14,7 @@ try {
   for (const mutate of [r => { r.headers.origin = 'https://other.invalid'; }, r => { r.method = 'GET'; }, r => { r.body.checks = []; }, r => { r.body.checks[0].status = 'user supplied text'; }, r => { r.headers['content-length'] = '5000'; }, r => { r.body = '{'; }]) {
     req = request(); mutate(req); res = response(); handler(req, res); assert.ok(res.code >= 400); assert.equal(logs.length, 2);
   }
-  req=request();req.body={phase:'shell',stage:'failed',build:'0123456789abcdef',code:503,state:'interactive',shell:true,small:true,modules:[true,false,false,false],password:'DO_NOT_LOG'};res=response();handler(req,res);assert.equal(res.code,201);assert.ok(logs[2].includes('503'));assert.ok(!logs[2].includes('DO_NOT_LOG'));
+  req=request();req.body={phase:'shell',stage:'failed',build:'0123456789abcdef',code:503,asset:'sdk',reason:'http',state:'interactive',shell:true,small:true,modules:[true,false,false,false],password:'DO_NOT_LOG'};res=response();handler(req,res);assert.equal(res.code,201);assert.ok(logs[2].includes('503'));assert.ok(logs[2].includes('"asset":"sdk"'));assert.ok(!logs[2].includes('DO_NOT_LOG'));
   req.body.stage='untrusted error message';res=response();handler(req,res);assert.equal(res.code,400);assert.equal(logs.length,3);
 } finally { console.info = originalLog; }
 console.log('PASS: automatic diagnostic reports, partial transfers, bounded validation, ignored private/extra fields');

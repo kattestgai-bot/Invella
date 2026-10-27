@@ -14,7 +14,8 @@ module.exports = async function startupAssets(req, res) {
   if (req.headers.origin && req.headers.origin !== ownOrigin) return res.status(403).json({ error: 'Origin not allowed' });
   let body = req.body;
   try { if (typeof body === 'string') body = JSON.parse(body); } catch { return res.status(400).json({ error: 'Invalid JSON' }); }
-  const modern=body&&body.protocol===2,size=modern?384:CHUNK_BYTES;
+  const modern=body&&body.protocol===2,size=modern?(body.chunkSize===undefined?384:body.chunkSize):CHUNK_BYTES;
+  if(modern&&![384,4096].includes(size))return res.status(400).json({error:'Invalid chunk size'});
   if (!body || (body.protocol!==undefined&&body.protocol!==2) || !Object.prototype.hasOwnProperty.call(FILES, body.asset) || !Number.isInteger(body.offset) || body.offset < 0 || body.offset % size !== 0) return res.status(400).json({ error: 'Invalid asset or offset' });
   try {
     if(modern){

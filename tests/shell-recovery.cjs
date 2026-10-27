@@ -22,9 +22,9 @@ function runtime(options={}){
   if(this.url==='/api/connection-report'){reports.push(body);this.status=201;this.responseText='{}';return this.onload()}
   if(this.method==='GET'){this.status=200;return this.ontimeout()}
   if(state.fail){this.status=503;return this.onload()}
-  const bytes=body.encoding==='gzip'?gzipSync(Buffer.from(assetTexts[body.asset])):Buffer.from(assetTexts[body.asset]),chunk=bytes.subarray(body.offset,body.offset+384);
+  const size=body.chunkSize||384,bytes=body.encoding==='gzip'?gzipSync(Buffer.from(assetTexts[body.asset])):Buffer.from(assetTexts[body.asset]),chunk=bytes.subarray(body.offset,body.offset+size);
   this.responseText=JSON.stringify({asset:body.asset,offset:body.offset,bytes:chunk.length,total:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex'),encoding:body.encoding,build,data:chunk.toString('base64')});
-  assert.ok(Buffer.byteLength(this.responseText)<1024);this.status=200;this.onload();
+  assert.ok(Buffer.byteLength(this.responseText)<6144);this.status=200;this.onload();
  });};
  const config={build,page:'main',assets:Object.fromEntries(Object.keys(texts).map(key=>[key,'/'+key]))};
  context=vm.createContext({window,document,location:{search:options.small?'?delivery=small':''},XMLHttpRequest:XHR,Promise,Number,Date,Uint8Array,Array,JSON,TextDecoder,Response,Blob,DecompressionStream:options.legacy?undefined:DecompressionStream,atob,setInterval,clearInterval,setTimeout:()=>0});
@@ -35,5 +35,6 @@ function runtime(options={}){
  for(const legacy of [false,true]){const r=runtime({legacy});await r.window.invellaRetryBoot();assert.equal(r.window.invellaReady,true);assert.equal(r.window.invellaSmallDelivery,true,'Recovered sessions also use the compatible transport for account reads');assert.equal(r.window.invellaPremiumReady,true);assert.ok(r.nodes.app);assert.equal(r.nodes.authEmail.value,'kept@example.invalid');assert.equal(r.nodes.authPassword.value,'preserved-test-value');assert.ok(r.calls.some(c=>c.body?.protocol===2));assert.ok(r.reports.some(x=>x.stage==='ready'&&x.small));}
  const waiting=runtime({waitingAccount:true,small:true}),choice=waiting.window.chooseTemplate('classic');await waiting.window.invellaRetryBoot();assert.equal(waiting.window.chosen,undefined);waiting.window.releaseAccount();await choice;assert.equal(waiting.window.chosen,'classic');
  const r=runtime({fail:true,small:true});await r.window.invellaRetryBoot();assert.notEqual(r.window.invellaReady,true);assert.ok(r.reports.some(x=>x.stage==='failed'&&x.code===503),'Keep actual HTTP error codes');r.state.fail=false;await r.window.invellaRetryBoot();assert.equal(r.window.invellaReady,true);
- console.log('PASS: stalled 200 responses recover via sub-1-KiB XHR, gzip/older browser decoding, unchanged credentials, actual failure code and retry');
+ assert.ok(r.reports.some(x=>x.stage==='failed'&&x.asset==='styles'&&x.reason==='http'),'A failed module and reason must be visible without relying on remote logs');
+ console.log('PASS: stalled 200 responses recover over bounded compressed XHR, gzip/older browser decoding, unchanged credentials, actual module/failure code and retry');
 })().catch(e=>{console.error(e);process.exitCode=1});

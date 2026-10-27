@@ -8,5 +8,8 @@
   "scripts": {
     "build": "node scripts/build.cjs",
     "test": "node tests/run.cjs"
+  },
+  "devDependencies": {
+    "terser": "5.51.2"
   }
 }

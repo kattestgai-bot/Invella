@@ -14,10 +14,12 @@ module.exports = function connectionReport(req, res) {
     if (!body || Buffer.byteLength(JSON.stringify(body)) > 4096) return res.status(400).json({ error: 'Invalid report' });
   } catch { return res.status(400).json({ error: 'Invalid JSON' }); }
   if(body.phase==='shell'){
-    const stages=new Set(['early','head','start','waiting','ready','failed','script-error','click']);
+    const stages=new Set(['early','head','start','waiting','ready','failed','script-error','click','auth-failed']);
     const actions=new Set(['','openAuth','closeAuth','openTemplates','chooseTemplate','setAuthMode','togglePassword','submitAuth','forgotPassword','login']);
-    if(!stages.has(body.stage)||!actions.has(body.action||'')||!/^[a-f0-9]{16}$/.test(body.build||'')||!Number.isInteger(body.code)||!(body.code===0||(body.code>=100&&body.code<=599))||!Array.isArray(body.modules)||body.modules.length!==4||body.modules.some(v=>typeof v!=='boolean')||!['loading','interactive','complete'].includes(body.state)||typeof body.shell!=='boolean')return res.status(400).json({error:'Invalid shell report'});
-    const id=randomBytes(5).toString('hex');console.info('Invella shell check',JSON.stringify({id,build:body.build,stage:body.stage,action:body.action||'',code:body.code,modules:body.modules,shell:body.shell,state:body.state,small:body.small===true}));return res.status(201).json({ok:true,id});
+    const assets=new Set(['','styles','sdk','network','app','premium','fragment','admin','auth']);
+    const reasons=new Set(['','http','network','timeout','metadata','chunk','length','deadline','integrity','sdk','app','editor','admin','incomplete page','format','aborted','session','unknown']);
+    if(!stages.has(body.stage)||!actions.has(body.action||'')||!assets.has(body.asset||'')||!reasons.has(body.reason||'')||!/^[a-f0-9]{16}$/.test(body.build||'')||!Number.isInteger(body.code)||!(body.code===0||(body.code>=100&&body.code<=599))||!Array.isArray(body.modules)||body.modules.length!==4||body.modules.some(v=>typeof v!=='boolean')||!['loading','interactive','complete'].includes(body.state)||typeof body.shell!=='boolean')return res.status(400).json({error:'Invalid shell report'});
+    const id=randomBytes(5).toString('hex');console.info('Invella shell check',JSON.stringify({id,build:body.build,stage:body.stage,action:body.action||'',code:body.code,asset:body.asset||'',reason:body.reason||'',modules:body.modules,shell:body.shell,state:body.state,small:body.small===true}));return res.status(201).json({ok:true,id});
   }
   const startup = body.phase === 'startup';
   const keys = startup ? ['styles', 'auth-sdk', 'app', 'media-editor'] : KEYS;

@@ -2,11 +2,11 @@
   'use strict';
   var build = '__INVELLA_BUILD__', seen = {};
   function node(id) { return document.getElementById(id); }
-  function report(stage, action) {
+  function report(stage, action, detail) {
     try {
       var r = new XMLHttpRequest(); r.open('POST', '/api/connection-report', true); r.timeout = 5000;
       r.setRequestHeader('Content-Type', 'application/json');
-      r.send(JSON.stringify({phase:'shell',stage:stage,build:build,action:action||'',code:0,state:document.readyState,
+      r.send(JSON.stringify({phase:'shell',stage:stage,build:build,action:action||'',code:detail&&detail.code||0,asset:detail&&detail.asset||'',reason:detail&&detail.reason||'',state:document.readyState,
         shell:!!node('invellaShellReady'),small:false,modules:[!!node('invellaCriticalStyles'),!!(window.supabase&&window.supabase.createClient),window.invellaReady===true,window.invellaPremiumReady===true]}));
     } catch (e) {}
   }

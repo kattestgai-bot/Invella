@@ -1,6 +1,8 @@
 const {createHash}=require('node:crypto');
 const fs=require('node:fs');
 const path=require('node:path');
+const {minify_sync}=require('terser');
+function script(text){return minify_sync(text,{ecma:2017,compress:{passes:2},mangle:true,format:{comments:false}}).code;}
 function extract(html,id){
  const match=new RegExp('<(div|section)\\b[^>]*\\bid="'+id+'"[^>]*>').exec(html);
  if(!match)throw Error('Missing fragment '+id);
@@ -53,7 +55,8 @@ function build(root){
  for(const [page,input]of [['index.html',main],['admin.html',admin]]){
   let html=controls(input),keys=page==='index.html'?['styles','sdk','network','app','premium','fragment']:['sdk','network','admin'];
   const config={build:buildId,page:page==='index.html'?'main':'admin',assets:Object.fromEntries(keys.map(key=>[key,'/'+files[key]]))};
-  const early=read('assets/invella-early.js').replace('__INVELLA_BUILD__',buildId),shell=read('assets/invella-shell.js').replace('__INVELLA_BOOT_CONFIG__',JSON.stringify(config));
+  const early=script(read('assets/invella-early.js').replace('__INVELLA_BUILD__',buildId)),shell=script(read('assets/invella-shell.js').replace('__INVELLA_BOOT_CONFIG__',JSON.stringify(config)));
+  if(page==='index.html')html=html.replace('</head>','<script id="invellaAuth">'+script(read('assets/invella-auth.js'))+'</script></head>');
   html=html.replace('{{INVELLA_CSS}}',critical(read(files.styles),html)).replace('id="invellaLoadedStyles"','id="invellaCriticalStyles"');
   html=html.replace('<meta charset="utf-8">','<meta charset="utf-8"><script id="invellaEarly">'+early+'</script>');
   if(!html.includes('id="invellaEarly"'))html=html.replace('<head>','<head><script id="invellaEarly">'+early+'</script>');
