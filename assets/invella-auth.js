@@ -39,6 +39,7 @@
     if(pending)return pending;
     window.invellaEarlyAuthActive=true;button.disabled=true;button.textContent='Подождите…';
     pending=Promise.resolve().then(operation).catch(function(error){
+      if(!error.reason)error=failure('network',error.status);
       message(errorText(error),false);
       if(window.invellaEarlyReport)window.invellaEarlyReport('auth-failed','',{asset:'auth',reason:error.reason||'unknown',code:error.status||0});
     }).then(function(){

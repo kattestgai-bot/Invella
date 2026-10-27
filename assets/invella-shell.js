@@ -96,7 +96,7 @@
         if (!window.invellaPremiumReady) execute(texts.premium, 'invellaEditor');
         if (!window.invellaPremiumReady) throw new Error('editor');
         ready = true; if (window.invellaPendingAuthMode) window.setAuthMode(window.invellaPendingAuthMode); notice('', false); report('ready');
-      } catch (error) { var reasons=['http','network','timeout','metadata','chunk','length','deadline','integrity','sdk','app','editor','admin','incomplete page'],reason=reasons.indexOf(error.message)!==-1?error.message:'format';error.message=reason;notice('Не удалось загрузить редактор. Код: '+(error.asset||'page')+'/'+reason+(error.status?'/'+error.status:'')+'. Нажмите «Повторить».', true); report('failed', error); throw error; }
+      } catch (error) { var reasons=['http','network','timeout','metadata','chunk','length','deadline','integrity','sdk','app','editor','admin','incomplete page'],reason=reasons.indexOf(error.message)!==-1?error.message:'format';notice('Не удалось загрузить редактор. Код: '+(error.asset||'page')+'/'+reason+(error.status?'/'+error.status:'')+'. Нажмите «Повторить».', true); report('failed', {asset:error.asset,message:reason,status:error.status}); throw error; }
       finally { running = null; }
     })(); return running;
   }
