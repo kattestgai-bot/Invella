@@ -40,5 +40,15 @@ function editor() {
   assert.equal(await fresh.window.invellaAfterCloudSave({ id: 'new-invitation' }), true, 'The first save must flush files after creating the invitation');
   await fresh.window.invellaBeforeCloudSave({ id: 'new-invitation' });
   assert.match(fresh.nodes.backgroundCustomUrl.value, /new-invitation\/background-/);
-  console.log('PASS: unblurred fragment inputs, failed-upload retry, background persistence, first-save media flush');
+  const mediaNodes={},created=[];
+  const stage={appendChild(node){mediaNodes[node.id]=node;}};
+  const mediaWindow={location:{origin:'https://example.invalid'},invellaMediaUrl:value=>value.replace('https://example.invalid/sb/','https://lwanymjmbcstvggmhevx.supabase.co/')};
+  const mediaDocument={querySelector:()=>stage,body:stage,createElement(tag){const node={style:{},getAttribute(name){return this[name];},pause(){this.paused=true;},remove(){delete mediaNodes[this.id];}};if(tag==='audio')created.push(node);return node;}};
+  const renderSource=source.slice(source.indexOf('function render(){'),source.indexOf('function toggleAudio('));
+  const urlSource=source.match(/function publicMediaUrl\(u\)\{[^\n]+\}/)[0];
+  const context=vm.createContext({window:mediaWindow,document:mediaDocument,$:id=>mediaNodes[id]||null,photos:[],cover:'',music:'https://example.invalid/sb/storage/v1/object/public/invitation-media/fixture.mp3',removeEditorialNumber(){},enforceEnd(){},toggleAudio(){}});
+  vm.runInContext(urlSource+'\n'+renderSource+'\nrender();',context);
+  const audio=mediaNodes.invAudio;audio.currentTime=5;vm.runInContext('render();',context);
+  assert.equal(created.length,1,'Switching the public media delivery origin must not recreate music on every render');assert.equal(mediaNodes.invAudio,audio);assert.equal(audio.currentTime,5);
+  console.log('PASS: unblurred fragment inputs, failed-upload retry, background persistence, first-save media flush, stable music across media delivery paths');
 })().catch(error => { console.error(error); process.exitCode = 1; });
