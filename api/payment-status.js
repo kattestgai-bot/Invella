@@ -1,8 +1,10 @@
+const serverFetch = require('../lib/server-fetch');
 const SUPABASE_URL = "https://lwanymjmbcstvggmhevx.supabase.co";
 const NORMAL_PRICES = { basic: 99000, pro: 149000, premium: 249000 };
 
 function withConfig(config = {}) {
 return async function handler(req, res) {
+  res.setHeader('Cache-Control','no-store');
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -29,7 +31,7 @@ return async function handler(req, res) {
       return res.status(401).json({ error: "Войдите в аккаунт ещё раз" });
     }
 
-    const userResponse = await fetch(
+    const userResponse = await serverFetch(
       `${SUPABASE_URL}/auth/v1/user`,
       {
         headers: {
@@ -48,7 +50,7 @@ return async function handler(req, res) {
     }
 
     // Получаем реальный платёж непосредственно у платёжного провайдера.
-    const response = await fetch(
+    const response = await serverFetch(
       `https://api.yookassa.ru/v3/payments/${encodeURIComponent(paymentId)}`,
       {
         headers: {
@@ -83,14 +85,14 @@ return async function handler(req, res) {
       });
     }
 
-    if (!NORMAL_PRICES[plan]) {
+    if (!Object.hasOwn(NORMAL_PRICES,plan)) {
       return res.status(400).json({ error: "Неизвестный тариф платежа" });
     }
 
     let published = false;
     let slug = null;
 
-    const ir = await fetch(
+    const ir = await serverFetch(
       `${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(
         invitationId
       )}&owner_id=eq.${encodeURIComponent(
@@ -121,27 +123,15 @@ return async function handler(req, res) {
           amountMinor !== expectedMinor || expectedMinor < 100 || expectedMinor > NORMAL_PRICES[plan]) {
         return res.status(400).json({ error: "Сумма платежа не совпадает с тарифом" });
       }
-      const headers = {
-        "Content-Type": "application/json", apikey: serviceKey,
-        Authorization: `Bearer ${serviceKey}`
-      };
-      const saved = await fetch(`${SUPABASE_URL}/rest/v1/payments?on_conflict=provider_payment_id`, {
-        method: "POST", headers: { ...headers, Prefer: "resolution=ignore-duplicates,return=minimal" },
-        body: JSON.stringify({ owner_id: user.id, invitation_id: invitationId,
-          provider: "yookassa", provider_payment_id: payment.id, plan_key: plan,
-          amount_minor: amountMinor, currency: "RUB", status: "succeeded",
-          confirmed_at: new Date().toISOString() })
+      const confirmed = await serverFetch(`${SUPABASE_URL}/rest/v1/rpc/confirm_invella_payment`, {
+        method: 'POST', headers: { 'Content-Type':'application/json', apikey:serviceKey, Authorization:`Bearer ${serviceKey}` },
+        body: JSON.stringify({p_payment_id:payment.id,p_owner_id:user.id,p_invitation_id:invitationId,p_plan:plan,
+          p_amount_minor:amountMinor,p_currency:'RUB',p_promo_id:payment.metadata?.promoId||null,
+          p_provider:config.testMode===true?'yookassa_test':'yookassa'})
       });
-      if (!saved.ok) throw new Error(`Payment record failed: ${saved.status}`);
-      if (!published) {
-        const updated = await fetch(`${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(invitationId)}&owner_id=eq.${encodeURIComponent(user.id)}`, {
-          method: "PATCH", headers: { ...headers, Prefer: "return=minimal" },
-          body: JSON.stringify({ plan, status: "published", preview_published: false,
-            published_at: new Date().toISOString() })
-        });
-        if (!updated.ok) throw new Error(`Invitation publish failed: ${updated.status}`);
-        published = true;
-      }
+      const result=await confirmed.json();
+      if(!confirmed.ok)throw new Error('Payment confirmation failed: '+confirmed.status);
+      return res.status(200).json(result);
     }
 
     return res.status(200).json({

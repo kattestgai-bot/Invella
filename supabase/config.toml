@@ -1,0 +1,8 @@
+[functions.public-invitation]
+verify_jwt = false
+
+[functions.admin-panel]
+verify_jwt = true
+
+[functions.admin-activate-invitation]
+verify_jwt = true

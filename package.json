@@ -1,0 +1,12 @@
+{
+  "name": "invella",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "test": "node tests/run.cjs"
+  }
+}

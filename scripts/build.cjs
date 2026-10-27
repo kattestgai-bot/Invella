@@ -9,7 +9,8 @@ const sources = {
   INVELLA_SDK: read('supabase.min.js'),
   INVELLA_NETWORK: read('assets/invella-network.js'),
   INVELLA_APP: read('assets/invella-app.js'),
-  INVELLA_EDITOR: read('assets/invella-premium-fix.js')
+  INVELLA_EDITOR: read('assets/invella-premium-fix.js'),
+  INVELLA_READY: read('assets/invella-ready.js')
 };
 for (const page of ['index.html', 'admin.html']) {
   const html = read('src/' + page).replace(/\{\{(INVELLA_[A-Z]+)\}\}/g, (_, key) => {

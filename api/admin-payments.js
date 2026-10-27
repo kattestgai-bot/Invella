@@ -1,3 +1,4 @@
+const serverFetch = require('../lib/server-fetch');
 const SUPABASE_URL = 'https://lwanymjmbcstvggmhevx.supabase.co';
 
 module.exports = async function handler(req, res) {
@@ -10,12 +11,12 @@ module.exports = async function handler(req, res) {
     const shopId = process.env.YOOKASSA_SHOP_ID;
     const secretKey = process.env.YOOKASSA_SECRET_KEY;
     if (!serviceKey || !shopId || !secretKey) return res.status(503).json({ error: 'Сверка оплат не настроена' });
-    const userResponse = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+    const userResponse = await serverFetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { apikey: serviceKey, Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(10000)
     });
     const user = await userResponse.json();
     if (!userResponse.ok || !user?.id) return res.status(401).json({ error: 'Сессия истекла' });
-    const adminResponse = await fetch(`${SUPABASE_URL}/rest/v1/invella_admins?user_id=eq.${encodeURIComponent(user.id)}&select=user_id&limit=1`, {
+    const adminResponse = await serverFetch(`${SUPABASE_URL}/rest/v1/invella_admins?user_id=eq.${encodeURIComponent(user.id)}&select=user_id&limit=1`, {
       headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}` }, signal: AbortSignal.timeout(10000)
     });
     const admins = await adminResponse.json();
@@ -39,7 +40,7 @@ module.exports = async function handler(req, res) {
       url.searchParams.set('created_at.lte', to.toISOString());
       url.searchParams.set('limit', '100');
       if (cursor) url.searchParams.set('cursor', cursor);
-      const response = await fetch(url, { headers: { Authorization: auth }, signal: AbortSignal.timeout(15000) });
+      const response = await serverFetch(url, { headers: { Authorization: auth }, signal: AbortSignal.timeout(15000) });
       const data = await response.json();
       if (!response.ok) {
         console.error('YooKassa payments list error', response.status, data?.type);

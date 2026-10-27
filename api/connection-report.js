@@ -20,7 +20,7 @@ module.exports = function connectionReport(req, res) {
   for (let i = 0; i < keys.length; i++) {
     const r = body.checks[i];
     if (!r || !STATES.has(r.status) || !Number.isInteger(r.code) || !(r.code === 0 || (r.code >= 100 && r.code <= 599)) || !Number.isInteger(r.bytes) || r.bytes < 0 || r.bytes > 20971520 || !Number.isInteger(r.ms) || r.ms < 0 || r.ms > 120000) return res.status(400).json({ error: 'Invalid check' });
-    checks.push({ key: keys[i], status: r.status, code: r.code, bytes: r.bytes, ms: r.ms, ...(startup ? { transport: r.transport === 'small' ? 'small' : 'get' } : {}) });
+    checks.push({ key: keys[i], status: r.status, code: r.code, bytes: r.bytes, ms: r.ms, ...(startup ? { transport: ['get','small','inline'].includes(r.transport) ? r.transport : 'get' } : {}) });
   }
   const id = randomBytes(5).toString('hex');
   console.info(startup ? 'Invella startup check' : 'Invella connection check', JSON.stringify({ id, version: 1, checks }));

@@ -71,10 +71,6 @@ function runtime(options = {}) {
   r = runtime({ stallGets: true, rejectPosts: true }); assert.equal(await r.window.invellaRetryStartup(), false); r.state.rejectPosts = false;
   assert.equal(await r.window.invellaRetryStartup(), true); assert.deepEqual(r.window.order, ['sdk', 'app', 'premium']);
   r = runtime({ small: true, rejectPosts: true, public: true }); assert.equal(await r.window.invellaRetryStartup(), false); assert.ok(r.elements.invellaPublicStartupFailure); r.state.rejectPosts = false; assert.equal(await r.window.invellaRetryStartup(), true); assert.equal(r.elements.invellaPublicStartupFailure, undefined);
-  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  assert.ok(html.includes(source.trim()), 'Inline boot and its source must stay synchronized');
-  assert.doesNotMatch(html, /<script defer src="\/(?:supabase|assets\/invella-)/);
-  assert.doesNotMatch(html, /<link rel="stylesheet"/);
-  assert.ok(gzipSync(html).length < 16384, 'Initial compressed document must stay small');
+  // Compatibility coverage for already cached pages. Current pages are covered by self-contained-pages.cjs.
   console.log('PASS: exact public asset chunks, access boundaries, normal boot, stalled-download recovery, UTF-8/integrity, retry and unchanged form values');
 })().catch(error => { console.error(error); process.exitCode = 1; });

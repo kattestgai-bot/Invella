@@ -1,3 +1,5 @@
+const { createHash, randomUUID } = require('node:crypto');
+const serverFetch = require('../lib/server-fetch');
 const SUPABASE_URL = "https://lwanymjmbcstvggmhevx.supabase.co";
 
 const PLANS = {
@@ -17,6 +19,7 @@ const PLANS = {
 
 function withConfig(config = {}) {
 return async function handler(req, res) {
+  res.setHeader('Cache-Control','no-store');
   if (req.method !== "POST") {
     return res.status(405).json({
       error: "Method not allowed"
@@ -28,10 +31,11 @@ return async function handler(req, res) {
       plan,
       invitationId,
       promoCode = "",
-      validatePromoOnly = false
+      validatePromoOnly = false,
+      requestId = null
     } = req.body || {};
 
-    const selected = PLANS[plan];
+    const selected = Object.hasOwn(PLANS,plan) ? PLANS[plan] : null;
 
     if (!selected) {
       return res.status(400).json({
@@ -61,7 +65,7 @@ return async function handler(req, res) {
       });
     }
 
-    const userResponse = await fetch(
+    const userResponse = await serverFetch(
       `${SUPABASE_URL}/auth/v1/user`,
       {
         headers: {
@@ -89,7 +93,7 @@ return async function handler(req, res) {
       });
     }
 
-    const invitationResponse = await fetch(
+    const invitationResponse = await serverFetch(
       `${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(
         invitationId
       )}&owner_id=eq.${encodeURIComponent(
@@ -133,7 +137,7 @@ return async function handler(req, res) {
       .toUpperCase();
 
     if (code) {
-      const promoResponse = await fetch(
+      const promoResponse = await serverFetch(
         `${SUPABASE_URL}/rest/v1/promo_codes?code=eq.${encodeURIComponent(
           code
         )}&select=id,code,discount_type,discount_value,plan_key,active,starts_at,expires_at,max_uses,uses_count`,
@@ -267,7 +271,7 @@ return async function handler(req, res) {
       });
     }
 
-    const paymentResponse = await fetch(
+    const paymentResponse = await serverFetch(
       "https://api.yookassa.ru/v3/payments",
       {
         method: "POST",
@@ -276,7 +280,7 @@ return async function handler(req, res) {
           "Content-Type": "application/json",
 
           "Idempotence-Key":
-            crypto.randomUUID(),
+            createHash('sha256').update(JSON.stringify([user.id,invitationId,plan,amountMinor,appliedPromo?.code||'',typeof requestId==='string'&&/^[a-f0-9-]{36}$/i.test(requestId)?requestId:randomUUID()])).digest('hex'),
 
           Authorization:
             "Basic " +

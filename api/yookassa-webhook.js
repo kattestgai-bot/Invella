@@ -1,3 +1,4 @@
+const serverFetch = require('../lib/server-fetch');
 const SUPABASE_URL = "https://lwanymjmbcstvggmhevx.supabase.co";
 
 const NORMAL_PRICES = {
@@ -8,6 +9,7 @@ const NORMAL_PRICES = {
 
 function withConfig(config = {}) {
 return async function handler(req, res) {
+  res.setHeader('Cache-Control','no-store');
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -38,7 +40,7 @@ return async function handler(req, res) {
 
     // Никогда не доверяем данным самого webhook.
     // Повторно получаем платёж напрямую у платёжного провайдера.
-    const paymentResponse = await fetch(
+    const paymentResponse = await serverFetch(
       `https://api.yookassa.ru/v3/payments/${encodeURIComponent(paymentId)}`,
       {
         headers: {
@@ -71,7 +73,7 @@ return async function handler(req, res) {
     const metadataOwnerId = payment.metadata?.ownerId;
 
     if (
-      !NORMAL_PRICES[plan] ||
+      !Object.hasOwn(NORMAL_PRICES,plan) ||
       !invitationId ||
       !metadataOwnerId
     ) {
@@ -90,7 +92,7 @@ return async function handler(req, res) {
 
     if (
       payment.amount?.currency !== "RUB" ||
-      amountMinor !== expectedAmountMinor ||
+      !Number.isSafeInteger(amountMinor) || !Number.isSafeInteger(expectedAmountMinor) || amountMinor !== expectedAmountMinor ||
       expectedAmountMinor > NORMAL_PRICES[plan] ||
       expectedAmountMinor < 100
     ) {
@@ -100,7 +102,7 @@ return async function handler(req, res) {
     }
 
     // Находим приглашение.
-    const invitationResponse = await fetch(
+    const invitationResponse = await serverFetch(
       `${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(
         invitationId
       )}&select=id,owner_id,slug`,
@@ -133,159 +135,19 @@ return async function handler(req, res) {
       });
     }
 
-    // Записываем платёж.
-    const paymentDbResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/payments?on_conflict=provider_payment_id`,
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          apikey: serviceKey,
-          Authorization: `Bearer ${serviceKey}`,
-          Prefer: "resolution=merge-duplicates,return=representation"
-        },
-
-        body: JSON.stringify({
-          owner_id: invitation.owner_id,
-          invitation_id: invitationId,
-          provider: "yookassa",
-          provider_payment_id: paymentId,
-          plan_key: plan,
-          amount_minor: amountMinor,
-          currency: "RUB",
-          status: "succeeded",
-          confirmed_at: new Date().toISOString()
-        })
-      }
-    );
-
-    const paymentRows = await paymentDbResponse.json();
-
-    if (!paymentDbResponse.ok) {
-      console.error("PAYMENT DB ERROR:", paymentRows);
-
-      return res.status(500).json({
-        error: "Payment database error"
-      });
-    }
-
-    // Публикуем приглашение и выдаём купленный тариф.
-    const publishResponse = await fetch(
-      `${SUPABASE_URL}/rest/v1/invitations?id=eq.${encodeURIComponent(
-        invitationId
-      )}`,
-      {
-        method: "PATCH",
-
-        headers: {
-          "Content-Type": "application/json",
-          apikey: serviceKey,
-          Authorization: `Bearer ${serviceKey}`,
-          Prefer: "return=minimal"
-        },
-
-        body: JSON.stringify({
-          plan,
-          status: "published",
-          preview_published: false,
-          published_at: new Date().toISOString()
-        })
-      }
-    );
-
-    if (!publishResponse.ok) {
-      const publishError = await publishResponse.text();
-
-      console.error("INVITATION PUBLISH ERROR:", publishError);
-
-      return res.status(500).json({
-        error: "Invitation publish error"
-      });
-    }
-
-    // Учитываем использование промокода.
-    const promoId = payment.metadata?.promoId || "";
-
-    if (promoId) {
-      const redemptionResponse = await fetch(
-        `${SUPABASE_URL}/rest/v1/promo_redemptions?provider_payment_id=eq.${encodeURIComponent(
-          paymentId
-        )}&select=id`,
-        {
-          headers: {
-            apikey: serviceKey,
-            Authorization: `Bearer ${serviceKey}`
-          }
-        }
-      );
-
-      const existingRedemptions =
-        await redemptionResponse.json();
-
-      if (
-        redemptionResponse.ok &&
-        Array.isArray(existingRedemptions) &&
-        existingRedemptions.length === 0
-      ) {
-        const insertRedemptionResponse = await fetch(
-          `${SUPABASE_URL}/rest/v1/promo_redemptions`,
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type": "application/json",
-              apikey: serviceKey,
-              Authorization: `Bearer ${serviceKey}`
-            },
-
-            body: JSON.stringify({
-              promo_code_id: promoId,
-              payment_id: paymentRows?.[0]?.id || null,
-              owner_id: invitation.owner_id,
-              invitation_id: invitationId,
-              provider_payment_id: paymentId
-            })
-          }
-        );
-
-        if (insertRedemptionResponse.ok) {
-          const incrementResponse = await fetch(
-            `${SUPABASE_URL}/rest/v1/rpc/increment_promo_use`,
-            {
-              method: "POST",
-
-              headers: {
-                "Content-Type": "application/json",
-                apikey: serviceKey,
-                Authorization: `Bearer ${serviceKey}`
-              },
-
-              body: JSON.stringify({
-                p_id: promoId
-              })
-            }
-          );
-
-          if (!incrementResponse.ok) {
-            console.error(
-              "PROMO INCREMENT ERROR:",
-              await incrementResponse.text()
-            );
-          }
-        } else {
-          console.error(
-            "PROMO REDEMPTION ERROR:",
-            await insertRedemptionResponse.text()
-          );
-        }
-      }
-    }
+    const confirmed = await serverFetch(`${SUPABASE_URL}/rest/v1/rpc/confirm_invella_payment`, {
+      method:'POST',headers:{'Content-Type':'application/json',apikey:serviceKey,Authorization:`Bearer ${serviceKey}`},
+      body:JSON.stringify({p_payment_id:payment.id,p_owner_id:invitation.owner_id,p_invitation_id:invitationId,p_plan:plan,
+        p_amount_minor:amountMinor,p_currency:'RUB',p_promo_id:payment.metadata?.promoId||null,
+        p_provider:config.testMode===true?'yookassa_test':'yookassa'})
+    });
+    if(!confirmed.ok){console.error('Payment confirmation failed',confirmed.status);return res.status(500).json({error:'Payment confirmation failed'})}
+    const result=await confirmed.json();
 
     return res.status(200).json({
       received: true,
       paid: true,
-      published: true
+      published: result.published===true
     });
   } catch (error) {
     console.error("WEBHOOK ERROR:", error);
