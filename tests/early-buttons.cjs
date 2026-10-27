@@ -15,4 +15,9 @@ assert.equal(events.click.capture,true);assert.equal(prevented,2);assert.equal(c
 assert.equal(window.invellaReady,undefined);assert.equal(window.supabase,undefined);
 window.closeAuth();assert.equal(classes.has('hidden'),true);
 assert.equal(JSON.stringify(reports).includes('password'),false);
-console.log('PASS: login opens and closes before SDK/app or document completion; capturing events require no inline onclick');
+(async()=>{
+ let release,selected=[];window.invellaInitialization=new Promise(resolve=>{release=resolve});window.chooseTemplate=value=>selected.push(value);
+ const choice={getAttribute:name=>name==='data-shell'?'chooseTemplate':name==='data-value'?'classic':null};
+ events.click.fn({target:choice,preventDefault(){},stopImmediatePropagation(){}});assert.equal(selected.length,0,'Wait for account restoration before resetting an editor');release();await Promise.resolve();assert.deepEqual(selected,['classic']);
+ console.log('PASS: login opens before SDK/document completion, capturing clicks, editor choice waits for account restoration');
+})().catch(error=>{console.error(error);process.exitCode=1});

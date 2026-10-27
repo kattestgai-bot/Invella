@@ -26,7 +26,8 @@
     if(typeof window[name]!=='function')return;
     event.preventDefault();event.stopImmediatePropagation();
     if(!seen[name]){seen[name]=true;report('click',name);}
-    if(name==='togglePassword')window[name](el.getAttribute('data-value'),el);
+    if(name==='chooseTemplate'&&window.invellaInitialization){var value=el.getAttribute('data-value');window.invellaInitialization.then(function(){window[name](value);});}
+    else if(name==='togglePassword')window[name](el.getAttribute('data-value'),el);
     else if(name==='chooseTemplate'||name==='setAuthMode')window[name](el.getAttribute('data-value'));
     else window[name]();
   },true);
