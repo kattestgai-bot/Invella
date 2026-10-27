@@ -31,7 +31,7 @@ function runtime(options={}){
  return{window,nodes,calls,reports,state};
 }
 (async()=>{
- for(const legacy of [false,true]){const r=runtime({legacy});await r.window.invellaRetryBoot();assert.equal(r.window.invellaReady,true);assert.equal(r.window.invellaPremiumReady,true);assert.ok(r.nodes.app);assert.equal(r.nodes.authEmail.value,'kept@example.invalid');assert.equal(r.nodes.authPassword.value,'preserved-test-value');assert.ok(r.calls.some(c=>c.body?.protocol===2));assert.ok(r.reports.some(x=>x.stage==='ready'&&x.small));}
+ for(const legacy of [false,true]){const r=runtime({legacy});await r.window.invellaRetryBoot();assert.equal(r.window.invellaReady,true);assert.equal(r.window.invellaSmallDelivery,true,'Recovered sessions also use the compatible transport for account reads');assert.equal(r.window.invellaPremiumReady,true);assert.ok(r.nodes.app);assert.equal(r.nodes.authEmail.value,'kept@example.invalid');assert.equal(r.nodes.authPassword.value,'preserved-test-value');assert.ok(r.calls.some(c=>c.body?.protocol===2));assert.ok(r.reports.some(x=>x.stage==='ready'&&x.small));}
  const r=runtime({fail:true,small:true});await r.window.invellaRetryBoot();assert.notEqual(r.window.invellaReady,true);assert.ok(r.reports.some(x=>x.stage==='failed'&&x.code===503),'Keep actual HTTP error codes');r.state.fail=false;await r.window.invellaRetryBoot();assert.equal(r.window.invellaReady,true);
  console.log('PASS: stalled 200 responses recover via sub-1-KiB XHR, gzip/older browser decoding, unchanged credentials, actual failure code and retry');
 })().catch(e=>{console.error(e);process.exitCode=1});

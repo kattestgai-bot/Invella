@@ -340,7 +340,7 @@ input,select{
     if (!window.invellaSmallDelivery) {
       try { text = await xhr(config.assets[key] + '?v=' + config.build, 'GET', null, 1800); if (!text || /^\s*</.test(text) && key !== 'fragment') throw new Error('body'); } catch (e) {}
     }
-    if (!text) { last = 'small'; text = await tiny(key); }
+    if (!text) { last = 'small'; window.invellaSmallDelivery=true; text = await tiny(key); }
     cache[key] = text; return text;
   }
   function execute(text, id) { var el = document.createElement('script'); el.id = id; el.textContent = text; document.head.appendChild(el); }
