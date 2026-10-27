@@ -1,7 +1,7 @@
 (function () {
   'use strict';
-  var nativeFetch = window.fetch.bind(window), preferPost = false;
-  try { preferPost = localStorage.getItem('invella_post_reads') === '1'; } catch (error) {}
+  var nativeFetch = window.fetch.bind(window), preferPost = window.invellaSmallDelivery===true;
+  try { preferPost = preferPost || localStorage.getItem('invella_post_reads') === '1'; } catch (error) {}
   async function buffered(input, options, ms) {
     var controller = new AbortController(), upstream = options.signal;
     var cancel = function () { controller.abort(); };

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><script id="invellaEarly">(function () {
   'use strict';
-  var build = 'a756f6a47e4a59cd', seen = {};
+  var build = 'cbf2ab898304acf8', seen = {};
   function node(id) { return document.getElementById(id); }
   function report(stage, action) {
     try {
@@ -270,7 +270,8 @@ input,select{
 </style>
 <script id="invellaShell">(function () {
   'use strict';
-  var config = {"build":"a756f6a47e4a59cd","page":"admin","assets":{"sdk":"/supabase.min.js","network":"/assets/invella-network.js","admin":"/assets/invella-admin.js"}}, running, ready = false, cache = {}, last = 'head';
+  var config = {"build":"cbf2ab898304acf8","page":"admin","assets":{"sdk":"/supabase.min.js","network":"/assets/invella-network.js","admin":"/assets/invella-admin.js"}}, running, ready = false, cache = {}, last = 'head';
+  window.invellaSmallDelivery=location.search.indexOf('delivery=small')!==-1;
   function $(id) { return document.getElementById(id); }
   function notice(text, failed) {
     var box = $('invellaBootStatus');
@@ -336,7 +337,7 @@ input,select{
   async function asset(key) {
     if (cache[key]) return cache[key];
     var text;
-    if (location.search.indexOf('delivery=small') === -1) {
+    if (!window.invellaSmallDelivery) {
       try { text = await xhr(config.assets[key] + '?v=' + config.build, 'GET', null, 1800); if (!text || /^\s*</.test(text) && key !== 'fragment') throw new Error('body'); } catch (e) {}
     }
     if (!text) { last = 'small'; text = await tiny(key); }

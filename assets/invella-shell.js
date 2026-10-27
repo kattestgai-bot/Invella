@@ -1,6 +1,7 @@
 (function () {
   'use strict';
   var config = __INVELLA_BOOT_CONFIG__, running, ready = false, cache = {}, last = 'head';
+  window.invellaSmallDelivery=location.search.indexOf('delivery=small')!==-1;
   function $(id) { return document.getElementById(id); }
   function notice(text, failed) {
     var box = $('invellaBootStatus');
@@ -66,7 +67,7 @@
   async function asset(key) {
     if (cache[key]) return cache[key];
     var text;
-    if (location.search.indexOf('delivery=small') === -1) {
+    if (!window.invellaSmallDelivery) {
       try { text = await xhr(config.assets[key] + '?v=' + config.build, 'GET', null, 1800); if (!text || /^\s*</.test(text) && key !== 'fragment') throw new Error('body'); } catch (e) {}
     }
     if (!text) { last = 'small'; text = await tiny(key); }
