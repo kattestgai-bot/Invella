@@ -37,7 +37,7 @@
   window.setAuthMode = mode;
   window.togglePassword = function (id, button) { var input = $(id); input.type = input.type === 'password' ? 'text' : 'password'; button.textContent = input.type === 'password' ? '◉' : '◌'; };
   window.openTemplates = function () { history.pushState({}, '', '/create/design'); $('templates').scrollIntoView({ block: 'start' }); };
-  function deferred(name) { var fallback = function () { var args = arguments; notice('Загружаем редактор…', false); return boot().then(function () { var fn = window[name]; if (fn === fallback) throw new Error('handler'); return fn.apply(window, args); }); }; return fallback; }
+  function deferred(name) { var fallback = function () { var args = arguments; notice('Загружаем редактор…', false); return boot().then(function () { return name==='chooseTemplate'&&window.invellaInitialization ? window.invellaInitialization : null; }).then(function () { var fn = window[name]; if (fn === fallback) throw new Error('handler'); return fn.apply(window, args); }); }; return fallback; }
   window.chooseTemplate = deferred('chooseTemplate');
   window.submitAuth = function () { if (!$('authEmail').value.trim() || !$('authPassword').value) { $('authMessage').textContent = 'Введите email и пароль.'; return; } return deferred('submitAuth')(); };
   window.login = function () { var email=$('email'),password=$('password'); if(email&&password&&(!email.value.trim()||!password.value)){if($('loginMessage'))$('loginMessage').textContent='Введите email и пароль';return}return deferred('login')(); };
