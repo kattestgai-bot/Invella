@@ -62,7 +62,7 @@
   "outputDirectory": "public",
   "functions": {
     "api/startup-assets.js": {
-      "includeFiles": "{supabase.min.js,assets/invella-bundle.css,assets/invella-app.js,assets/invella-premium-fix.js}"
+      "includeFiles": "{supabase.min.js,assets/invella-bundle.css,assets/invella-app.js,assets/invella-premium-fix.js,assets/invella-network.js,assets/invella-fragment.html,assets/invella-admin.js,assets/invella-startup-manifest.json}"
     }
   }
 }

@@ -1,0 +1,18 @@
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const vm=require('node:vm');
+const source=fs.readFileSync(path.join(__dirname,'../assets/invella-early.js'),'utf8').replace('__INVELLA_BUILD__','0123456789abcdef');
+const classes=new Set(['hidden']),events={},reports=[];
+const modal={classList:{remove:c=>classes.delete(c),add:c=>classes.add(c)}},document={readyState:'loading',body:{style:{}},getElementById:id=>id==='authModal'?modal:null,addEventListener:(name,fn,capture)=>{events[name]={fn,capture}}};
+function XHR(){}XHR.prototype.open=function(){};XHR.prototype.setRequestHeader=function(){};XHR.prototype.send=function(body){reports.push(JSON.parse(body))};
+const window={addEventListener(){}};
+vm.runInNewContext(source,{window,document,XMLHttpRequest:XHR,setTimeout:()=>0});
+assert.equal(reports[0].stage,'early');assert.equal(reports[0].shell,false,'Test represents an unfinished document with no application code');
+const target={getAttribute:name=>name==='data-shell'?'openAuth':null};let prevented=0;
+events.click.fn({target,preventDefault(){prevented++},stopImmediatePropagation(){prevented++}});
+assert.equal(events.click.capture,true);assert.equal(prevented,2);assert.equal(classes.has('hidden'),false);assert.equal(document.body.style.overflow,'hidden');
+assert.equal(window.invellaReady,undefined);assert.equal(window.supabase,undefined);
+window.closeAuth();assert.equal(classes.has('hidden'),true);
+assert.equal(JSON.stringify(reports).includes('password'),false);
+console.log('PASS: login opens and closes before SDK/app or document completion; capturing events require no inline onclick');
