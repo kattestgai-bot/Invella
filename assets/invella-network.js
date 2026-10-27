@@ -1,7 +1,10 @@
 (function () {
   'use strict';
-  var nativeFetch = window.fetch.bind(window), preferPost = window.invellaSmallDelivery===true;
-  try { preferPost = preferPost || localStorage.getItem('invella_post_reads') === '1'; } catch (error) {}
+  var nativeFetch = window.fetch.bind(window), preferPost = window.invellaSmallDelivery===true, preferDirect=window.invellaDirectBackend===true;
+  function rememberDirect(){preferDirect=true;try{localStorage.setItem('invella_direct_backend','1');}catch(error){}}
+  try { preferPost = preferPost || localStorage.getItem('invella_post_reads') === '1';preferDirect=preferDirect||localStorage.getItem('invella_direct_backend')==='1';if(preferDirect)rememberDirect(); } catch (error) {}
+  function directUrl(value){try{var parsed=new URL(value,window.location.origin);if(parsed.origin===window.location.origin&&parsed.pathname.indexOf('/sb/')===0)return 'https://lwanymjmbcstvggmhevx.supabase.co'+parsed.pathname.slice(3)+parsed.search;}catch(error){}return null;}
+  window.invellaMediaUrl=function(value){return preferDirect?directUrl(String(value||''))||value:value;};
   async function buffered(input, options, ms) {
     var controller = new AbortController(), upstream = options.signal;
     var cancel = function () { controller.abort(); };
@@ -26,14 +29,21 @@
     options = options || {};
     var url = String(input && input.url || input), route = null;
     var method = String(options.method || input && input.method || 'GET').toUpperCase();
+    var direct=directUrl(url),directInput=direct&&(typeof Request!=='undefined'&&input instanceof Request?new Request(direct,input.clone()):direct);
     try {
       var parsed = new URL(url, window.location.origin);
       if (method === 'GET' && parsed.origin === window.location.origin && /^\/sb\/rest\/v1\/(invitations|rsvp_responses)$/.test(parsed.pathname))
         route = parsed.pathname.slice(3) + parsed.search;
     } catch (error) {}
-    if (!route || !preferPost) {
+    if(preferDirect&&direct){
+      // Reuse the customer's JWT against the same Supabase project. Never retry a write.
+      try{return await buffered(directInput,options,route?5000:/\/storage\/v1\//.test(url)?90000:20000);}
+      catch(error){if(!route||options.signal&&options.signal.aborted)throw error;}
+    }else if (!route || !preferPost) {
       try { return await buffered(input, options, route ? 5000 : /\/storage\/v1\//.test(url) ? 90000 : 20000); }
       catch (error) { if (!route || options.signal && options.signal.aborted) throw error; }
+      try{var recovered=await buffered(directInput,options,5000);rememberDirect();return recovered;}
+      catch(error){if(options.signal&&options.signal.aborted)throw error;}
     }
     var headers = new Headers(options.headers || input && input.headers || {});
     var response = await buffered('/api/read-data', {

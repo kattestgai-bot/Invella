@@ -54,8 +54,8 @@ function build(root){
  write('assets/invella-startup-manifest.json',JSON.stringify({build:buildId,hashes}));
  for(const [page,input]of [['index.html',main],['admin.html',admin]]){
   let html=controls(input),keys=page==='index.html'?['styles','sdk','network','app','premium','fragment']:['sdk','network','admin'];
-  const config={build:buildId,page:page==='index.html'?'main':'admin',assets:Object.fromEntries(keys.map(key=>[key,'/'+files[key]]))};
-  const early=script(read('assets/invella-early.js').replace('__INVELLA_BUILD__',buildId)),shell=script(read('assets/invella-shell.js').replace('__INVELLA_BOOT_CONFIG__',JSON.stringify(config)));
+  const config={build:buildId,page:page==='index.html'?'main':'admin',assets:Object.fromEntries(keys.map(key=>[key,'/'+files[key]])),mirror:'https://lwanymjmbcstvggmhevx.supabase.co/functions/v1/invella-assets',mirrorKey:'sb_publishable_EY50r1gV7v1zyD9vBgrteA_JVcOg4_J'};
+  const early=script(read('assets/invella-early.js').replace('__INVELLA_BUILD__',buildId)),shell=script(read('assets/invella-shell.js').replace('__INVELLA_BOOT_CONFIG__',JSON.stringify(config)).replace(/\bconfig\.page\b/g,JSON.stringify(config.page)));
   if(page==='index.html')html=html.replace('</head>','<script id="invellaAuth">'+script(read('assets/invella-auth.js'))+'</script></head>');
   html=html.replace('{{INVELLA_CSS}}',critical(read(files.styles),html)).replace('id="invellaLoadedStyles"','id="invellaCriticalStyles"');
   html=html.replace('<meta charset="utf-8">','<meta charset="utf-8"><script id="invellaEarly">'+early+'</script>');

@@ -6,3 +6,7 @@ verify_jwt = true
 
 [functions.admin-activate-invitation]
 verify_jwt = true
+
+# Only public application files; the handler validates the project's publishable key.
+[functions.invella-assets]
+verify_jwt = false
