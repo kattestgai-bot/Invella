@@ -65,6 +65,7 @@ function runtime(options = {}) {
   assert.equal(r.calls.filter(c => c.url === '/api/startup-assets').length, 0);
   r = runtime({ stallGets: true }); assert.equal(await r.window.invellaRetryStartup(), true); assert.deepEqual(r.window.order, ['sdk', 'app', 'premium']);
   assert.equal(r.elements.invellaLoadedStyles.textContent, texts.styles); assert.equal(r.elements.authEmail.value, 'draft@example.invalid'); assert.equal(r.elements.authPassword.value, 'test-value');
+  assert.equal(r.elements.authMessage.textContent, '', 'The loading message must disappear when recovery completes');
   assert.equal(r.storage.get('invella_small_startup'), '1'); assert.ok(r.calls.some(c => c.url === '/api/startup-assets'));
   r = runtime({ small: true, tamper: true }); assert.equal(await r.window.invellaRetryStartup(), false); assert.equal(r.window.invellaReady, false); assert.equal(r.elements.invellaStartupRetry.style.display, '');
   r = runtime({ stallGets: true, rejectPosts: true }); assert.equal(await r.window.invellaRetryStartup(), false); r.state.rejectPosts = false;

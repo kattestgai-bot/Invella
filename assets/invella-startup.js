@@ -53,7 +53,7 @@ function ensure(){
    var sdk=await result('sdk');if(!window.supabase)execute(sdk);if(!window.supabase||!window.supabase.createClient)throw new Error('Auth module unavailable');
    var app=await result('app'),premium=await result('premium');if(!window.invellaReady)execute(app);if(!window.invellaReady)throw new Error('App module unavailable');
    if(!window.invellaPremiumReady)execute(premium);if(!window.invellaPremiumReady)throw new Error('Editor module unavailable');
-   window.invellaStartupState='ready';retryButton(false);
+   window.invellaStartupState='ready';retryButton(false);var info=document.getElementById('authMessage');if(info&&/Загружаем вход|Восстанавливаем загрузку|Не удалось завершить загрузку/.test(info.textContent||''))info.textContent='';
    return true;
   }catch(error){window.invellaStartupState='failed';message('Не удалось завершить загрузку. Нажмите «Повторить загрузку».');retryButton(true);publicFailure(true);console.error('Invella startup:',error.message);return false}
   finally{await Promise.all(Object.keys(jobs).map(function(key){return jobs[key]}));active=null;report()}
