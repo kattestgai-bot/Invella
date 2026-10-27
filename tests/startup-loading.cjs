@@ -36,7 +36,9 @@ function runtime(options = {}) {
   const elements = { authMessage: { textContent: '' }, authEmail: { value: 'draft@example.invalid' }, authPassword: { value: 'test-value' }, invellaStartupRetry: { style: {} } };
   const storage = new Map(); const calls = []; let ctx;
   const state = { rejectPosts: !!options.rejectPosts };
-  const document = { readyState: 'complete', getElementById: id => elements[id] || null, addEventListener() {}, createElement: tag => ({ tag, style: {}, remove() {} }), head: { appendChild(el) { if (el.id) elements[el.id] = el; if (el.tag === 'script') vm.runInContext(el.textContent, ctx); } } };
+  function element(tag) { return { tag, style: {}, children: [], remove() { if (this.id) delete elements[this.id]; }, appendChild(child) { this.children.push(child); if (child.id) elements[child.id] = child; } }; }
+  if (options.public) elements.publicLoading = Object.assign(element('div'), { querySelector() { return this; } });
+  const document = { readyState: 'complete', documentElement: { classList: { contains: () => !!options.public } }, getElementById: id => elements[id] || null, addEventListener() {}, createElement: element, head: { appendChild(el) { if (el.id) elements[el.id] = el; if (el.tag === 'script') vm.runInContext(el.textContent, ctx); } } };
   const window = { location: { search: options.small ? '?lite=1' : '' }, order: [], crypto: crypto.webcrypto, invellaReady: false };
   const context = { window, location: window.location, document, AbortController, URLSearchParams, Uint8Array, TextEncoder, TextDecoder, atob, setTimeout, clearTimeout, Date, localStorage: { getItem: k => storage.get(k), setItem: (k, v) => storage.set(k, v), removeItem: k => storage.delete(k) }, console: { error() {} }, fetch: async (url, init = {}) => {
     calls.push({ url, init });
@@ -67,6 +69,7 @@ function runtime(options = {}) {
   r = runtime({ small: true, tamper: true }); assert.equal(await r.window.invellaRetryStartup(), false); assert.equal(r.window.invellaReady, false); assert.equal(r.elements.invellaStartupRetry.style.display, '');
   r = runtime({ stallGets: true, rejectPosts: true }); assert.equal(await r.window.invellaRetryStartup(), false); r.state.rejectPosts = false;
   assert.equal(await r.window.invellaRetryStartup(), true); assert.deepEqual(r.window.order, ['sdk', 'app', 'premium']);
+  r = runtime({ small: true, rejectPosts: true, public: true }); assert.equal(await r.window.invellaRetryStartup(), false); assert.ok(r.elements.invellaPublicStartupFailure); r.state.rejectPosts = false; assert.equal(await r.window.invellaRetryStartup(), true); assert.equal(r.elements.invellaPublicStartupFailure, undefined);
   const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   assert.ok(html.includes(source.trim()), 'Inline boot and its source must stay synchronized');
   assert.doesNotMatch(html, /<script defer src="\/(?:supabase|assets\/invella-)/);

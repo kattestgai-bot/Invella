@@ -39,10 +39,11 @@ async function asset(key){
 function execute(text){var script=document.createElement('script');script.textContent=text+'\n//# sourceURL=invella-startup-inline.js';document.head.appendChild(script);script.remove()}
 function installStyles(text){if(document.getElementById('invellaLoadedStyles'))return;var style=document.createElement('style');style.id='invellaLoadedStyles';style.textContent=text;document.head.appendChild(style)}
 function retryButton(show){var el=document.getElementById('invellaStartupRetry');if(el)el.style.display=show?'':'none'}
+function publicFailure(show){var old=document.getElementById('invellaPublicStartupFailure');if(old)old.remove();var loader=document.getElementById('publicLoading');if(!show||!loader||!document.documentElement.classList.contains('public-pending'))return;var box=document.createElement('div');box.id='invellaPublicStartupFailure';var text=document.createElement('p');text.textContent='Не удалось завершить загрузку приглашения.';var retry=document.createElement('button');retry.type='button';retry.textContent='Повторить загрузку';retry.onclick=ensure;box.appendChild(text);box.appendChild(retry);(loader.querySelector('.public-loading-card')||loader).appendChild(box)}
 async function report(){try{await request('/api/connection-report',{method:'POST',credentials:'same-origin',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/json'},body:JSON.stringify({phase:'startup',checks:['styles','sdk','app','premium'].map(function(key){var r=trace[key]||{status:'network',bytes:0,ms:0,transport:'get'};return{status:r.status,code:r.status==='ok'?200:0,bytes:r.bytes,ms:r.ms,transport:r.transport}})})},POST_MS)}catch(error){}}
 function ensure(){
  if(active)return active;
- window.invellaStartupState='loading';retryButton(false);
+ window.invellaStartupState='loading';retryButton(false);publicFailure(false);
  active=(async function(){
   await domReady;
   var jobs={};Object.keys(urls).forEach(function(key){jobs[key]=asset(key).then(function(text){return{text:text}},function(error){return{error:error}})});
@@ -54,11 +55,12 @@ function ensure(){
    if(!window.invellaPremiumReady)execute(premium);if(!window.invellaPremiumReady)throw new Error('Editor module unavailable');
    window.invellaStartupState='ready';retryButton(false);
    return true;
-  }catch(error){window.invellaStartupState='failed';message('Не удалось завершить загрузку. Нажмите «Повторить загрузку».');retryButton(true);console.error('Invella startup:',error.message);return false}
+  }catch(error){window.invellaStartupState='failed';message('Не удалось завершить загрузку. Нажмите «Повторить загрузку».');retryButton(true);publicFailure(true);console.error('Invella startup:',error.message);return false}
   finally{await Promise.all(Object.keys(jobs).map(function(key){return jobs[key]}));active=null;report()}
  })();return active;
 }
 window.invellaRetryStartup=ensure;
 ensure();
 })();
+
 

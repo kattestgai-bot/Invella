@@ -1,4 +1,4 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231d1b19%22/><text x=%2232%22 y=%2241%22 text-anchor=%22middle%22 font-family=%22Georgia%22 font-size=%2226%22 fill=%22white%22>IV</text></svg>"><title>Invella — сайты-приглашения</title><meta name="description" content="Создайте красивый персональный сайт-приглашение за несколько минут."><script>if(/^\/i\/[a-z0-9-]+\/?$/.test(location.pathname))document.documentElement.classList.add('public-route','public-pending');</script><style>html,body{background:#f7f2ea}.hidden{display:none!important}body{margin:0;color:#201b17;font-family:Arial,sans-serif}.shell{max-width:1180px;margin:auto;padding:0 22px}nav{display:flex;align-items:center;justify-content:space-between;min-height:72px}.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:#201d1ba8}.modal-card{width:min(460px,100%);max-height:90vh;overflow:auto;padding:24px;background:#f7f2ea}.field{margin:15px 0}.field input{width:100%;padding:13px}button{cursor:pointer;font:inherit}html.public-pending #publicLoading{opacity:1!important;pointer-events:auto!important}html.public-pending #app,html.public-pending #marketing{visibility:hidden!important}</style><script id="invellaStartupLoader">
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%231d1b19%22/><text x=%2232%22 y=%2241%22 text-anchor=%22middle%22 font-family=%22Georgia%22 font-size=%2226%22 fill=%22white%22>IV</text></svg>"><title>Invella — сайты-приглашения</title><meta name="description" content="Создайте красивый персональный сайт-приглашение за несколько минут."><script>if(/^\/i\/[a-z0-9-]+\/?$/.test(location.pathname))document.documentElement.classList.add('public-route','public-pending');</script><style>html,body{background:#f7f2ea}.legal-doc{display:none}.public-route .legal-doc,.public-route .legal-links{display:none!important}.public-loading{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:#f7f2ea}.public-loading-card:before{content:'INVELLA';letter-spacing:.34em;font:20px Georgia;color:#7d6a57}.hidden{display:none!important}body{margin:0;color:#201b17;font-family:Arial,sans-serif}.shell{max-width:1180px;margin:auto;padding:0 22px}nav{display:flex;align-items:center;justify-content:space-between;min-height:72px}.modal{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:18px;background:#201d1ba8}.modal-card{width:min(460px,100%);max-height:90vh;overflow:auto;padding:24px;background:#f7f2ea}.field{margin:15px 0}.field input{width:100%;padding:13px}button{cursor:pointer;font:inherit}html.public-pending #publicLoading{display:grid!important;opacity:1!important;pointer-events:auto!important}html.public-pending #app,html.public-pending #marketing{visibility:hidden!important}</style><script id="invellaStartupLoader">
 (function(){
 'use strict';
 if(window.invellaStartupBoot)return;
@@ -40,10 +40,11 @@ async function asset(key){
 function execute(text){var script=document.createElement('script');script.textContent=text+'\n//# sourceURL=invella-startup-inline.js';document.head.appendChild(script);script.remove()}
 function installStyles(text){if(document.getElementById('invellaLoadedStyles'))return;var style=document.createElement('style');style.id='invellaLoadedStyles';style.textContent=text;document.head.appendChild(style)}
 function retryButton(show){var el=document.getElementById('invellaStartupRetry');if(el)el.style.display=show?'':'none'}
+function publicFailure(show){var old=document.getElementById('invellaPublicStartupFailure');if(old)old.remove();var loader=document.getElementById('publicLoading');if(!show||!loader||!document.documentElement.classList.contains('public-pending'))return;var box=document.createElement('div');box.id='invellaPublicStartupFailure';var text=document.createElement('p');text.textContent='Не удалось завершить загрузку приглашения.';var retry=document.createElement('button');retry.type='button';retry.textContent='Повторить загрузку';retry.onclick=ensure;box.appendChild(text);box.appendChild(retry);(loader.querySelector('.public-loading-card')||loader).appendChild(box)}
 async function report(){try{await request('/api/connection-report',{method:'POST',credentials:'same-origin',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/json'},body:JSON.stringify({phase:'startup',checks:['styles','sdk','app','premium'].map(function(key){var r=trace[key]||{status:'network',bytes:0,ms:0,transport:'get'};return{status:r.status,code:r.status==='ok'?200:0,bytes:r.bytes,ms:r.ms,transport:r.transport}})})},POST_MS)}catch(error){}}
 function ensure(){
  if(active)return active;
- window.invellaStartupState='loading';retryButton(false);
+ window.invellaStartupState='loading';retryButton(false);publicFailure(false);
  active=(async function(){
   await domReady;
   var jobs={};Object.keys(urls).forEach(function(key){jobs[key]=asset(key).then(function(text){return{text:text}},function(error){return{error:error}})});
@@ -55,13 +56,14 @@ function ensure(){
    if(!window.invellaPremiumReady)execute(premium);if(!window.invellaPremiumReady)throw new Error('Editor module unavailable');
    window.invellaStartupState='ready';retryButton(false);
    return true;
-  }catch(error){window.invellaStartupState='failed';message('Не удалось завершить загрузку. Нажмите «Повторить загрузку».');retryButton(true);console.error('Invella startup:',error.message);return false}
+  }catch(error){window.invellaStartupState='failed';message('Не удалось завершить загрузку. Нажмите «Повторить загрузку».');retryButton(true);publicFailure(true);console.error('Invella startup:',error.message);return false}
   finally{await Promise.all(Object.keys(jobs).map(function(key){return jobs[key]}));active=null;report()}
  })();return active;
 }
 window.invellaRetryStartup=ensure;
 ensure();
 })();
+
 
 
 </script><script>if(document.documentElement.classList.contains('public-route')&&new URLSearchParams(location.search).get('style')==='atelier'){document.documentElement.classList.add('atelier-preview');var luxuryStyle=document.createElement('link');luxuryStyle.rel='stylesheet';luxuryStyle.href='/assets/atelier-preview.css?v=1';document.head.appendChild(luxuryStyle)}</script><script>
