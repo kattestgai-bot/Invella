@@ -25,9 +25,38 @@
       "permanent": true
     }
   ],
-  "functions": {
-    "api/startup-assets.js": {
-      "includeFiles": "{supabase.min.js,assets/invella-bundle.css,assets/invella-app.js,assets/invella-premium-fix.js}"
+  "buildCommand": "node scripts/build.cjs",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/admin.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     }
-  }
+  ]
 }
