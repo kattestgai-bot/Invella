@@ -57,6 +57,19 @@
           "value": "no-store"
         }
       ]
+    },
+    {
+      "source": "/payment-complete.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        }
+      ]
     }
   ],
   "outputDirectory": "public",

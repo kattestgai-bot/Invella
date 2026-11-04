@@ -20,6 +20,11 @@ for(const page of ['index.html','admin.html']){
   assert.doesNotMatch(html,/id="app"/,'The editor belongs to a separate bounded transfer');
  }
 }
+const payment=fs.readFileSync(path.join(root,'payment-complete.html'),'utf8');
+assert.ok(gzipSync(payment).length<16384,'Payment instructions must fit below a 16 KiB compressed response');
+assert.doesNotMatch(payment,/\{\{INVELLA_|invella-shell|invella-app|supabase\.min/);
+assert.match(payment,/id="invellaPaymentReturn"/);
+for(const m of payment.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi))new vm.Script(m[1]);
 const fragment=fs.readFileSync(path.join(root,'assets/invella-fragment.html'),'utf8');
 for(const id of ['app','publishModal','paymentSuccessModal','dashboardModal','resetPasswordModal','offer','privacy'])assert.match(fragment,new RegExp('id="'+id+'"'));
 assert.doesNotMatch(fragment,/id="authModal"/,'Never replace credentials already entered into the shell');

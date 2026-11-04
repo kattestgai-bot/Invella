@@ -23,6 +23,7 @@ const res=()=>({code:0,setHeader(){},status(n){this.code=n;return this},json(dat
   assert.match(keys[0],/^[a-f0-9]{64}$/);
   const r=res();await handler(req('pro'),r);assert.equal(r.code,200);assert.notEqual(keys[0],keys[2]);
   assert.equal(bodies[0].amount.value,'990.00');assert.equal(bodies[2].amount.value,'1490.00');
+  assert.equal(bodies[0].confirmation.return_url,'https://invella.ru/payment-complete.html','New checkouts return to the independent instruction page');
   for(const plan of ['constructor','__proto__','toString']){const before=calls,r=res();await handler(req(plan),r);assert.equal(r.code,400);assert.equal(calls,before)}
   published=true;const before=keys.length,blocked=res();await handler(req('basic'),blocked);assert.equal(blocked.code,409);assert.equal(keys.length,before);
   console.log('PASS: checkout retry idempotency, tariff-bound operations, prototype keys rejected, paid invite blocks another checkout');

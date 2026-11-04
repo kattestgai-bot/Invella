@@ -66,6 +66,8 @@ function build(root){
   write(page,html);write('public/'+page,html);console.log('Built '+page+': '+Buffer.byteLength(html)+' bytes; small initial shell, early controls');
  }
  for(const file of new Set([...Object.values(files),'assets/atelier-preview.css','connection-check.html'])){write('public/'+file,read(file));}
+ const payment=read('src/payment-complete.html').replace('{{INVELLA_PAYMENT_RETURN}}',script(read('assets/invella-payment-return.js')));
+ write('payment-complete.html',payment);write('public/payment-complete.html',payment);
  return {build:buildId,files};
 }
 module.exports={build,critical,extract};

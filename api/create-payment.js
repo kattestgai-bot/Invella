@@ -303,7 +303,7 @@ return async function handler(req, res) {
             type: "redirect",
 
             return_url:
-              config.returnUrl || "https://invella.ru/?payment=success"
+              config.returnUrl || "https://invella.ru/payment-complete.html"
           },
 
           description:
