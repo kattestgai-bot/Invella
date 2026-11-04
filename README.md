@@ -44,6 +44,7 @@ HTML/CSS/JavaScript, Vercel Functions, Supabase Auth/Postgres/Storage и ЮKassa
 | `supabase/schema-snapshot.sql` | Снимок схемы, политик и прав без данных клиентов |
 | `tests/` | Автоматические проверки |
 | `docs/verification-2026-10-27.md` | Результаты и границы проверки |
+| `docs/verification-2026-11-04.md` | Самостоятельная инструкция после оплаты и повторная проверка редактора |
 
 Нужен Node.js 24. Единственная зависимость сборки — Terser 5.51.2, закреплённая в package-lock.json. Минификация держит начальный документ ниже 16 КиБ gzip. В браузер дополнительные npm-пакеты не загружаются.
 
